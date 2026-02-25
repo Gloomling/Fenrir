@@ -17,9 +17,9 @@ import logging.handlers
 import sys
 from typing import Optional
 
-from colorama import Fore, Style, init as colorama_init
+import colorama; from colorama import Fore, Style; colorama.init()
 
-colorama_init(autoreset=True)
+colorama.init(autoreset=True)
 
 # ---------------------------------------------------------------------------
 # Constants

@@ -35,7 +35,7 @@ class FenrirGUI(tk.Tk):
         
         self.scan_thread = None
         self.create_widgets()
-        self.process_log_queue()
+        self.after(100, lambda: self.process_log_queue())
         self.bind("<Configure>", self.on_resize)
 
     def apply_styles(self):
@@ -212,19 +212,24 @@ class FenrirGUI(tk.Tk):
         
         self.logger.info("--- All selected scans complete ---")
 
-    def process_log_queue(self):
-        """Periodically checks the log queue and updates the text widget."""
-        try:
-            while True:
-                record = self.log_queue.get_nowait()
-                self.output_text.config(state="normal")
-                self.output_text.insert(tk.END, record.getMessage() + "\n")
-                self.output_text.yview(tk.END)
-                self.output_text.config(state="disabled")
-        except queue.Empty:
-            pass
-        finally:
-            self.after(100, self.process_log_queue)
+def process_log_queue(self):
+    try:
+        while True:
+            record = self.log_queue.get_nowait()
+            
+            # Fix: Ensure we extract the string message from the LogRecord object
+            if hasattr(record, 'getMessage'):
+                msg = record.getMessage()
+            else:
+                msg = str(record)
+                
+            self.output_text.insert(tk.END, msg + "\n")
+            self.output_text.see(tk.END)
+    except queue.Empty:
+        pass
+    finally:
+        # Re-schedule the check
+        self.after(100, lambda: self.process_log_queue())
             
     def on_closing(self):
         """Handles window closing event."""
