@@ -50,4 +50,4 @@ class OtScanner:
             log.error(f"An error occurred during the passive OT scan. Do you have root privileges? Error: {e}")
         
         log.info("Passive OT scan finished.")
-```python
+"""python"""

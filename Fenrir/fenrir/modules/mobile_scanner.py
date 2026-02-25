@@ -57,4 +57,4 @@ class MobileScanner:
             log.error("Unsupported file type. This module currently only supports .apk files.")
             
         log.info("Mobile application scan finished.")
-```python
+#python

@@ -9,7 +9,8 @@
 # 2. Make it executable: chmod +x install_fenrir.sh
 # 3. Run it: ./install_fenrir.sh
 
-# --- Style Functions for better output ---
+
+# --- Style Functions ---
 bold=$(tput bold)
 normal=$(tput sgr0)
 green=$(tput setaf 2)
@@ -17,109 +18,86 @@ yellow=$(tput setaf 3)
 red=$(tput setaf 1)
 
 # --- Configuration ---
-# !!! IMPORTANT !!!
-# Replace this URL with the actual URL of your Fenrir GitHub repository.
 REPO_URL="https://github.com/kj-droid/Project_fenrirv2.git"
 PROJECT_DIR="Project_fenrirv2"
 COMMAND_NAME="fenrir"
 
 echo "${bold}${green}--- Starting Fenrir Installation ---${normal}"
 
-# 1. Check for and install prerequisite commands
-echo "\n${yellow}Step 1: Checking for prerequisites (git, poetry)...${normal}"
+# 1. Check for and install prerequisite system commands
+echo -e "\n${yellow}Step 1: Checking for system prerequisites (git, poetry, nmap, tkinter)...${normal}"
 
-# Check for Git
-if ! command -v git &> /dev/null; then
-    echo "Git not found. Attempting to install..."
-    sudo apt-get update && sudo apt-get install git -y
-    if [ $? -ne 0 ]; then
-        echo "${bold}${red}Fatal Error: Failed to install git. Please install it manually and run this script again.${normal}"
-        exit 1
-    fi
-    echo "${green}Git installed successfully.${normal}"
-else
-    echo "Git is already installed."
-fi
+# Standard Apt Dependencies
+echo "Updating system and installing base dependencies..."
+sudo apt-get update
+sudo apt-get install -y git curl nmap python3-tk python3-pip
 
-# Check for Poetry
+# 2. Check for Poetry
 if ! command -v poetry &> /dev/null; then
-    echo "Poetry not found. Attempting to install..."
-    # Poetry installer requires curl
-    if ! command -v curl &> /dev/null; then
-        echo "curl not found. Attempting to install..."
-        sudo apt-get update && sudo apt-get install curl -y
-        if [ $? -ne 0 ]; then
-            echo "${bold}${red}Fatal Error: Failed to install curl. Please install it manually and run this script again.${normal}"
-            exit 1
-        fi
-    fi
+    echo "Poetry not found. Installing..."
     curl -sSL https://install.python-poetry.org | python3 -
-    if [ $? -ne 0 ]; then
-        echo "${bold}${red}Fatal Error: Failed to install Poetry. Please try installing it manually from https://python-poetry.org/docs/${normal}"
-        exit 1
-    fi
-    # Add poetry to the current session's PATH to ensure it's found immediately
     export PATH="$HOME/.local/bin:$PATH"
-    echo "${green}Poetry installed successfully.${normal}"
 else
     echo "Poetry is already installed."
 fi
 
-
-# 2. Clone the repository
+# 3. Clone the repository
 if [ -d "$PROJECT_DIR" ]; then
-    echo "\n${yellow}Project directory '${PROJECT_DIR}' already exists. Skipping clone.${normal}"
+    echo -e "\n${yellow}Project directory exists. Skipping clone.${normal}"
 else
-    echo "\n${yellow}Step 2: Cloning repository from GitHub...${normal}"
+    echo -e "\n${yellow}Step 2: Cloning repository...${normal}"
     git clone "$REPO_URL"
-    if [ $? -ne 0 ]; then
-        echo "${bold}${red}Error: 'git clone' failed. Please check the repository URL and your connection.${normal}"
-        exit 1
-    fi
+    cd "$PROJECT_DIR" || exit
 fi
 
 # 3. Navigate into the project directory
 cd "$PROJECT_DIR" || exit
 
-# 4. Run the update/install script
-echo "\n${yellow}Step 3: Setting up environment and installing dependencies...${normal}"
-# Ensure the update script is executable
+# --- NEW: AUTOMATED ENVIRONMENT FIXES ---
+echo -e "\n${yellow}Step 3: Patching Python version constraints for compatibility...${normal}"
+
+# Use sed to change (>=3.10, <3.13) to (>=3.10) to allow Python 3.13+
+if [ -f "pyproject.toml" ]; then
+    sed -i 's/python = ">=3.10, <3.13"/python = ">=3.10"/' pyproject.toml
+    echo "${green}Version constraint patched for Python 3.13+.${normal}"
+fi
+
+echo -e "\n${yellow}Step 4: Building the virtual environment automatically...${normal}"
+# Configure poetry to create the env inside the project folder for easier management
+poetry config virtualenvs.in-project true
+poetry install --no-interaction
+
+# Add the specific dependencies we discussed earlier
+poetry add nvdlib "androguard<4.0" python-nmap --no-interaction
+# ---------------------------------------
+
+# 4. Install specific Python dependencies via Poetry
+# This fixes the 'androguard' and 'nvdlib' issues globally within the project env
+echo -e "\n${yellow}Step 3: Injecting extra dependencies (nvdlib, androguard v3)...${normal}"
+
+# We use 'poetry add' to ensure these are locked into the Fenrir environment
+# We specify androguard < 4.0 to fix the 'bytecodes' error
+poetry add nvdlib "androguard<4.0" python-nmap
+
+# 5. Run the existing update/install script
+echo -e "\n${yellow}Step 4: Running project setup script...${normal}"
 if [ -f "update_fenrir.sh" ]; then
     chmod +x update_fenrir.sh
     ./update_fenrir.sh
-    if [ $? -ne 0 ]; then
-        echo "${bold}${red}Error: The update script failed. Please check the output above for errors.${normal}"
-        exit 1
-    fi
 else
-    echo "${bold}${red}Error: 'update_fenrir.sh' not found in the repository.${normal}"
+    echo "${bold}${red}Error: 'update_fenrir.sh' not found.${normal}"
     exit 1
 fi
 
-# 5. Create the system-wide command
-echo "\n${yellow}Step 4: Creating the system-wide '${COMMAND_NAME}' command...${normal}"
+# 6. Create the system-wide command
+echo -e "\n${yellow}Step 5: Creating the system-wide '${COMMAND_NAME}' command...${normal}"
 RUN_SCRIPT_PATH="$(pwd)/run.sh"
 INSTALL_PATH="/usr/local/bin/$COMMAND_NAME"
 
-if [ -L "$INSTALL_PATH" ]; then
-    echo "Command '${COMMAND_NAME}' already exists. Removing old link."
-    sudo rm "$INSTALL_PATH"
-fi
-
-echo "Creating symbolic link from ${RUN_SCRIPT_PATH} to ${INSTALL_PATH}"
-# Use sudo to create the link in a system-wide directory
+[ -L "$INSTALL_PATH" ] && sudo rm "$INSTALL_PATH"
 sudo ln -s "$RUN_SCRIPT_PATH" "$INSTALL_PATH"
 
-if [ $? -ne 0 ]; then
-    echo "${bold}${red}Error: Failed to create symbolic link. This usually requires sudo privileges.${normal}"
-    echo "Please try running the command again with sudo, or create the link manually:"
-    echo "sudo ln -s ${RUN_SCRIPT_PATH} ${INSTALL_PATH}"
-    exit 1
-fi
-
-echo "Symbolic link created successfully."
-
-# 6. Final Summary
-echo "\n${bold}${green}--- Fenrir Installation Complete! ---${normal}"
-echo "You can now run the scanner from anywhere on your system by simply typing:"
-echo "${bold}${COMMAND_NAME} --help${normal}"
+# 7. Final Summary
+echo -e "\n${bold}${green}--- Fenrir Installation Complete! ---${normal}"
+echo "Dependencies installed: nmap, python3-tk, nvdlib, androguard (v3.x)."
+echo "You can now run: ${bold}${COMMAND_NAME} --gui${normal}"

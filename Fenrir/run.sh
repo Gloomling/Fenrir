@@ -1,22 +1,15 @@
 #!/bin/bash
-#
-# Fenrir Runner Script
-# This script runs the Fenrir application using the correct Python interpreter
-# from the project's Poetry virtual environment, bypassing any system path issues.
-#
-# It passes all command-line arguments directly to the Fenrir CLI.
-# Example: ./run.sh --gui
-# Example: ./run.sh 192.168.56.103 -sV
+# Find the actual directory where Fenrir is installed, even if called via symlink
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do
+  DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+PROJECT_ROOT="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 
-# Find the full path to the python executable inside the virtual environment
-PYTHON_EXEC=$(poetry env info --path)/bin/python
+# Move to the project root so Poetry can find pyproject.toml
+cd "$PROJECT_ROOT"
 
-# Check if the executable exists
-if [ ! -f "$PYTHON_EXEC" ]; then
-    echo "Error: Could not find the Python executable in the virtual environment."
-    echo "Please run './update_fenrir.sh' first to set up the environment."
-    exit 1
-fi
-
-# Run the Fenrir CLI module with the correct python, passing all arguments
-"$PYTHON_EXEC" -m fenrir.cli "$@"
+# Run the application
+poetry run python3 -m fenrir.cli "$@"

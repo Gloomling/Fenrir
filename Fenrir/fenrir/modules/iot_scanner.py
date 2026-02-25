@@ -61,7 +61,7 @@ class IotScanner:
         
         await asyncio.gather(*tasks)
         log.info("IoT scan finished.")
-```python
+#   python
 # File: fenrir/modules/ot_scanner.py
 import asyncio
 from scapy.all import sniff, TCP
@@ -114,7 +114,7 @@ class OtScanner:
             log.error(f"An error occurred during the passive OT scan. Do you have root privileges? Error: {e}")
         
         log.info("Passive OT scan finished.")
-```python
+#python
 # File: fenrir/modules/mobile_scanner.py
 import os
 import zipfile
@@ -174,7 +174,7 @@ class MobileScanner:
             log.error("Unsupported file type. This module currently only supports .apk files.")
             
         log.info("Mobile application scan finished.")
-```python
+#python
 # File: fenrir/modules/rf_scanner.py
 import asyncio
 from ..logging_config import log

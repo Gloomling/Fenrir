@@ -218,7 +218,7 @@ class FenrirGUI(tk.Tk):
             while True:
                 record = self.log_queue.get_nowait()
                 self.output_text.config(state="normal")
-                self.output_text.insert(tk.END, record + "\n")
+                self.output_text.insert(tk.END, record.getMessage() + "\n")
                 self.output_text.yview(tk.END)
                 self.output_text.config(state="disabled")
         except queue.Empty:

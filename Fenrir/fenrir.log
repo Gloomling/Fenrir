@@ -12,3 +12,1088 @@
 2026-02-23 22:13:08,052 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
 2026-02-23 22:13:15,069 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: NOT SET | OTX key: NOT SET | NVD key: NOT SET
 2026-02-23 22:13:15,188 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-02-24 00:37:48,328 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: NOT SET | OTX key: NOT SET | NVD key: NOT SET
+2026-02-24 00:37:48,453 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-02-24 00:39:50,597 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: NOT SET | OTX key: NOT SET | NVD key: NOT SET
+2026-02-24 00:39:50,738 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-02-24 00:40:08,433 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: NOT SET | OTX key: NOT SET | NVD key: NOT SET
+2026-02-24 00:40:08,570 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-02-24 17:46:52,428 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: NOT SET | OTX key: NOT SET | NVD key: NOT SET
+2026-02-24 17:46:52,587 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-02-24 17:46:58,741 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: NOT SET | OTX key: NOT SET | NVD key: NOT SET
+2026-02-24 17:46:58,875 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-02-24 17:49:07,656 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: NOT SET | OTX key: NOT SET | NVD key: NOT SET
+2026-02-24 17:49:07,792 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-02-24 17:52:06,549 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: NOT SET | OTX key: NOT SET | NVD key: NOT SET
+2026-02-24 17:52:06,684 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-02-24 17:52:32,519 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: NOT SET | OTX key: NOT SET | NVD key: NOT SET
+2026-02-24 17:52:32,657 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-02-24 17:52:32,718 - fenrir - WARNING - __init__:122 - IotScanner could not be loaded: No module named 'bleak'
+2026-02-24 17:53:02,461 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: NOT SET | OTX key: NOT SET | NVD key: NOT SET
+2026-02-24 17:53:02,592 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-02-24 17:53:02,643 - fenrir - WARNING - __init__:122 - IotScanner could not be loaded: No module named 'bleak'
+2026-02-24 17:53:53,929 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: NOT SET | OTX key: NOT SET | NVD key: NOT SET
+2026-02-24 17:53:54,065 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-02-24 17:54:12,811 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: NOT SET | OTX key: NOT SET | NVD key: NOT SET
+2026-02-24 17:54:12,946 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-02-24 17:54:56,437 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: NOT SET | OTX key: NOT SET | NVD key: NOT SET
+2026-02-24 17:54:56,575 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-02-24 17:54:56,629 - fenrir - WARNING - __init__:122 - IotScanner could not be loaded: No module named 'bleak'
+2026-02-24 17:56:39,543 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: NOT SET | OTX key: NOT SET | NVD key: NOT SET
+2026-02-24 17:56:39,674 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-02-24 17:56:39,730 - fenrir - WARNING - __init__:122 - IotScanner could not be loaded: No module named 'bleak'
+2026-02-24 17:56:40,026 - fenrir - WARNING - __init__:134 - MobileScanner could not be loaded: No module named 'androguard'
+2026-02-24 17:57:12,346 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: NOT SET | OTX key: NOT SET | NVD key: NOT SET
+2026-02-24 17:57:12,484 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-02-24 17:57:12,533 - fenrir - WARNING - __init__:122 - IotScanner could not be loaded: No module named 'bleak'
+2026-02-24 17:57:12,818 - fenrir - WARNING - __init__:134 - MobileScanner could not be loaded: No module named 'androguard'
+2026-02-24 17:57:56,935 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: NOT SET | OTX key: NOT SET | NVD key: NOT SET
+2026-02-24 17:57:57,066 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-02-24 17:57:57,115 - fenrir - WARNING - __init__:122 - IotScanner could not be loaded: No module named 'bleak'
+2026-02-24 17:57:57,402 - fenrir - WARNING - __init__:134 - MobileScanner could not be loaded: No module named 'androguard'
+2026-02-24 18:00:09,249 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: NOT SET | OTX key: NOT SET | NVD key: NOT SET
+2026-02-24 18:00:09,375 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-02-24 18:00:09,949 - fenrir - WARNING - __init__:122 - IotScanner could not be loaded: No module named 'androguard'
+2026-02-24 18:00:09,949 - fenrir - WARNING - __init__:134 - MobileScanner could not be loaded: No module named 'androguard'
+2026-02-24 18:20:25,507 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: NOT SET | OTX key: NOT SET | NVD key: NOT SET
+2026-02-24 18:20:25,874 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-02-24 18:20:26,714 - fenrir - WARNING - __init__:122 - IotScanner could not be loaded: No module named 'androguard'
+2026-02-24 18:20:26,715 - fenrir - WARNING - __init__:134 - MobileScanner could not be loaded: No module named 'androguard'
+2026-02-24 18:21:26,763 - fenrir - INFO - fenrir_gui:199 - --- Starting new scan on 192.168.56.102 ---
+2026-02-24 18:21:26,763 - fenrir - INFO - report_manager:90 - Report session started. Target: 192.168.56.102
+2026-02-24 18:21:26,763 - fenrir - INFO - report_manager:91 -   TXT report : /home/kali/Desktop/Project_fenrirv2/fenrir_report_192.168.56.102_20260224_182126.txt
+2026-02-24 18:21:26,763 - fenrir - INFO - report_manager:92 -   JSON report: /home/kali/Desktop/Project_fenrirv2/fenrir_report_192.168.56.102_20260224_182126.json
+2026-02-24 18:21:26,764 - fenrir - INFO - port_scanner:300 - No ports specified — using default top-1000 port list.
+2026-02-24 18:21:26,764 - fenrir - INFO - port_scanner:302 - Starting port scan on 192.168.56.102 (1000 ports to check)...
+2026-02-24 18:21:26,764 - fenrir - INFO - port_scanner:303 - Concurrency: 200 | Timeout: 1.0s per port
+2026-02-24 18:21:26,899 - fenrir - INFO - port_scanner:324 - Port scan complete. Scanned: 1000 | Open: 1 | Closed/Filtered: 999
+2026-02-24 18:21:26,899 - fenrir - WARNING - port_scanner:331 - Open ports on 192.168.56.102:
+2026-02-24 18:21:26,899 - fenrir - WARNING - port_scanner:334 -   5555/tcp  open  unknown
+2026-02-24 18:21:26,899 - fenrir - INFO - vulnerability_scanner:311 - Starting vulnerability scan on 192.168.56.102 (1 open port(s))...
+2026-02-24 18:21:26,899 - fenrir - INFO - vulnerability_scanner:319 - Stage 1/2: Service and version detection...
+2026-02-24 18:21:26,900 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.102:5555...
+2026-02-24 18:21:26,902 - fenrir - ERROR - vulnerability_scanner:334 - Service detection stage failed: name 'nmap' is not defined
+2026-02-24 18:21:26,902 - fenrir - INFO - web_scanner:432 - Starting web reconnaissance on 192.168.56.102 (ports: 80, 443, 3000, 8080)...
+2026-02-24 18:21:26,903 - fenrir - INFO - web_scanner:372 - Scanning http://192.168.56.102:80...
+2026-02-24 18:21:26,908 - fenrir - INFO - web_scanner:372 - Scanning https://192.168.56.102:443...
+2026-02-24 18:21:26,908 - fenrir - INFO - web_scanner:372 - Scanning http://192.168.56.102:3000...
+2026-02-24 18:21:26,908 - fenrir - INFO - web_scanner:372 - Scanning http://192.168.56.102:8080...
+2026-02-24 18:21:26,910 - fenrir - WARNING - web_scanner:155 -   http://192.168.56.102:80  →  Could not connect: All connection attempts failed
+2026-02-24 18:21:26,910 - fenrir - WARNING - web_scanner:388 -   http://192.168.56.102:80 is not reachable — skipping analysis.
+2026-02-24 18:21:26,910 - fenrir - WARNING - web_scanner:155 -   https://192.168.56.102:443  →  Could not connect: All connection attempts failed
+2026-02-24 18:21:26,910 - fenrir - WARNING - web_scanner:388 -   https://192.168.56.102:443 is not reachable — skipping analysis.
+2026-02-24 18:21:26,910 - fenrir - WARNING - web_scanner:155 -   http://192.168.56.102:3000  →  Could not connect: All connection attempts failed
+2026-02-24 18:21:26,910 - fenrir - WARNING - web_scanner:388 -   http://192.168.56.102:3000 is not reachable — skipping analysis.
+2026-02-24 18:21:26,910 - fenrir - WARNING - web_scanner:155 -   http://192.168.56.102:8080  →  Could not connect: All connection attempts failed
+2026-02-24 18:21:26,910 - fenrir - WARNING - web_scanner:388 -   http://192.168.56.102:8080 is not reachable — skipping analysis.
+2026-02-24 18:21:26,910 - fenrir - INFO - web_scanner:514 - Web reconnaissance complete. Ports scanned: 4 | Reachable: 0 | Findings: 0
+2026-02-24 18:21:26,910 - fenrir - INFO - fenrir_gui:213 - --- All selected scans complete ---
+2026-02-24 18:23:43,282 - fenrir - INFO - fenrir_gui:199 - --- Starting new scan on 192.168.56.102 ---
+2026-02-24 18:23:43,283 - fenrir - INFO - report_manager:90 - Report session started. Target: 192.168.56.102
+2026-02-24 18:23:43,283 - fenrir - INFO - report_manager:91 -   TXT report : /home/kali/Desktop/Project_fenrirv2/fenrir_report_192.168.56.102_20260224_182343.txt
+2026-02-24 18:23:43,283 - fenrir - INFO - report_manager:92 -   JSON report: /home/kali/Desktop/Project_fenrirv2/fenrir_report_192.168.56.102_20260224_182343.json
+2026-02-24 18:23:43,283 - fenrir - INFO - port_scanner:300 - No ports specified — using default top-1000 port list.
+2026-02-24 18:23:43,283 - fenrir - INFO - port_scanner:302 - Starting port scan on 192.168.56.102 (1000 ports to check)...
+2026-02-24 18:23:43,283 - fenrir - INFO - port_scanner:303 - Concurrency: 200 | Timeout: 1.0s per port
+2026-02-24 18:23:43,396 - fenrir - INFO - port_scanner:324 - Port scan complete. Scanned: 1000 | Open: 1 | Closed/Filtered: 999
+2026-02-24 18:23:43,396 - fenrir - WARNING - port_scanner:331 - Open ports on 192.168.56.102:
+2026-02-24 18:23:43,396 - fenrir - WARNING - port_scanner:334 -   5555/tcp  open  unknown
+2026-02-24 18:23:43,396 - fenrir - INFO - vulnerability_scanner:311 - Starting vulnerability scan on 192.168.56.102 (1 open port(s))...
+2026-02-24 18:23:43,396 - fenrir - INFO - vulnerability_scanner:319 - Stage 1/2: Service and version detection...
+2026-02-24 18:23:43,396 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.102:5555...
+2026-02-24 18:23:43,397 - fenrir - ERROR - vulnerability_scanner:334 - Service detection stage failed: name 'nmap' is not defined
+2026-02-24 18:23:43,397 - fenrir - INFO - web_scanner:432 - Starting web reconnaissance on 192.168.56.102 (ports: 80, 443, 3000, 8080)...
+2026-02-24 18:23:43,398 - fenrir - INFO - web_scanner:372 - Scanning http://192.168.56.102:80...
+2026-02-24 18:23:43,399 - fenrir - INFO - web_scanner:372 - Scanning https://192.168.56.102:443...
+2026-02-24 18:23:43,401 - fenrir - INFO - web_scanner:372 - Scanning http://192.168.56.102:3000...
+2026-02-24 18:23:43,401 - fenrir - INFO - web_scanner:372 - Scanning http://192.168.56.102:8080...
+2026-02-24 18:23:43,402 - fenrir - WARNING - web_scanner:155 -   http://192.168.56.102:80  →  Could not connect: All connection attempts failed
+2026-02-24 18:23:43,403 - fenrir - WARNING - web_scanner:388 -   http://192.168.56.102:80 is not reachable — skipping analysis.
+2026-02-24 18:23:43,403 - fenrir - WARNING - web_scanner:155 -   https://192.168.56.102:443  →  Could not connect: All connection attempts failed
+2026-02-24 18:23:43,403 - fenrir - WARNING - web_scanner:388 -   https://192.168.56.102:443 is not reachable — skipping analysis.
+2026-02-24 18:23:43,403 - fenrir - WARNING - web_scanner:155 -   http://192.168.56.102:3000  →  Could not connect: All connection attempts failed
+2026-02-24 18:23:43,403 - fenrir - WARNING - web_scanner:388 -   http://192.168.56.102:3000 is not reachable — skipping analysis.
+2026-02-24 18:23:43,403 - fenrir - WARNING - web_scanner:155 -   http://192.168.56.102:8080  →  Could not connect: All connection attempts failed
+2026-02-24 18:23:43,403 - fenrir - WARNING - web_scanner:388 -   http://192.168.56.102:8080 is not reachable — skipping analysis.
+2026-02-24 18:23:43,403 - fenrir - INFO - web_scanner:514 - Web reconnaissance complete. Ports scanned: 4 | Reachable: 0 | Findings: 0
+2026-02-24 18:23:43,403 - fenrir - INFO - fenrir_gui:213 - --- All selected scans complete ---
+2026-02-24 18:29:25,572 - fenrir - INFO - fenrir_gui:199 - --- Starting new scan on 192.168.56.102 ---
+2026-02-24 18:29:25,573 - fenrir - INFO - report_manager:90 - Report session started. Target: 192.168.56.102
+2026-02-24 18:29:25,574 - fenrir - INFO - report_manager:91 -   TXT report : /home/kali/Desktop/Project_fenrirv2/fenrir_report_192.168.56.102_20260224_182925.txt
+2026-02-24 18:29:25,574 - fenrir - INFO - report_manager:92 -   JSON report: /home/kali/Desktop/Project_fenrirv2/fenrir_report_192.168.56.102_20260224_182925.json
+2026-02-24 18:29:25,584 - fenrir - INFO - port_scanner:300 - No ports specified — using default top-1000 port list.
+2026-02-24 18:29:25,585 - fenrir - INFO - port_scanner:302 - Starting port scan on 192.168.56.102 (1000 ports to check)...
+2026-02-24 18:29:25,586 - fenrir - INFO - port_scanner:303 - Concurrency: 200 | Timeout: 1.0s per port
+2026-02-24 18:29:25,690 - fenrir - INFO - port_scanner:324 - Port scan complete. Scanned: 1000 | Open: 1 | Closed/Filtered: 999
+2026-02-24 18:29:25,690 - fenrir - WARNING - port_scanner:331 - Open ports on 192.168.56.102:
+2026-02-24 18:29:25,690 - fenrir - WARNING - port_scanner:334 -   5555/tcp  open  unknown
+2026-02-24 18:29:25,691 - fenrir - INFO - fenrir_gui:213 - --- All selected scans complete ---
+2026-02-24 18:29:50,494 - fenrir - INFO - fenrir_gui:199 - --- Starting new scan on 192.168.56.101 ---
+2026-02-24 18:29:50,495 - fenrir - INFO - report_manager:90 - Report session started. Target: 192.168.56.101
+2026-02-24 18:29:50,495 - fenrir - INFO - report_manager:91 -   TXT report : /home/kali/Desktop/Project_fenrirv2/fenrir_report_192.168.56.101_20260224_182950.txt
+2026-02-24 18:29:50,495 - fenrir - INFO - report_manager:92 -   JSON report: /home/kali/Desktop/Project_fenrirv2/fenrir_report_192.168.56.101_20260224_182950.json
+2026-02-24 18:29:50,495 - fenrir - INFO - port_scanner:300 - No ports specified — using default top-1000 port list.
+2026-02-24 18:29:50,495 - fenrir - INFO - port_scanner:302 - Starting port scan on 192.168.56.101 (1000 ports to check)...
+2026-02-24 18:29:50,495 - fenrir - INFO - port_scanner:303 - Concurrency: 200 | Timeout: 1.0s per port
+2026-02-24 18:29:50,839 - fenrir - INFO - port_scanner:324 - Port scan complete. Scanned: 1000 | Open: 23 | Closed/Filtered: 977
+2026-02-24 18:29:50,839 - fenrir - WARNING - port_scanner:331 - Open ports on 192.168.56.101:
+2026-02-24 18:29:50,839 - fenrir - WARNING - port_scanner:334 -   21/tcp  open  ftp
+2026-02-24 18:29:50,839 - fenrir - WARNING - port_scanner:334 -   22/tcp  open  ssh
+2026-02-24 18:29:50,840 - fenrir - WARNING - port_scanner:334 -   23/tcp  open  telnet
+2026-02-24 18:29:50,840 - fenrir - WARNING - port_scanner:334 -   25/tcp  open  smtp
+2026-02-24 18:29:50,840 - fenrir - WARNING - port_scanner:334 -   53/tcp  open  dns
+2026-02-24 18:29:50,840 - fenrir - WARNING - port_scanner:334 -   80/tcp  open  http
+2026-02-24 18:29:50,840 - fenrir - WARNING - port_scanner:334 -   111/tcp  open  rpcbind
+2026-02-24 18:29:50,840 - fenrir - WARNING - port_scanner:334 -   139/tcp  open  netbios-ssn
+2026-02-24 18:29:50,840 - fenrir - WARNING - port_scanner:334 -   445/tcp  open  microsoft-ds
+2026-02-24 18:29:50,840 - fenrir - WARNING - port_scanner:334 -   512/tcp  open  exec
+2026-02-24 18:29:50,840 - fenrir - WARNING - port_scanner:334 -   513/tcp  open  login
+2026-02-24 18:29:50,840 - fenrir - WARNING - port_scanner:334 -   514/tcp  open  shell
+2026-02-24 18:29:50,840 - fenrir - WARNING - port_scanner:334 -   1099/tcp  open  unknown
+2026-02-24 18:29:50,840 - fenrir - WARNING - port_scanner:334 -   1524/tcp  open  unknown
+2026-02-24 18:29:50,840 - fenrir - WARNING - port_scanner:334 -   2049/tcp  open  nfs
+2026-02-24 18:29:50,840 - fenrir - WARNING - port_scanner:334 -   2121/tcp  open  unknown
+2026-02-24 18:29:50,840 - fenrir - WARNING - port_scanner:334 -   3306/tcp  open  mysql
+2026-02-24 18:29:50,840 - fenrir - WARNING - port_scanner:334 -   5432/tcp  open  postgresql
+2026-02-24 18:29:50,840 - fenrir - WARNING - port_scanner:334 -   5900/tcp  open  vnc
+2026-02-24 18:29:50,840 - fenrir - WARNING - port_scanner:334 -   6000/tcp  open  unknown
+2026-02-24 18:29:50,840 - fenrir - WARNING - port_scanner:334 -   6667/tcp  open  unknown
+2026-02-24 18:29:50,840 - fenrir - WARNING - port_scanner:334 -   8009/tcp  open  unknown
+2026-02-24 18:29:50,840 - fenrir - WARNING - port_scanner:334 -   8180/tcp  open  unknown
+2026-02-24 18:29:50,841 - fenrir - INFO - fenrir_gui:213 - --- All selected scans complete ---
+2026-02-24 18:32:26,399 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: NOT SET | OTX key: NOT SET | NVD key: NOT SET
+2026-02-24 18:32:26,528 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-02-24 18:32:26,981 - fenrir - WARNING - __init__:122 - IotScanner could not be loaded: No module named 'androguard'
+2026-02-24 18:32:26,982 - fenrir - WARNING - __init__:134 - MobileScanner could not be loaded: No module named 'androguard'
+2026-02-24 18:35:46,217 - fenrir - INFO - fenrir_gui:199 - --- Starting new scan on 192.168.56.101 ---
+2026-02-24 18:35:46,217 - fenrir - INFO - report_manager:90 - Report session started. Target: 192.168.56.101
+2026-02-24 18:35:46,217 - fenrir - INFO - report_manager:91 -   TXT report : /home/kali/Desktop/Project_fenrirv2/fenrir_report_192.168.56.101_20260224_183546.txt
+2026-02-24 18:35:46,217 - fenrir - INFO - report_manager:92 -   JSON report: /home/kali/Desktop/Project_fenrirv2/fenrir_report_192.168.56.101_20260224_183546.json
+2026-02-24 18:35:46,217 - fenrir - INFO - port_scanner:300 - No ports specified — using default top-1000 port list.
+2026-02-24 18:35:46,218 - fenrir - INFO - port_scanner:302 - Starting port scan on 192.168.56.101 (1000 ports to check)...
+2026-02-24 18:35:46,218 - fenrir - INFO - port_scanner:303 - Concurrency: 200 | Timeout: 1.0s per port
+2026-02-24 18:35:46,483 - fenrir - INFO - port_scanner:324 - Port scan complete. Scanned: 1000 | Open: 23 | Closed/Filtered: 977
+2026-02-24 18:35:46,483 - fenrir - WARNING - port_scanner:331 - Open ports on 192.168.56.101:
+2026-02-24 18:35:46,484 - fenrir - WARNING - port_scanner:334 -   21/tcp  open  ftp
+2026-02-24 18:35:46,484 - fenrir - WARNING - port_scanner:334 -   22/tcp  open  ssh
+2026-02-24 18:35:46,484 - fenrir - WARNING - port_scanner:334 -   23/tcp  open  telnet
+2026-02-24 18:35:46,484 - fenrir - WARNING - port_scanner:334 -   25/tcp  open  smtp
+2026-02-24 18:35:46,484 - fenrir - WARNING - port_scanner:334 -   53/tcp  open  dns
+2026-02-24 18:35:46,484 - fenrir - WARNING - port_scanner:334 -   80/tcp  open  http
+2026-02-24 18:35:46,484 - fenrir - WARNING - port_scanner:334 -   111/tcp  open  rpcbind
+2026-02-24 18:35:46,484 - fenrir - WARNING - port_scanner:334 -   139/tcp  open  netbios-ssn
+2026-02-24 18:35:46,484 - fenrir - WARNING - port_scanner:334 -   445/tcp  open  microsoft-ds
+2026-02-24 18:35:46,484 - fenrir - WARNING - port_scanner:334 -   512/tcp  open  exec
+2026-02-24 18:35:46,484 - fenrir - WARNING - port_scanner:334 -   513/tcp  open  login
+2026-02-24 18:35:46,484 - fenrir - WARNING - port_scanner:334 -   514/tcp  open  shell
+2026-02-24 18:35:46,484 - fenrir - WARNING - port_scanner:334 -   1099/tcp  open  unknown
+2026-02-24 18:35:46,484 - fenrir - WARNING - port_scanner:334 -   1524/tcp  open  unknown
+2026-02-24 18:35:46,484 - fenrir - WARNING - port_scanner:334 -   2049/tcp  open  nfs
+2026-02-24 18:35:46,484 - fenrir - WARNING - port_scanner:334 -   2121/tcp  open  unknown
+2026-02-24 18:35:46,484 - fenrir - WARNING - port_scanner:334 -   3306/tcp  open  mysql
+2026-02-24 18:35:46,484 - fenrir - WARNING - port_scanner:334 -   5432/tcp  open  postgresql
+2026-02-24 18:35:46,484 - fenrir - WARNING - port_scanner:334 -   5900/tcp  open  vnc
+2026-02-24 18:35:46,484 - fenrir - WARNING - port_scanner:334 -   6000/tcp  open  unknown
+2026-02-24 18:35:46,484 - fenrir - WARNING - port_scanner:334 -   6667/tcp  open  unknown
+2026-02-24 18:35:46,484 - fenrir - WARNING - port_scanner:334 -   8009/tcp  open  unknown
+2026-02-24 18:35:46,484 - fenrir - WARNING - port_scanner:334 -   8180/tcp  open  unknown
+2026-02-24 18:35:46,484 - fenrir - INFO - fenrir_gui:213 - --- All selected scans complete ---
+2026-02-24 18:40:45,966 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: NOT SET | OTX key: NOT SET | NVD key: NOT SET
+2026-02-24 18:40:46,142 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-02-24 18:40:46,797 - fenrir - WARNING - __init__:122 - IotScanner could not be loaded: No module named 'androguard'
+2026-02-24 18:40:46,798 - fenrir - WARNING - __init__:134 - MobileScanner could not be loaded: No module named 'androguard'
+2026-02-24 18:40:50,842 - fenrir - INFO - fenrir_gui:199 - --- Starting new scan on 192.168.56.103 ---
+2026-02-24 18:40:50,843 - fenrir - INFO - report_manager:90 - Report session started. Target: 192.168.56.103
+2026-02-24 18:40:50,843 - fenrir - INFO - report_manager:91 -   TXT report : /home/kali/Desktop/Project_fenrirv2/fenrir_report_192.168.56.103_20260224_184050.txt
+2026-02-24 18:40:50,843 - fenrir - INFO - report_manager:92 -   JSON report: /home/kali/Desktop/Project_fenrirv2/fenrir_report_192.168.56.103_20260224_184050.json
+2026-02-24 18:40:50,843 - fenrir - INFO - port_scanner:300 - No ports specified — using default top-1000 port list.
+2026-02-24 18:40:50,843 - fenrir - INFO - port_scanner:302 - Starting port scan on 192.168.56.103 (1000 ports to check)...
+2026-02-24 18:40:50,843 - fenrir - INFO - port_scanner:303 - Concurrency: 200 | Timeout: 1.0s per port
+2026-02-24 18:40:55,920 - fenrir - INFO - port_scanner:324 - Port scan complete. Scanned: 1000 | Open: 0 | Closed/Filtered: 1000
+2026-02-24 18:40:55,920 - fenrir - INFO - port_scanner:336 - No open ports found on 192.168.56.103 in the scanned range.
+2026-02-24 18:40:55,924 - fenrir - INFO - fenrir_gui:213 - --- All selected scans complete ---
+2026-02-24 18:41:04,332 - fenrir - INFO - fenrir_gui:199 - --- Starting new scan on 192.168.56.101 ---
+2026-02-24 18:41:04,332 - fenrir - INFO - report_manager:90 - Report session started. Target: 192.168.56.101
+2026-02-24 18:41:04,332 - fenrir - INFO - report_manager:91 -   TXT report : /home/kali/Desktop/Project_fenrirv2/fenrir_report_192.168.56.101_20260224_184104.txt
+2026-02-24 18:41:04,333 - fenrir - INFO - report_manager:92 -   JSON report: /home/kali/Desktop/Project_fenrirv2/fenrir_report_192.168.56.101_20260224_184104.json
+2026-02-24 18:41:04,333 - fenrir - INFO - port_scanner:300 - No ports specified — using default top-1000 port list.
+2026-02-24 18:41:04,333 - fenrir - INFO - port_scanner:302 - Starting port scan on 192.168.56.101 (1000 ports to check)...
+2026-02-24 18:41:04,333 - fenrir - INFO - port_scanner:303 - Concurrency: 200 | Timeout: 1.0s per port
+2026-02-24 18:41:09,625 - fenrir - INFO - port_scanner:324 - Port scan complete. Scanned: 1000 | Open: 23 | Closed/Filtered: 977
+2026-02-24 18:41:09,625 - fenrir - WARNING - port_scanner:331 - Open ports on 192.168.56.101:
+2026-02-24 18:41:09,625 - fenrir - WARNING - port_scanner:334 -   21/tcp  open  ftp
+2026-02-24 18:41:09,625 - fenrir - WARNING - port_scanner:334 -   22/tcp  open  ssh
+2026-02-24 18:41:09,625 - fenrir - WARNING - port_scanner:334 -   23/tcp  open  telnet
+2026-02-24 18:41:09,626 - fenrir - WARNING - port_scanner:334 -   25/tcp  open  smtp
+2026-02-24 18:41:09,626 - fenrir - WARNING - port_scanner:334 -   53/tcp  open  dns
+2026-02-24 18:41:09,626 - fenrir - WARNING - port_scanner:334 -   80/tcp  open  http
+2026-02-24 18:41:09,626 - fenrir - WARNING - port_scanner:334 -   111/tcp  open  rpcbind
+2026-02-24 18:41:09,626 - fenrir - WARNING - port_scanner:334 -   139/tcp  open  netbios-ssn
+2026-02-24 18:41:09,626 - fenrir - WARNING - port_scanner:334 -   445/tcp  open  microsoft-ds
+2026-02-24 18:41:09,626 - fenrir - WARNING - port_scanner:334 -   512/tcp  open  exec
+2026-02-24 18:41:09,626 - fenrir - WARNING - port_scanner:334 -   513/tcp  open  login
+2026-02-24 18:41:09,626 - fenrir - WARNING - port_scanner:334 -   514/tcp  open  shell
+2026-02-24 18:41:09,626 - fenrir - WARNING - port_scanner:334 -   1099/tcp  open  unknown
+2026-02-24 18:41:09,626 - fenrir - WARNING - port_scanner:334 -   1524/tcp  open  unknown
+2026-02-24 18:41:09,626 - fenrir - WARNING - port_scanner:334 -   2049/tcp  open  nfs
+2026-02-24 18:41:09,626 - fenrir - WARNING - port_scanner:334 -   2121/tcp  open  unknown
+2026-02-24 18:41:09,626 - fenrir - WARNING - port_scanner:334 -   3306/tcp  open  mysql
+2026-02-24 18:41:09,626 - fenrir - WARNING - port_scanner:334 -   5432/tcp  open  postgresql
+2026-02-24 18:41:09,626 - fenrir - WARNING - port_scanner:334 -   5900/tcp  open  vnc
+2026-02-24 18:41:09,626 - fenrir - WARNING - port_scanner:334 -   6000/tcp  open  unknown
+2026-02-24 18:41:09,626 - fenrir - WARNING - port_scanner:334 -   6667/tcp  open  unknown
+2026-02-24 18:41:09,626 - fenrir - WARNING - port_scanner:334 -   8009/tcp  open  unknown
+2026-02-24 18:41:09,626 - fenrir - WARNING - port_scanner:334 -   8180/tcp  open  unknown
+2026-02-24 18:41:09,627 - fenrir - INFO - fenrir_gui:213 - --- All selected scans complete ---
+2026-02-24 18:41:18,117 - fenrir - INFO - fenrir_gui:199 - --- Starting new scan on 192.168.56.101 ---
+2026-02-24 18:41:18,117 - fenrir - INFO - report_manager:90 - Report session started. Target: 192.168.56.101
+2026-02-24 18:41:18,118 - fenrir - INFO - report_manager:91 -   TXT report : /home/kali/Desktop/Project_fenrirv2/fenrir_report_192.168.56.101_20260224_184118.txt
+2026-02-24 18:41:18,118 - fenrir - INFO - report_manager:92 -   JSON report: /home/kali/Desktop/Project_fenrirv2/fenrir_report_192.168.56.101_20260224_184118.json
+2026-02-24 18:41:18,118 - fenrir - INFO - port_scanner:300 - No ports specified — using default top-1000 port list.
+2026-02-24 18:41:18,118 - fenrir - INFO - port_scanner:302 - Starting port scan on 192.168.56.101 (1000 ports to check)...
+2026-02-24 18:41:18,118 - fenrir - INFO - port_scanner:303 - Concurrency: 200 | Timeout: 1.0s per port
+2026-02-24 18:41:23,183 - fenrir - INFO - port_scanner:324 - Port scan complete. Scanned: 1000 | Open: 23 | Closed/Filtered: 977
+2026-02-24 18:41:23,183 - fenrir - WARNING - port_scanner:331 - Open ports on 192.168.56.101:
+2026-02-24 18:41:23,183 - fenrir - WARNING - port_scanner:334 -   21/tcp  open  ftp
+2026-02-24 18:41:23,183 - fenrir - WARNING - port_scanner:334 -   22/tcp  open  ssh
+2026-02-24 18:41:23,183 - fenrir - WARNING - port_scanner:334 -   23/tcp  open  telnet
+2026-02-24 18:41:23,183 - fenrir - WARNING - port_scanner:334 -   25/tcp  open  smtp
+2026-02-24 18:41:23,183 - fenrir - WARNING - port_scanner:334 -   53/tcp  open  dns
+2026-02-24 18:41:23,183 - fenrir - WARNING - port_scanner:334 -   80/tcp  open  http
+2026-02-24 18:41:23,183 - fenrir - WARNING - port_scanner:334 -   111/tcp  open  rpcbind
+2026-02-24 18:41:23,183 - fenrir - WARNING - port_scanner:334 -   139/tcp  open  netbios-ssn
+2026-02-24 18:41:23,183 - fenrir - WARNING - port_scanner:334 -   445/tcp  open  microsoft-ds
+2026-02-24 18:41:23,183 - fenrir - WARNING - port_scanner:334 -   512/tcp  open  exec
+2026-02-24 18:41:23,184 - fenrir - WARNING - port_scanner:334 -   513/tcp  open  login
+2026-02-24 18:41:23,184 - fenrir - WARNING - port_scanner:334 -   514/tcp  open  shell
+2026-02-24 18:41:23,184 - fenrir - WARNING - port_scanner:334 -   1099/tcp  open  unknown
+2026-02-24 18:41:23,184 - fenrir - WARNING - port_scanner:334 -   1524/tcp  open  unknown
+2026-02-24 18:41:23,184 - fenrir - WARNING - port_scanner:334 -   2049/tcp  open  nfs
+2026-02-24 18:41:23,184 - fenrir - WARNING - port_scanner:334 -   2121/tcp  open  unknown
+2026-02-24 18:41:23,184 - fenrir - WARNING - port_scanner:334 -   3306/tcp  open  mysql
+2026-02-24 18:41:23,184 - fenrir - WARNING - port_scanner:334 -   5432/tcp  open  postgresql
+2026-02-24 18:41:23,184 - fenrir - WARNING - port_scanner:334 -   5900/tcp  open  vnc
+2026-02-24 18:41:23,184 - fenrir - WARNING - port_scanner:334 -   6000/tcp  open  unknown
+2026-02-24 18:41:23,184 - fenrir - WARNING - port_scanner:334 -   6667/tcp  open  unknown
+2026-02-24 18:41:23,184 - fenrir - WARNING - port_scanner:334 -   8009/tcp  open  unknown
+2026-02-24 18:41:23,184 - fenrir - WARNING - port_scanner:334 -   8180/tcp  open  unknown
+2026-02-24 18:41:23,184 - fenrir - INFO - vulnerability_scanner:311 - Starting vulnerability scan on 192.168.56.101 (23 open port(s))...
+2026-02-24 18:41:23,184 - fenrir - INFO - vulnerability_scanner:319 - Stage 1/2: Service and version detection...
+2026-02-24 18:41:23,185 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:21...
+2026-02-24 18:41:23,186 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:22...
+2026-02-24 18:41:23,186 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:23...
+2026-02-24 18:41:23,186 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:25...
+2026-02-24 18:41:23,186 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:53...
+2026-02-24 18:41:23,187 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:80...
+2026-02-24 18:41:23,187 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:111...
+2026-02-24 18:41:23,187 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:139...
+2026-02-24 18:41:23,187 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:445...
+2026-02-24 18:41:23,188 - fenrir - ERROR - vulnerability_scanner:334 - Service detection stage failed: name 'nmap' is not defined
+2026-02-24 18:41:23,188 - fenrir - INFO - fenrir_gui:213 - --- All selected scans complete ---
+2026-02-24 18:41:42,055 - fenrir - INFO - fenrir_gui:199 - --- Starting new scan on 192.168.56.101 ---
+2026-02-24 18:41:42,056 - fenrir - INFO - report_manager:90 - Report session started. Target: 192.168.56.101
+2026-02-24 18:41:42,056 - fenrir - INFO - report_manager:91 -   TXT report : /home/kali/Desktop/Project_fenrirv2/fenrir_report_192.168.56.101_20260224_184142.txt
+2026-02-24 18:41:42,056 - fenrir - INFO - report_manager:92 -   JSON report: /home/kali/Desktop/Project_fenrirv2/fenrir_report_192.168.56.101_20260224_184142.json
+2026-02-24 18:41:42,057 - fenrir - INFO - port_scanner:300 - No ports specified — using default top-1000 port list.
+2026-02-24 18:41:42,057 - fenrir - INFO - port_scanner:302 - Starting port scan on 192.168.56.101 (1000 ports to check)...
+2026-02-24 18:41:42,057 - fenrir - INFO - port_scanner:303 - Concurrency: 200 | Timeout: 1.0s per port
+2026-02-24 18:41:47,142 - fenrir - INFO - port_scanner:324 - Port scan complete. Scanned: 1000 | Open: 23 | Closed/Filtered: 977
+2026-02-24 18:41:47,142 - fenrir - WARNING - port_scanner:331 - Open ports on 192.168.56.101:
+2026-02-24 18:41:47,142 - fenrir - WARNING - port_scanner:334 -   21/tcp  open  ftp
+2026-02-24 18:41:47,143 - fenrir - WARNING - port_scanner:334 -   22/tcp  open  ssh
+2026-02-24 18:41:47,143 - fenrir - WARNING - port_scanner:334 -   23/tcp  open  telnet
+2026-02-24 18:41:47,143 - fenrir - WARNING - port_scanner:334 -   25/tcp  open  smtp
+2026-02-24 18:41:47,143 - fenrir - WARNING - port_scanner:334 -   53/tcp  open  dns
+2026-02-24 18:41:47,143 - fenrir - WARNING - port_scanner:334 -   80/tcp  open  http
+2026-02-24 18:41:47,143 - fenrir - WARNING - port_scanner:334 -   111/tcp  open  rpcbind
+2026-02-24 18:41:47,143 - fenrir - WARNING - port_scanner:334 -   139/tcp  open  netbios-ssn
+2026-02-24 18:41:47,143 - fenrir - WARNING - port_scanner:334 -   445/tcp  open  microsoft-ds
+2026-02-24 18:41:47,143 - fenrir - WARNING - port_scanner:334 -   512/tcp  open  exec
+2026-02-24 18:41:47,143 - fenrir - WARNING - port_scanner:334 -   513/tcp  open  login
+2026-02-24 18:41:47,143 - fenrir - WARNING - port_scanner:334 -   514/tcp  open  shell
+2026-02-24 18:41:47,143 - fenrir - WARNING - port_scanner:334 -   1099/tcp  open  unknown
+2026-02-24 18:41:47,143 - fenrir - WARNING - port_scanner:334 -   1524/tcp  open  unknown
+2026-02-24 18:41:47,143 - fenrir - WARNING - port_scanner:334 -   2049/tcp  open  nfs
+2026-02-24 18:41:47,143 - fenrir - WARNING - port_scanner:334 -   2121/tcp  open  unknown
+2026-02-24 18:41:47,143 - fenrir - WARNING - port_scanner:334 -   3306/tcp  open  mysql
+2026-02-24 18:41:47,143 - fenrir - WARNING - port_scanner:334 -   5432/tcp  open  postgresql
+2026-02-24 18:41:47,143 - fenrir - WARNING - port_scanner:334 -   5900/tcp  open  vnc
+2026-02-24 18:41:47,143 - fenrir - WARNING - port_scanner:334 -   6000/tcp  open  unknown
+2026-02-24 18:41:47,143 - fenrir - WARNING - port_scanner:334 -   6667/tcp  open  unknown
+2026-02-24 18:41:47,143 - fenrir - WARNING - port_scanner:334 -   8009/tcp  open  unknown
+2026-02-24 18:41:47,143 - fenrir - WARNING - port_scanner:334 -   8180/tcp  open  unknown
+2026-02-24 18:41:47,144 - fenrir - INFO - vulnerability_scanner:311 - Starting vulnerability scan on 192.168.56.101 (23 open port(s))...
+2026-02-24 18:41:47,144 - fenrir - INFO - vulnerability_scanner:319 - Stage 1/2: Service and version detection...
+2026-02-24 18:41:47,144 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:21...
+2026-02-24 18:41:47,145 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:22...
+2026-02-24 18:41:47,145 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:23...
+2026-02-24 18:41:47,146 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:25...
+2026-02-24 18:41:47,146 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:53...
+2026-02-24 18:41:47,147 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:80...
+2026-02-24 18:41:47,147 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:111...
+2026-02-24 18:41:47,151 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:139...
+2026-02-24 18:41:47,151 - fenrir - ERROR - vulnerability_scanner:334 - Service detection stage failed: name 'nmap' is not defined
+2026-02-24 18:41:47,152 - fenrir - INFO - web_scanner:432 - Starting web reconnaissance on 192.168.56.101 (ports: 80, 443, 3000, 8080)...
+2026-02-24 18:41:47,153 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:445...
+2026-02-24 18:41:47,154 - fenrir - INFO - web_scanner:372 - Scanning http://192.168.56.101:80...
+2026-02-24 18:41:47,160 - fenrir - INFO - web_scanner:372 - Scanning https://192.168.56.101:443...
+2026-02-24 18:41:47,160 - fenrir - INFO - web_scanner:372 - Scanning http://192.168.56.101:3000...
+2026-02-24 18:41:47,161 - fenrir - INFO - web_scanner:372 - Scanning http://192.168.56.101:8080...
+2026-02-24 18:41:47,161 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:512...
+2026-02-24 18:41:47,161 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:513...
+2026-02-24 18:41:47,162 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:514...
+2026-02-24 18:41:47,162 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:1099...
+2026-02-24 18:41:47,164 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:1524...
+2026-02-24 18:41:47,164 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:2049...
+2026-02-24 18:41:47,165 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:2121...
+2026-02-24 18:41:47,165 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:3306...
+2026-02-24 18:41:47,166 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:5432...
+2026-02-24 18:41:47,166 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:5900...
+2026-02-24 18:41:47,166 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:6000...
+2026-02-24 18:41:47,167 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:6667...
+2026-02-24 18:41:47,168 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:8009...
+2026-02-24 18:41:47,176 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:8180...
+2026-02-24 18:41:47,341 - fenrir - INFO - web_scanner:147 -   http://192.168.56.101:80  →  HTTP 200  (final URL: http://192.168.56.101)
+2026-02-24 18:41:47,341 - fenrir - INFO - web_scanner:184 -   Information disclosure headers:
+2026-02-24 18:41:47,341 - fenrir - WARNING - web_scanner:190 -     [INFO DISCLOSURE]  Server: Apache/2.2.8 (Ubuntu) DAV/2
+2026-02-24 18:41:47,341 - fenrir - WARNING - web_scanner:190 -     [INFO DISCLOSURE]  X-Powered-By: PHP/5.2.4-2ubuntu5.10
+2026-02-24 18:41:47,341 - fenrir - INFO - web_scanner:226 -   Security header analysis:
+2026-02-24 18:41:47,341 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | HIGH]  Strict-Transport-Security
+2026-02-24 18:41:47,341 - fenrir - WARNING - web_scanner:237 -         → Add 'Strict-Transport-Security: max-age=31536000; includeSubDomains' to enforce HTTPS and prevent protocol downgrade attacks.
+2026-02-24 18:41:47,341 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | HIGH]  Content-Security-Policy
+2026-02-24 18:41:47,341 - fenrir - WARNING - web_scanner:237 -         → Add a Content-Security-Policy header to prevent XSS and data injection attacks.
+2026-02-24 18:41:47,341 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | MEDIUM]  X-Frame-Options
+2026-02-24 18:41:47,341 - fenrir - WARNING - web_scanner:237 -         → Add 'X-Frame-Options: DENY' or 'SAMEORIGIN' to prevent clickjacking attacks.
+2026-02-24 18:41:47,342 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | MEDIUM]  X-Content-Type-Options
+2026-02-24 18:41:47,342 - fenrir - WARNING - web_scanner:237 -         → Add 'X-Content-Type-Options: nosniff' to prevent MIME-type sniffing.
+2026-02-24 18:41:47,342 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | LOW]  Referrer-Policy
+2026-02-24 18:41:47,342 - fenrir - WARNING - web_scanner:237 -         → Add a Referrer-Policy header to control information sent in the Referer header.
+2026-02-24 18:41:47,342 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | LOW]  Permissions-Policy
+2026-02-24 18:41:47,342 - fenrir - WARNING - web_scanner:237 -         → Add a Permissions-Policy header to restrict access to browser features (camera, microphone, geolocation, etc.).
+2026-02-24 18:41:47,342 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | LOW]  X-XSS-Protection
+2026-02-24 18:41:47,342 - fenrir - WARNING - web_scanner:237 -         → Consider adding 'X-XSS-Protection: 1; mode=block' for legacy browser support, though CSP is the modern replacement.
+2026-02-24 18:41:47,342 - fenrir - WARNING - web_scanner:333 -   [NO HTTPS REDIRECT]  Port 80 does not redirect to HTTPS.
+2026-02-24 18:41:49,173 - fenrir - WARNING - web_scanner:155 -   http://192.168.56.101:3000  →  Could not connect: All connection attempts failed
+2026-02-24 18:41:49,174 - fenrir - WARNING - web_scanner:388 -   http://192.168.56.101:3000 is not reachable — skipping analysis.
+2026-02-24 18:41:49,175 - fenrir - WARNING - web_scanner:155 -   https://192.168.56.101:443  →  Could not connect: All connection attempts failed
+2026-02-24 18:41:49,175 - fenrir - WARNING - web_scanner:388 -   https://192.168.56.101:443 is not reachable — skipping analysis.
+2026-02-24 18:41:49,175 - fenrir - WARNING - web_scanner:155 -   http://192.168.56.101:8080  →  Could not connect: All connection attempts failed
+2026-02-24 18:41:49,175 - fenrir - WARNING - web_scanner:388 -   http://192.168.56.101:8080 is not reachable — skipping analysis.
+2026-02-24 18:41:49,176 - fenrir - INFO - web_scanner:514 - Web reconnaissance complete. Ports scanned: 4 | Reachable: 1 | Findings: 10
+2026-02-24 18:41:49,176 - fenrir - INFO - fenrir_gui:213 - --- All selected scans complete ---
+2026-02-24 18:42:24,256 - fenrir - INFO - fenrir_gui:199 - --- Starting new scan on 192.168.56.101 ---
+2026-02-24 18:42:24,256 - fenrir - INFO - report_manager:90 - Report session started. Target: 192.168.56.101
+2026-02-24 18:42:24,256 - fenrir - INFO - report_manager:91 -   TXT report : /home/kali/Desktop/fenrir_report_192.168.56.101_20260224_184224.txt
+2026-02-24 18:42:24,256 - fenrir - INFO - report_manager:92 -   JSON report: /home/kali/Desktop/fenrir_report_192.168.56.101_20260224_184224.json
+2026-02-24 18:42:24,256 - fenrir - INFO - port_scanner:300 - No ports specified — using default top-1000 port list.
+2026-02-24 18:42:24,257 - fenrir - INFO - port_scanner:302 - Starting port scan on 192.168.56.101 (1000 ports to check)...
+2026-02-24 18:42:24,257 - fenrir - INFO - port_scanner:303 - Concurrency: 200 | Timeout: 1.0s per port
+2026-02-24 18:42:29,302 - fenrir - INFO - port_scanner:324 - Port scan complete. Scanned: 1000 | Open: 23 | Closed/Filtered: 977
+2026-02-24 18:42:29,303 - fenrir - WARNING - port_scanner:331 - Open ports on 192.168.56.101:
+2026-02-24 18:42:29,303 - fenrir - WARNING - port_scanner:334 -   21/tcp  open  ftp
+2026-02-24 18:42:29,303 - fenrir - WARNING - port_scanner:334 -   22/tcp  open  ssh
+2026-02-24 18:42:29,303 - fenrir - WARNING - port_scanner:334 -   23/tcp  open  telnet
+2026-02-24 18:42:29,303 - fenrir - WARNING - port_scanner:334 -   25/tcp  open  smtp
+2026-02-24 18:42:29,304 - fenrir - WARNING - port_scanner:334 -   53/tcp  open  dns
+2026-02-24 18:42:29,304 - fenrir - WARNING - port_scanner:334 -   80/tcp  open  http
+2026-02-24 18:42:29,304 - fenrir - WARNING - port_scanner:334 -   111/tcp  open  rpcbind
+2026-02-24 18:42:29,304 - fenrir - WARNING - port_scanner:334 -   139/tcp  open  netbios-ssn
+2026-02-24 18:42:29,304 - fenrir - WARNING - port_scanner:334 -   445/tcp  open  microsoft-ds
+2026-02-24 18:42:29,304 - fenrir - WARNING - port_scanner:334 -   512/tcp  open  exec
+2026-02-24 18:42:29,304 - fenrir - WARNING - port_scanner:334 -   513/tcp  open  login
+2026-02-24 18:42:29,304 - fenrir - WARNING - port_scanner:334 -   514/tcp  open  shell
+2026-02-24 18:42:29,304 - fenrir - WARNING - port_scanner:334 -   1099/tcp  open  unknown
+2026-02-24 18:42:29,304 - fenrir - WARNING - port_scanner:334 -   1524/tcp  open  unknown
+2026-02-24 18:42:29,304 - fenrir - WARNING - port_scanner:334 -   2049/tcp  open  nfs
+2026-02-24 18:42:29,304 - fenrir - WARNING - port_scanner:334 -   2121/tcp  open  unknown
+2026-02-24 18:42:29,304 - fenrir - WARNING - port_scanner:334 -   3306/tcp  open  mysql
+2026-02-24 18:42:29,304 - fenrir - WARNING - port_scanner:334 -   5432/tcp  open  postgresql
+2026-02-24 18:42:29,304 - fenrir - WARNING - port_scanner:334 -   5900/tcp  open  vnc
+2026-02-24 18:42:29,304 - fenrir - WARNING - port_scanner:334 -   6000/tcp  open  unknown
+2026-02-24 18:42:29,304 - fenrir - WARNING - port_scanner:334 -   6667/tcp  open  unknown
+2026-02-24 18:42:29,304 - fenrir - WARNING - port_scanner:334 -   8009/tcp  open  unknown
+2026-02-24 18:42:29,304 - fenrir - WARNING - port_scanner:334 -   8180/tcp  open  unknown
+2026-02-24 18:42:29,305 - fenrir - INFO - vulnerability_scanner:311 - Starting vulnerability scan on 192.168.56.101 (23 open port(s))...
+2026-02-24 18:42:29,305 - fenrir - INFO - vulnerability_scanner:319 - Stage 1/2: Service and version detection...
+2026-02-24 18:42:29,305 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:21...
+2026-02-24 18:42:29,305 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:22...
+2026-02-24 18:42:29,306 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:23...
+2026-02-24 18:42:29,306 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:25...
+2026-02-24 18:42:29,306 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:53...
+2026-02-24 18:42:29,307 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:80...
+2026-02-24 18:42:29,308 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:111...
+2026-02-24 18:42:29,309 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:139...
+2026-02-24 18:42:29,309 - fenrir - ERROR - vulnerability_scanner:334 - Service detection stage failed: name 'nmap' is not defined
+2026-02-24 18:42:29,309 - fenrir - INFO - web_scanner:432 - Starting web reconnaissance on 192.168.56.101 (ports: 80, 443, 3000, 8080)...
+2026-02-24 18:42:29,310 - fenrir - INFO - web_scanner:372 - Scanning http://192.168.56.101:80...
+2026-02-24 18:42:29,311 - fenrir - INFO - web_scanner:372 - Scanning https://192.168.56.101:443...
+2026-02-24 18:42:29,311 - fenrir - INFO - web_scanner:372 - Scanning http://192.168.56.101:3000...
+2026-02-24 18:42:29,311 - fenrir - INFO - web_scanner:372 - Scanning http://192.168.56.101:8080...
+2026-02-24 18:42:29,311 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:445...
+2026-02-24 18:42:29,311 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:512...
+2026-02-24 18:42:29,312 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:513...
+2026-02-24 18:42:29,312 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:514...
+2026-02-24 18:42:29,313 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:1099...
+2026-02-24 18:42:29,313 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:1524...
+2026-02-24 18:42:29,314 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:2049...
+2026-02-24 18:42:29,314 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:2121...
+2026-02-24 18:42:29,316 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:3306...
+2026-02-24 18:42:29,316 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:5432...
+2026-02-24 18:42:29,317 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:5900...
+2026-02-24 18:42:29,317 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:6000...
+2026-02-24 18:42:29,317 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:6667...
+2026-02-24 18:42:29,317 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:8009...
+2026-02-24 18:42:29,318 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:8180...
+2026-02-24 18:42:29,397 - fenrir - INFO - web_scanner:147 -   http://192.168.56.101:80  →  HTTP 200  (final URL: http://192.168.56.101)
+2026-02-24 18:42:29,397 - fenrir - INFO - web_scanner:184 -   Information disclosure headers:
+2026-02-24 18:42:29,397 - fenrir - WARNING - web_scanner:190 -     [INFO DISCLOSURE]  Server: Apache/2.2.8 (Ubuntu) DAV/2
+2026-02-24 18:42:29,397 - fenrir - WARNING - web_scanner:190 -     [INFO DISCLOSURE]  X-Powered-By: PHP/5.2.4-2ubuntu5.10
+2026-02-24 18:42:29,398 - fenrir - INFO - web_scanner:226 -   Security header analysis:
+2026-02-24 18:42:29,398 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | HIGH]  Strict-Transport-Security
+2026-02-24 18:42:29,398 - fenrir - WARNING - web_scanner:237 -         → Add 'Strict-Transport-Security: max-age=31536000; includeSubDomains' to enforce HTTPS and prevent protocol downgrade attacks.
+2026-02-24 18:42:29,398 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | HIGH]  Content-Security-Policy
+2026-02-24 18:42:29,398 - fenrir - WARNING - web_scanner:237 -         → Add a Content-Security-Policy header to prevent XSS and data injection attacks.
+2026-02-24 18:42:29,398 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | MEDIUM]  X-Frame-Options
+2026-02-24 18:42:29,398 - fenrir - WARNING - web_scanner:237 -         → Add 'X-Frame-Options: DENY' or 'SAMEORIGIN' to prevent clickjacking attacks.
+2026-02-24 18:42:29,398 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | MEDIUM]  X-Content-Type-Options
+2026-02-24 18:42:29,398 - fenrir - WARNING - web_scanner:237 -         → Add 'X-Content-Type-Options: nosniff' to prevent MIME-type sniffing.
+2026-02-24 18:42:29,398 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | LOW]  Referrer-Policy
+2026-02-24 18:42:29,398 - fenrir - WARNING - web_scanner:237 -         → Add a Referrer-Policy header to control information sent in the Referer header.
+2026-02-24 18:42:29,398 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | LOW]  Permissions-Policy
+2026-02-24 18:42:29,398 - fenrir - WARNING - web_scanner:237 -         → Add a Permissions-Policy header to restrict access to browser features (camera, microphone, geolocation, etc.).
+2026-02-24 18:42:29,398 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | LOW]  X-XSS-Protection
+2026-02-24 18:42:29,398 - fenrir - WARNING - web_scanner:237 -         → Consider adding 'X-XSS-Protection: 1; mode=block' for legacy browser support, though CSP is the modern replacement.
+2026-02-24 18:42:29,398 - fenrir - WARNING - web_scanner:333 -   [NO HTTPS REDIRECT]  Port 80 does not redirect to HTTPS.
+2026-02-24 18:42:31,337 - fenrir - WARNING - web_scanner:155 -   http://192.168.56.101:3000  →  Could not connect: All connection attempts failed
+2026-02-24 18:42:31,337 - fenrir - WARNING - web_scanner:388 -   http://192.168.56.101:3000 is not reachable — skipping analysis.
+2026-02-24 18:42:31,337 - fenrir - WARNING - web_scanner:155 -   http://192.168.56.101:8080  →  Could not connect: All connection attempts failed
+2026-02-24 18:42:31,337 - fenrir - WARNING - web_scanner:388 -   http://192.168.56.101:8080 is not reachable — skipping analysis.
+2026-02-24 18:42:31,347 - fenrir - WARNING - web_scanner:155 -   https://192.168.56.101:443  →  Could not connect: All connection attempts failed
+2026-02-24 18:42:31,347 - fenrir - WARNING - web_scanner:388 -   https://192.168.56.101:443 is not reachable — skipping analysis.
+2026-02-24 18:42:31,347 - fenrir - INFO - web_scanner:514 - Web reconnaissance complete. Ports scanned: 4 | Reachable: 1 | Findings: 10
+2026-02-24 18:42:31,347 - fenrir - INFO - fenrir_gui:213 - --- All selected scans complete ---
+2026-02-24 18:43:24,622 - fenrir - INFO - fenrir_gui:199 - --- Starting new scan on 192.168.56.101 ---
+2026-02-24 18:43:24,622 - fenrir - INFO - report_manager:90 - Report session started. Target: 192.168.56.101
+2026-02-24 18:43:24,622 - fenrir - INFO - report_manager:91 -   TXT report : /home/kali/Desktop/fenrir_report_192.168.56.101_20260224_184324.txt
+2026-02-24 18:43:24,622 - fenrir - INFO - report_manager:92 -   JSON report: /home/kali/Desktop/fenrir_report_192.168.56.101_20260224_184324.json
+2026-02-24 18:43:24,623 - fenrir - INFO - port_scanner:300 - No ports specified — using default top-1000 port list.
+2026-02-24 18:43:24,623 - fenrir - INFO - port_scanner:302 - Starting port scan on 192.168.56.101 (1000 ports to check)...
+2026-02-24 18:43:24,623 - fenrir - INFO - port_scanner:303 - Concurrency: 200 | Timeout: 1.0s per port
+2026-02-24 18:43:29,746 - fenrir - INFO - port_scanner:324 - Port scan complete. Scanned: 1000 | Open: 23 | Closed/Filtered: 977
+2026-02-24 18:43:29,747 - fenrir - WARNING - port_scanner:331 - Open ports on 192.168.56.101:
+2026-02-24 18:43:29,747 - fenrir - WARNING - port_scanner:334 -   21/tcp  open  ftp
+2026-02-24 18:43:29,747 - fenrir - WARNING - port_scanner:334 -   22/tcp  open  ssh
+2026-02-24 18:43:29,747 - fenrir - WARNING - port_scanner:334 -   23/tcp  open  telnet
+2026-02-24 18:43:29,747 - fenrir - WARNING - port_scanner:334 -   25/tcp  open  smtp
+2026-02-24 18:43:29,747 - fenrir - WARNING - port_scanner:334 -   53/tcp  open  dns
+2026-02-24 18:43:29,747 - fenrir - WARNING - port_scanner:334 -   80/tcp  open  http
+2026-02-24 18:43:29,747 - fenrir - WARNING - port_scanner:334 -   111/tcp  open  rpcbind
+2026-02-24 18:43:29,747 - fenrir - WARNING - port_scanner:334 -   139/tcp  open  netbios-ssn
+2026-02-24 18:43:29,747 - fenrir - WARNING - port_scanner:334 -   445/tcp  open  microsoft-ds
+2026-02-24 18:43:29,747 - fenrir - WARNING - port_scanner:334 -   512/tcp  open  exec
+2026-02-24 18:43:29,747 - fenrir - WARNING - port_scanner:334 -   513/tcp  open  login
+2026-02-24 18:43:29,747 - fenrir - WARNING - port_scanner:334 -   514/tcp  open  shell
+2026-02-24 18:43:29,747 - fenrir - WARNING - port_scanner:334 -   1099/tcp  open  unknown
+2026-02-24 18:43:29,747 - fenrir - WARNING - port_scanner:334 -   1524/tcp  open  unknown
+2026-02-24 18:43:29,747 - fenrir - WARNING - port_scanner:334 -   2049/tcp  open  nfs
+2026-02-24 18:43:29,747 - fenrir - WARNING - port_scanner:334 -   2121/tcp  open  unknown
+2026-02-24 18:43:29,747 - fenrir - WARNING - port_scanner:334 -   3306/tcp  open  mysql
+2026-02-24 18:43:29,747 - fenrir - WARNING - port_scanner:334 -   5432/tcp  open  postgresql
+2026-02-24 18:43:29,747 - fenrir - WARNING - port_scanner:334 -   5900/tcp  open  vnc
+2026-02-24 18:43:29,747 - fenrir - WARNING - port_scanner:334 -   6000/tcp  open  unknown
+2026-02-24 18:43:29,747 - fenrir - WARNING - port_scanner:334 -   6667/tcp  open  unknown
+2026-02-24 18:43:29,747 - fenrir - WARNING - port_scanner:334 -   8009/tcp  open  unknown
+2026-02-24 18:43:29,747 - fenrir - WARNING - port_scanner:334 -   8180/tcp  open  unknown
+2026-02-24 18:43:29,748 - fenrir - INFO - vulnerability_scanner:311 - Starting vulnerability scan on 192.168.56.101 (23 open port(s))...
+2026-02-24 18:43:29,748 - fenrir - INFO - vulnerability_scanner:319 - Stage 1/2: Service and version detection...
+2026-02-24 18:43:29,748 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:21...
+2026-02-24 18:43:29,750 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:22...
+2026-02-24 18:43:29,750 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:23...
+2026-02-24 18:43:29,751 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:25...
+2026-02-24 18:43:29,755 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:53...
+2026-02-24 18:43:29,755 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:80...
+2026-02-24 18:43:29,756 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:111...
+2026-02-24 18:43:29,756 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:139...
+2026-02-24 18:43:29,757 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:445...
+2026-02-24 18:43:29,757 - fenrir - ERROR - vulnerability_scanner:334 - Service detection stage failed: name 'nmap' is not defined
+2026-02-24 18:43:29,757 - fenrir - INFO - web_scanner:432 - Starting web reconnaissance on 192.168.56.101 (ports: 80, 443, 3000, 8080)...
+2026-02-24 18:43:29,758 - fenrir - INFO - web_scanner:372 - Scanning http://192.168.56.101:80...
+2026-02-24 18:43:29,758 - fenrir - INFO - web_scanner:372 - Scanning https://192.168.56.101:443...
+2026-02-24 18:43:29,759 - fenrir - INFO - web_scanner:372 - Scanning http://192.168.56.101:3000...
+2026-02-24 18:43:29,759 - fenrir - INFO - web_scanner:372 - Scanning http://192.168.56.101:8080...
+2026-02-24 18:43:29,759 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:512...
+2026-02-24 18:43:29,761 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:513...
+2026-02-24 18:43:29,762 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:514...
+2026-02-24 18:43:29,762 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:1099...
+2026-02-24 18:43:29,762 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:1524...
+2026-02-24 18:43:29,764 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:2049...
+2026-02-24 18:43:29,764 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:2121...
+2026-02-24 18:43:29,773 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:3306...
+2026-02-24 18:43:29,775 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:5432...
+2026-02-24 18:43:29,775 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:5900...
+2026-02-24 18:43:29,776 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:6000...
+2026-02-24 18:43:29,776 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:6667...
+2026-02-24 18:43:29,776 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:8009...
+2026-02-24 18:43:29,776 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:8180...
+2026-02-24 18:43:29,827 - fenrir - INFO - web_scanner:147 -   http://192.168.56.101:80  →  HTTP 200  (final URL: http://192.168.56.101)
+2026-02-24 18:43:29,828 - fenrir - INFO - web_scanner:184 -   Information disclosure headers:
+2026-02-24 18:43:29,828 - fenrir - WARNING - web_scanner:190 -     [INFO DISCLOSURE]  Server: Apache/2.2.8 (Ubuntu) DAV/2
+2026-02-24 18:43:29,828 - fenrir - WARNING - web_scanner:190 -     [INFO DISCLOSURE]  X-Powered-By: PHP/5.2.4-2ubuntu5.10
+2026-02-24 18:43:29,828 - fenrir - INFO - web_scanner:226 -   Security header analysis:
+2026-02-24 18:43:29,828 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | HIGH]  Strict-Transport-Security
+2026-02-24 18:43:29,828 - fenrir - WARNING - web_scanner:237 -         → Add 'Strict-Transport-Security: max-age=31536000; includeSubDomains' to enforce HTTPS and prevent protocol downgrade attacks.
+2026-02-24 18:43:29,828 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | HIGH]  Content-Security-Policy
+2026-02-24 18:43:29,828 - fenrir - WARNING - web_scanner:237 -         → Add a Content-Security-Policy header to prevent XSS and data injection attacks.
+2026-02-24 18:43:29,828 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | MEDIUM]  X-Frame-Options
+2026-02-24 18:43:29,828 - fenrir - WARNING - web_scanner:237 -         → Add 'X-Frame-Options: DENY' or 'SAMEORIGIN' to prevent clickjacking attacks.
+2026-02-24 18:43:29,828 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | MEDIUM]  X-Content-Type-Options
+2026-02-24 18:43:29,828 - fenrir - WARNING - web_scanner:237 -         → Add 'X-Content-Type-Options: nosniff' to prevent MIME-type sniffing.
+2026-02-24 18:43:29,829 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | LOW]  Referrer-Policy
+2026-02-24 18:43:29,829 - fenrir - WARNING - web_scanner:237 -         → Add a Referrer-Policy header to control information sent in the Referer header.
+2026-02-24 18:43:29,829 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | LOW]  Permissions-Policy
+2026-02-24 18:43:29,829 - fenrir - WARNING - web_scanner:237 -         → Add a Permissions-Policy header to restrict access to browser features (camera, microphone, geolocation, etc.).
+2026-02-24 18:43:29,829 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | LOW]  X-XSS-Protection
+2026-02-24 18:43:29,829 - fenrir - WARNING - web_scanner:237 -         → Consider adding 'X-XSS-Protection: 1; mode=block' for legacy browser support, though CSP is the modern replacement.
+2026-02-24 18:43:29,829 - fenrir - WARNING - web_scanner:333 -   [NO HTTPS REDIRECT]  Port 80 does not redirect to HTTPS.
+2026-02-24 18:43:31,778 - fenrir - WARNING - web_scanner:155 -   http://192.168.56.101:8080  →  Could not connect: All connection attempts failed
+2026-02-24 18:43:31,778 - fenrir - WARNING - web_scanner:388 -   http://192.168.56.101:8080 is not reachable — skipping analysis.
+2026-02-24 18:43:31,781 - fenrir - WARNING - web_scanner:155 -   https://192.168.56.101:443  →  Could not connect: All connection attempts failed
+2026-02-24 18:43:31,781 - fenrir - WARNING - web_scanner:388 -   https://192.168.56.101:443 is not reachable — skipping analysis.
+2026-02-24 18:43:31,781 - fenrir - WARNING - web_scanner:155 -   http://192.168.56.101:3000  →  Could not connect: All connection attempts failed
+2026-02-24 18:43:31,782 - fenrir - WARNING - web_scanner:388 -   http://192.168.56.101:3000 is not reachable — skipping analysis.
+2026-02-24 18:43:31,782 - fenrir - INFO - web_scanner:514 - Web reconnaissance complete. Ports scanned: 4 | Reachable: 1 | Findings: 10
+2026-02-24 18:43:31,782 - fenrir - INFO - fenrir_gui:213 - --- All selected scans complete ---
+2026-02-24 18:43:47,290 - fenrir - INFO - fenrir_gui:199 - --- Starting new scan on 192.168.56.102 ---
+2026-02-24 18:43:47,290 - fenrir - INFO - report_manager:90 - Report session started. Target: 192.168.56.102
+2026-02-24 18:43:47,290 - fenrir - INFO - report_manager:91 -   TXT report : /home/kali/Desktop/fenrir_report_192.168.56.102_20260224_184347.txt
+2026-02-24 18:43:47,290 - fenrir - INFO - report_manager:92 -   JSON report: /home/kali/Desktop/fenrir_report_192.168.56.102_20260224_184347.json
+2026-02-24 18:43:47,291 - fenrir - INFO - port_scanner:300 - No ports specified — using default top-1000 port list.
+2026-02-24 18:43:47,291 - fenrir - INFO - port_scanner:302 - Starting port scan on 192.168.56.102 (1000 ports to check)...
+2026-02-24 18:43:47,291 - fenrir - INFO - port_scanner:303 - Concurrency: 200 | Timeout: 1.0s per port
+2026-02-24 18:43:52,371 - fenrir - INFO - port_scanner:324 - Port scan complete. Scanned: 1000 | Open: 1 | Closed/Filtered: 999
+2026-02-24 18:43:52,371 - fenrir - WARNING - port_scanner:331 - Open ports on 192.168.56.102:
+2026-02-24 18:43:52,371 - fenrir - WARNING - port_scanner:334 -   5555/tcp  open  unknown
+2026-02-24 18:43:52,373 - fenrir - INFO - vulnerability_scanner:311 - Starting vulnerability scan on 192.168.56.102 (1 open port(s))...
+2026-02-24 18:43:52,373 - fenrir - INFO - vulnerability_scanner:319 - Stage 1/2: Service and version detection...
+2026-02-24 18:43:52,374 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.102:5555...
+2026-02-24 18:43:52,374 - fenrir - ERROR - vulnerability_scanner:334 - Service detection stage failed: name 'nmap' is not defined
+2026-02-24 18:43:52,375 - fenrir - INFO - web_scanner:432 - Starting web reconnaissance on 192.168.56.102 (ports: 80, 443, 3000, 8080)...
+2026-02-24 18:43:52,375 - fenrir - INFO - web_scanner:372 - Scanning http://192.168.56.102:80...
+2026-02-24 18:43:52,375 - fenrir - INFO - web_scanner:372 - Scanning https://192.168.56.102:443...
+2026-02-24 18:43:52,375 - fenrir - INFO - web_scanner:372 - Scanning http://192.168.56.102:3000...
+2026-02-24 18:43:52,376 - fenrir - INFO - web_scanner:372 - Scanning http://192.168.56.102:8080...
+2026-02-24 18:43:54,385 - fenrir - WARNING - web_scanner:155 -   http://192.168.56.102:3000  →  Could not connect: All connection attempts failed
+2026-02-24 18:43:54,385 - fenrir - WARNING - web_scanner:388 -   http://192.168.56.102:3000 is not reachable — skipping analysis.
+2026-02-24 18:43:54,385 - fenrir - WARNING - web_scanner:155 -   http://192.168.56.102:8080  →  Could not connect: All connection attempts failed
+2026-02-24 18:43:54,385 - fenrir - WARNING - web_scanner:388 -   http://192.168.56.102:8080 is not reachable — skipping analysis.
+2026-02-24 18:43:54,385 - fenrir - WARNING - web_scanner:155 -   https://192.168.56.102:443  →  Could not connect: All connection attempts failed
+2026-02-24 18:43:54,385 - fenrir - WARNING - web_scanner:388 -   https://192.168.56.102:443 is not reachable — skipping analysis.
+2026-02-24 18:43:54,385 - fenrir - WARNING - web_scanner:155 -   http://192.168.56.102:80  →  Could not connect: All connection attempts failed
+2026-02-24 18:43:54,385 - fenrir - WARNING - web_scanner:388 -   http://192.168.56.102:80 is not reachable — skipping analysis.
+2026-02-24 18:43:54,386 - fenrir - INFO - web_scanner:514 - Web reconnaissance complete. Ports scanned: 4 | Reachable: 0 | Findings: 0
+2026-02-24 18:43:54,386 - fenrir - INFO - fenrir_gui:213 - --- All selected scans complete ---
+2026-02-24 18:45:51,395 - fenrir - INFO - fenrir_gui:199 - --- Starting new scan on 192.168.56.0/24 ---
+2026-02-24 18:45:51,396 - fenrir - INFO - report_manager:90 - Report session started. Target: 192.168.56.0/24
+2026-02-24 18:45:51,396 - fenrir - INFO - report_manager:91 -   TXT report : /home/kali/Desktop/fenrir_report_192.168.56.0_24_20260224_184551.txt
+2026-02-24 18:45:51,396 - fenrir - INFO - report_manager:92 -   JSON report: /home/kali/Desktop/fenrir_report_192.168.56.0_24_20260224_184551.json
+2026-02-24 18:45:51,396 - fenrir - INFO - port_scanner:300 - No ports specified — using default top-1000 port list.
+2026-02-24 18:45:51,396 - fenrir - INFO - port_scanner:302 - Starting port scan on 192.168.56.0/24 (1000 ports to check)...
+2026-02-24 18:45:51,396 - fenrir - INFO - port_scanner:303 - Concurrency: 200 | Timeout: 1.0s per port
+2026-02-24 18:45:51,625 - fenrir - INFO - port_scanner:324 - Port scan complete. Scanned: 1000 | Open: 0 | Closed/Filtered: 1000
+2026-02-24 18:45:51,626 - fenrir - INFO - port_scanner:336 - No open ports found on 192.168.56.0/24 in the scanned range.
+2026-02-24 18:45:51,626 - fenrir - WARNING - vulnerability_scanner:308 - VulnerabilityScanner: no open ports provided — skipping.
+2026-02-24 18:45:51,626 - fenrir - INFO - web_scanner:432 - Starting web reconnaissance on 192.168.56.0/24 (ports: 80, 443, 3000, 8080)...
+2026-02-24 18:45:51,627 - fenrir - INFO - web_scanner:372 - Scanning http://192.168.56.0/24:80...
+2026-02-24 18:45:51,628 - fenrir - INFO - web_scanner:372 - Scanning https://192.168.56.0/24:443...
+2026-02-24 18:45:51,628 - fenrir - INFO - web_scanner:372 - Scanning http://192.168.56.0/24:3000...
+2026-02-24 18:45:51,628 - fenrir - INFO - web_scanner:372 - Scanning http://192.168.56.0/24:8080...
+2026-02-24 18:46:01,639 - fenrir - WARNING - web_scanner:153 -   http://192.168.56.0/24:80  →  Connection timed out after 10.0s.
+2026-02-24 18:46:01,639 - fenrir - WARNING - web_scanner:388 -   http://192.168.56.0/24:80 is not reachable — skipping analysis.
+2026-02-24 18:46:01,640 - fenrir - WARNING - web_scanner:153 -   https://192.168.56.0/24:443  →  Connection timed out after 10.0s.
+2026-02-24 18:46:01,640 - fenrir - WARNING - web_scanner:388 -   https://192.168.56.0/24:443 is not reachable — skipping analysis.
+2026-02-24 18:46:01,640 - fenrir - WARNING - web_scanner:153 -   http://192.168.56.0/24:3000  →  Connection timed out after 10.0s.
+2026-02-24 18:46:01,640 - fenrir - WARNING - web_scanner:388 -   http://192.168.56.0/24:3000 is not reachable — skipping analysis.
+2026-02-24 18:46:01,640 - fenrir - WARNING - web_scanner:153 -   http://192.168.56.0/24:8080  →  Connection timed out after 10.0s.
+2026-02-24 18:46:01,640 - fenrir - WARNING - web_scanner:388 -   http://192.168.56.0/24:8080 is not reachable — skipping analysis.
+2026-02-24 18:46:01,640 - fenrir - INFO - web_scanner:514 - Web reconnaissance complete. Ports scanned: 4 | Reachable: 0 | Findings: 0
+2026-02-24 18:46:01,640 - fenrir - INFO - fenrir_gui:213 - --- All selected scans complete ---
+2026-02-24 18:46:29,029 - fenrir - INFO - fenrir_gui:199 - --- Starting new scan on 192.168.56.101 ---
+2026-02-24 18:46:29,029 - fenrir - INFO - report_manager:90 - Report session started. Target: 192.168.56.101
+2026-02-24 18:46:29,029 - fenrir - INFO - report_manager:91 -   TXT report : /home/kali/Desktop/fenrir_report_192.168.56.101_20260224_184629.txt
+2026-02-24 18:46:29,029 - fenrir - INFO - report_manager:92 -   JSON report: /home/kali/Desktop/fenrir_report_192.168.56.101_20260224_184629.json
+2026-02-24 18:46:29,031 - fenrir - INFO - port_scanner:300 - No ports specified — using default top-1000 port list.
+2026-02-24 18:46:29,031 - fenrir - INFO - port_scanner:302 - Starting port scan on 192.168.56.101 (1000 ports to check)...
+2026-02-24 18:46:29,031 - fenrir - INFO - port_scanner:303 - Concurrency: 200 | Timeout: 1.0s per port
+2026-02-24 18:46:34,140 - fenrir - INFO - port_scanner:324 - Port scan complete. Scanned: 1000 | Open: 23 | Closed/Filtered: 977
+2026-02-24 18:46:34,141 - fenrir - WARNING - port_scanner:331 - Open ports on 192.168.56.101:
+2026-02-24 18:46:34,141 - fenrir - WARNING - port_scanner:334 -   21/tcp  open  ftp
+2026-02-24 18:46:34,141 - fenrir - WARNING - port_scanner:334 -   22/tcp  open  ssh
+2026-02-24 18:46:34,141 - fenrir - WARNING - port_scanner:334 -   23/tcp  open  telnet
+2026-02-24 18:46:34,141 - fenrir - WARNING - port_scanner:334 -   25/tcp  open  smtp
+2026-02-24 18:46:34,141 - fenrir - WARNING - port_scanner:334 -   53/tcp  open  dns
+2026-02-24 18:46:34,141 - fenrir - WARNING - port_scanner:334 -   80/tcp  open  http
+2026-02-24 18:46:34,141 - fenrir - WARNING - port_scanner:334 -   111/tcp  open  rpcbind
+2026-02-24 18:46:34,141 - fenrir - WARNING - port_scanner:334 -   139/tcp  open  netbios-ssn
+2026-02-24 18:46:34,141 - fenrir - WARNING - port_scanner:334 -   445/tcp  open  microsoft-ds
+2026-02-24 18:46:34,141 - fenrir - WARNING - port_scanner:334 -   512/tcp  open  exec
+2026-02-24 18:46:34,141 - fenrir - WARNING - port_scanner:334 -   513/tcp  open  login
+2026-02-24 18:46:34,141 - fenrir - WARNING - port_scanner:334 -   514/tcp  open  shell
+2026-02-24 18:46:34,141 - fenrir - WARNING - port_scanner:334 -   1099/tcp  open  unknown
+2026-02-24 18:46:34,141 - fenrir - WARNING - port_scanner:334 -   1524/tcp  open  unknown
+2026-02-24 18:46:34,141 - fenrir - WARNING - port_scanner:334 -   2049/tcp  open  nfs
+2026-02-24 18:46:34,141 - fenrir - WARNING - port_scanner:334 -   2121/tcp  open  unknown
+2026-02-24 18:46:34,141 - fenrir - WARNING - port_scanner:334 -   3306/tcp  open  mysql
+2026-02-24 18:46:34,141 - fenrir - WARNING - port_scanner:334 -   5432/tcp  open  postgresql
+2026-02-24 18:46:34,141 - fenrir - WARNING - port_scanner:334 -   5900/tcp  open  vnc
+2026-02-24 18:46:34,141 - fenrir - WARNING - port_scanner:334 -   6000/tcp  open  unknown
+2026-02-24 18:46:34,141 - fenrir - WARNING - port_scanner:334 -   6667/tcp  open  unknown
+2026-02-24 18:46:34,141 - fenrir - WARNING - port_scanner:334 -   8009/tcp  open  unknown
+2026-02-24 18:46:34,141 - fenrir - WARNING - port_scanner:334 -   8180/tcp  open  unknown
+2026-02-24 18:46:34,142 - fenrir - INFO - vulnerability_scanner:311 - Starting vulnerability scan on 192.168.56.101 (23 open port(s))...
+2026-02-24 18:46:34,142 - fenrir - INFO - vulnerability_scanner:319 - Stage 1/2: Service and version detection...
+2026-02-24 18:46:34,143 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:21...
+2026-02-24 18:46:34,146 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:22...
+2026-02-24 18:46:34,146 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:23...
+2026-02-24 18:46:34,146 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:25...
+2026-02-24 18:46:34,147 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:53...
+2026-02-24 18:46:34,147 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:80...
+2026-02-24 18:46:34,147 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:111...
+2026-02-24 18:46:34,148 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:139...
+2026-02-24 18:46:34,148 - fenrir - ERROR - vulnerability_scanner:334 - Service detection stage failed: name 'nmap' is not defined
+2026-02-24 18:46:34,148 - fenrir - INFO - web_scanner:432 - Starting web reconnaissance on 192.168.56.101 (ports: 80, 443, 3000, 8080)...
+2026-02-24 18:46:34,149 - fenrir - INFO - web_scanner:372 - Scanning http://192.168.56.101:80...
+2026-02-24 18:46:34,150 - fenrir - INFO - web_scanner:372 - Scanning https://192.168.56.101:443...
+2026-02-24 18:46:34,150 - fenrir - INFO - web_scanner:372 - Scanning http://192.168.56.101:3000...
+2026-02-24 18:46:34,150 - fenrir - INFO - web_scanner:372 - Scanning http://192.168.56.101:8080...
+2026-02-24 18:46:34,151 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:445...
+2026-02-24 18:46:34,151 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:512...
+2026-02-24 18:46:34,151 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:513...
+2026-02-24 18:46:34,151 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:514...
+2026-02-24 18:46:34,151 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:1099...
+2026-02-24 18:46:34,152 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:1524...
+2026-02-24 18:46:34,152 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:2049...
+2026-02-24 18:46:34,152 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:2121...
+2026-02-24 18:46:34,152 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:3306...
+2026-02-24 18:46:34,152 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:5432...
+2026-02-24 18:46:34,152 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:5900...
+2026-02-24 18:46:34,159 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:6000...
+2026-02-24 18:46:34,159 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:6667...
+2026-02-24 18:46:34,159 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:8009...
+2026-02-24 18:46:34,159 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:8180...
+2026-02-24 18:46:34,229 - fenrir - INFO - web_scanner:147 -   http://192.168.56.101:80  →  HTTP 200  (final URL: http://192.168.56.101)
+2026-02-24 18:46:34,229 - fenrir - INFO - web_scanner:184 -   Information disclosure headers:
+2026-02-24 18:46:34,229 - fenrir - WARNING - web_scanner:190 -     [INFO DISCLOSURE]  Server: Apache/2.2.8 (Ubuntu) DAV/2
+2026-02-24 18:46:34,229 - fenrir - WARNING - web_scanner:190 -     [INFO DISCLOSURE]  X-Powered-By: PHP/5.2.4-2ubuntu5.10
+2026-02-24 18:46:34,229 - fenrir - INFO - web_scanner:226 -   Security header analysis:
+2026-02-24 18:46:34,230 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | HIGH]  Strict-Transport-Security
+2026-02-24 18:46:34,230 - fenrir - WARNING - web_scanner:237 -         → Add 'Strict-Transport-Security: max-age=31536000; includeSubDomains' to enforce HTTPS and prevent protocol downgrade attacks.
+2026-02-24 18:46:34,230 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | HIGH]  Content-Security-Policy
+2026-02-24 18:46:34,230 - fenrir - WARNING - web_scanner:237 -         → Add a Content-Security-Policy header to prevent XSS and data injection attacks.
+2026-02-24 18:46:34,230 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | MEDIUM]  X-Frame-Options
+2026-02-24 18:46:34,230 - fenrir - WARNING - web_scanner:237 -         → Add 'X-Frame-Options: DENY' or 'SAMEORIGIN' to prevent clickjacking attacks.
+2026-02-24 18:46:34,230 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | MEDIUM]  X-Content-Type-Options
+2026-02-24 18:46:34,230 - fenrir - WARNING - web_scanner:237 -         → Add 'X-Content-Type-Options: nosniff' to prevent MIME-type sniffing.
+2026-02-24 18:46:34,230 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | LOW]  Referrer-Policy
+2026-02-24 18:46:34,230 - fenrir - WARNING - web_scanner:237 -         → Add a Referrer-Policy header to control information sent in the Referer header.
+2026-02-24 18:46:34,230 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | LOW]  Permissions-Policy
+2026-02-24 18:46:34,230 - fenrir - WARNING - web_scanner:237 -         → Add a Permissions-Policy header to restrict access to browser features (camera, microphone, geolocation, etc.).
+2026-02-24 18:46:34,230 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | LOW]  X-XSS-Protection
+2026-02-24 18:46:34,230 - fenrir - WARNING - web_scanner:237 -         → Consider adding 'X-XSS-Protection: 1; mode=block' for legacy browser support, though CSP is the modern replacement.
+2026-02-24 18:46:34,230 - fenrir - WARNING - web_scanner:333 -   [NO HTTPS REDIRECT]  Port 80 does not redirect to HTTPS.
+2026-02-24 18:46:36,165 - fenrir - WARNING - web_scanner:155 -   http://192.168.56.101:8080  →  Could not connect: All connection attempts failed
+2026-02-24 18:46:36,165 - fenrir - WARNING - web_scanner:388 -   http://192.168.56.101:8080 is not reachable — skipping analysis.
+2026-02-24 18:46:36,166 - fenrir - WARNING - web_scanner:155 -   https://192.168.56.101:443  →  Could not connect: All connection attempts failed
+2026-02-24 18:46:36,167 - fenrir - WARNING - web_scanner:388 -   https://192.168.56.101:443 is not reachable — skipping analysis.
+2026-02-24 18:46:36,167 - fenrir - WARNING - web_scanner:155 -   http://192.168.56.101:3000  →  Could not connect: All connection attempts failed
+2026-02-24 18:46:36,167 - fenrir - WARNING - web_scanner:388 -   http://192.168.56.101:3000 is not reachable — skipping analysis.
+2026-02-24 18:46:36,167 - fenrir - INFO - web_scanner:514 - Web reconnaissance complete. Ports scanned: 4 | Reachable: 1 | Findings: 10
+2026-02-24 18:46:36,167 - fenrir - INFO - fenrir_gui:213 - --- All selected scans complete ---
+2026-02-24 18:55:45,646 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: NOT SET | OTX key: NOT SET | NVD key: NOT SET
+2026-02-24 18:55:45,772 - fenrir - WARNING - __init__:80 - VulnerabilityScanner could not be loaded: No module named 'nmap'
+2026-02-24 18:55:45,773 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-02-24 18:55:46,220 - fenrir - WARNING - __init__:122 - IotScanner could not be loaded: No module named 'androguard'
+2026-02-24 18:55:46,221 - fenrir - WARNING - __init__:134 - MobileScanner could not be loaded: No module named 'androguard'
+2026-02-24 18:56:14,041 - fenrir - INFO - fenrir_gui:199 - --- Starting new scan on 192.168.56.101 ---
+2026-02-24 18:56:14,042 - fenrir - INFO - report_manager:90 - Report session started. Target: 192.168.56.101
+2026-02-24 18:56:14,042 - fenrir - INFO - report_manager:91 -   TXT report : /home/kali/Desktop/Project_fenrirv2/fenrir_report_192.168.56.101_20260224_185614.txt
+2026-02-24 18:56:14,042 - fenrir - INFO - report_manager:92 -   JSON report: /home/kali/Desktop/Project_fenrirv2/fenrir_report_192.168.56.101_20260224_185614.json
+2026-02-24 18:56:14,042 - fenrir - INFO - port_scanner:300 - No ports specified — using default top-1000 port list.
+2026-02-24 18:56:14,042 - fenrir - INFO - port_scanner:302 - Starting port scan on 192.168.56.101 (1000 ports to check)...
+2026-02-24 18:56:14,042 - fenrir - INFO - port_scanner:303 - Concurrency: 200 | Timeout: 1.0s per port
+2026-02-24 18:56:19,085 - fenrir - INFO - port_scanner:324 - Port scan complete. Scanned: 1000 | Open: 23 | Closed/Filtered: 977
+2026-02-24 18:56:19,085 - fenrir - WARNING - port_scanner:331 - Open ports on 192.168.56.101:
+2026-02-24 18:56:19,085 - fenrir - WARNING - port_scanner:334 -   21/tcp  open  ftp
+2026-02-24 18:56:19,085 - fenrir - WARNING - port_scanner:334 -   22/tcp  open  ssh
+2026-02-24 18:56:19,085 - fenrir - WARNING - port_scanner:334 -   23/tcp  open  telnet
+2026-02-24 18:56:19,085 - fenrir - WARNING - port_scanner:334 -   25/tcp  open  smtp
+2026-02-24 18:56:19,085 - fenrir - WARNING - port_scanner:334 -   53/tcp  open  dns
+2026-02-24 18:56:19,085 - fenrir - WARNING - port_scanner:334 -   80/tcp  open  http
+2026-02-24 18:56:19,085 - fenrir - WARNING - port_scanner:334 -   111/tcp  open  rpcbind
+2026-02-24 18:56:19,085 - fenrir - WARNING - port_scanner:334 -   139/tcp  open  netbios-ssn
+2026-02-24 18:56:19,085 - fenrir - WARNING - port_scanner:334 -   445/tcp  open  microsoft-ds
+2026-02-24 18:56:19,085 - fenrir - WARNING - port_scanner:334 -   512/tcp  open  exec
+2026-02-24 18:56:19,085 - fenrir - WARNING - port_scanner:334 -   513/tcp  open  login
+2026-02-24 18:56:19,085 - fenrir - WARNING - port_scanner:334 -   514/tcp  open  shell
+2026-02-24 18:56:19,085 - fenrir - WARNING - port_scanner:334 -   1099/tcp  open  unknown
+2026-02-24 18:56:19,085 - fenrir - WARNING - port_scanner:334 -   1524/tcp  open  unknown
+2026-02-24 18:56:19,085 - fenrir - WARNING - port_scanner:334 -   2049/tcp  open  nfs
+2026-02-24 18:56:19,085 - fenrir - WARNING - port_scanner:334 -   2121/tcp  open  unknown
+2026-02-24 18:56:19,085 - fenrir - WARNING - port_scanner:334 -   3306/tcp  open  mysql
+2026-02-24 18:56:19,086 - fenrir - WARNING - port_scanner:334 -   5432/tcp  open  postgresql
+2026-02-24 18:56:19,086 - fenrir - WARNING - port_scanner:334 -   5900/tcp  open  vnc
+2026-02-24 18:56:19,086 - fenrir - WARNING - port_scanner:334 -   6000/tcp  open  unknown
+2026-02-24 18:56:19,086 - fenrir - WARNING - port_scanner:334 -   6667/tcp  open  unknown
+2026-02-24 18:56:19,086 - fenrir - WARNING - port_scanner:334 -   8009/tcp  open  unknown
+2026-02-24 18:56:19,086 - fenrir - WARNING - port_scanner:334 -   8180/tcp  open  unknown
+2026-02-24 18:56:19,086 - fenrir - ERROR - fenrir_gui:193 - An error occurred in the scan thread: 'NoneType' object is not callable
+2026-02-24 18:59:20,740 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: NOT SET | OTX key: NOT SET | NVD key: NOT SET
+2026-02-24 18:59:20,885 - fenrir - WARNING - __init__:80 - VulnerabilityScanner could not be loaded: No module named 'nvdlib'
+2026-02-24 18:59:20,887 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-02-24 18:59:21,443 - fenrir - WARNING - __init__:122 - IotScanner could not be loaded: No module named 'androguard'
+2026-02-24 18:59:21,444 - fenrir - WARNING - __init__:134 - MobileScanner could not be loaded: No module named 'androguard'
+2026-02-24 18:59:26,869 - fenrir - INFO - fenrir_gui:199 - --- Starting new scan on 192.168.56.101 ---
+2026-02-24 18:59:26,869 - fenrir - INFO - report_manager:90 - Report session started. Target: 192.168.56.101
+2026-02-24 18:59:26,869 - fenrir - INFO - report_manager:91 -   TXT report : /home/kali/Desktop/Project_fenrirv2/fenrir_report_192.168.56.101_20260224_185926.txt
+2026-02-24 18:59:26,869 - fenrir - INFO - report_manager:92 -   JSON report: /home/kali/Desktop/Project_fenrirv2/fenrir_report_192.168.56.101_20260224_185926.json
+2026-02-24 18:59:26,870 - fenrir - INFO - port_scanner:300 - No ports specified — using default top-1000 port list.
+2026-02-24 18:59:26,870 - fenrir - INFO - port_scanner:302 - Starting port scan on 192.168.56.101 (1000 ports to check)...
+2026-02-24 18:59:26,870 - fenrir - INFO - port_scanner:303 - Concurrency: 200 | Timeout: 1.0s per port
+2026-02-24 18:59:31,996 - fenrir - INFO - port_scanner:324 - Port scan complete. Scanned: 1000 | Open: 23 | Closed/Filtered: 977
+2026-02-24 18:59:31,996 - fenrir - WARNING - port_scanner:331 - Open ports on 192.168.56.101:
+2026-02-24 18:59:31,996 - fenrir - WARNING - port_scanner:334 -   21/tcp  open  ftp
+2026-02-24 18:59:31,996 - fenrir - WARNING - port_scanner:334 -   22/tcp  open  ssh
+2026-02-24 18:59:31,996 - fenrir - WARNING - port_scanner:334 -   23/tcp  open  telnet
+2026-02-24 18:59:31,996 - fenrir - WARNING - port_scanner:334 -   25/tcp  open  smtp
+2026-02-24 18:59:31,997 - fenrir - WARNING - port_scanner:334 -   53/tcp  open  dns
+2026-02-24 18:59:31,997 - fenrir - WARNING - port_scanner:334 -   80/tcp  open  http
+2026-02-24 18:59:31,997 - fenrir - WARNING - port_scanner:334 -   111/tcp  open  rpcbind
+2026-02-24 18:59:31,997 - fenrir - WARNING - port_scanner:334 -   139/tcp  open  netbios-ssn
+2026-02-24 18:59:31,997 - fenrir - WARNING - port_scanner:334 -   445/tcp  open  microsoft-ds
+2026-02-24 18:59:31,997 - fenrir - WARNING - port_scanner:334 -   512/tcp  open  exec
+2026-02-24 18:59:31,997 - fenrir - WARNING - port_scanner:334 -   513/tcp  open  login
+2026-02-24 18:59:31,997 - fenrir - WARNING - port_scanner:334 -   514/tcp  open  shell
+2026-02-24 18:59:31,997 - fenrir - WARNING - port_scanner:334 -   1099/tcp  open  unknown
+2026-02-24 18:59:31,997 - fenrir - WARNING - port_scanner:334 -   1524/tcp  open  unknown
+2026-02-24 18:59:31,997 - fenrir - WARNING - port_scanner:334 -   2049/tcp  open  nfs
+2026-02-24 18:59:31,997 - fenrir - WARNING - port_scanner:334 -   2121/tcp  open  unknown
+2026-02-24 18:59:31,997 - fenrir - WARNING - port_scanner:334 -   3306/tcp  open  mysql
+2026-02-24 18:59:31,997 - fenrir - WARNING - port_scanner:334 -   5432/tcp  open  postgresql
+2026-02-24 18:59:31,997 - fenrir - WARNING - port_scanner:334 -   5900/tcp  open  vnc
+2026-02-24 18:59:31,997 - fenrir - WARNING - port_scanner:334 -   6000/tcp  open  unknown
+2026-02-24 18:59:31,997 - fenrir - WARNING - port_scanner:334 -   6667/tcp  open  unknown
+2026-02-24 18:59:31,997 - fenrir - WARNING - port_scanner:334 -   8009/tcp  open  unknown
+2026-02-24 18:59:31,997 - fenrir - WARNING - port_scanner:334 -   8180/tcp  open  unknown
+2026-02-24 18:59:31,998 - fenrir - ERROR - fenrir_gui:193 - An error occurred in the scan thread: 'NoneType' object is not callable
+2026-02-24 19:00:20,122 - fenrir - INFO - fenrir_gui:199 - --- Starting new scan on 192.168.56.101 ---
+2026-02-24 19:00:20,123 - fenrir - INFO - report_manager:90 - Report session started. Target: 192.168.56.101
+2026-02-24 19:00:20,123 - fenrir - INFO - report_manager:91 -   TXT report : /home/kali/Desktop/Project_fenrirv2/fenrir_report_192.168.56.101_20260224_190020.txt
+2026-02-24 19:00:20,123 - fenrir - INFO - report_manager:92 -   JSON report: /home/kali/Desktop/Project_fenrirv2/fenrir_report_192.168.56.101_20260224_190020.json
+2026-02-24 19:00:20,123 - fenrir - INFO - port_scanner:300 - No ports specified — using default top-1000 port list.
+2026-02-24 19:00:20,123 - fenrir - INFO - port_scanner:302 - Starting port scan on 192.168.56.101 (1000 ports to check)...
+2026-02-24 19:00:20,124 - fenrir - INFO - port_scanner:303 - Concurrency: 200 | Timeout: 1.0s per port
+2026-02-24 19:00:25,176 - fenrir - INFO - port_scanner:324 - Port scan complete. Scanned: 1000 | Open: 23 | Closed/Filtered: 977
+2026-02-24 19:00:25,178 - fenrir - WARNING - port_scanner:331 - Open ports on 192.168.56.101:
+2026-02-24 19:00:25,179 - fenrir - WARNING - port_scanner:334 -   21/tcp  open  ftp
+2026-02-24 19:00:25,179 - fenrir - WARNING - port_scanner:334 -   22/tcp  open  ssh
+2026-02-24 19:00:25,179 - fenrir - WARNING - port_scanner:334 -   23/tcp  open  telnet
+2026-02-24 19:00:25,179 - fenrir - WARNING - port_scanner:334 -   25/tcp  open  smtp
+2026-02-24 19:00:25,179 - fenrir - WARNING - port_scanner:334 -   53/tcp  open  dns
+2026-02-24 19:00:25,179 - fenrir - WARNING - port_scanner:334 -   80/tcp  open  http
+2026-02-24 19:00:25,179 - fenrir - WARNING - port_scanner:334 -   111/tcp  open  rpcbind
+2026-02-24 19:00:25,179 - fenrir - WARNING - port_scanner:334 -   139/tcp  open  netbios-ssn
+2026-02-24 19:00:25,179 - fenrir - WARNING - port_scanner:334 -   445/tcp  open  microsoft-ds
+2026-02-24 19:00:25,179 - fenrir - WARNING - port_scanner:334 -   512/tcp  open  exec
+2026-02-24 19:00:25,180 - fenrir - WARNING - port_scanner:334 -   513/tcp  open  login
+2026-02-24 19:00:25,180 - fenrir - WARNING - port_scanner:334 -   514/tcp  open  shell
+2026-02-24 19:00:25,180 - fenrir - WARNING - port_scanner:334 -   1099/tcp  open  unknown
+2026-02-24 19:00:25,180 - fenrir - WARNING - port_scanner:334 -   1524/tcp  open  unknown
+2026-02-24 19:00:25,180 - fenrir - WARNING - port_scanner:334 -   2049/tcp  open  nfs
+2026-02-24 19:00:25,180 - fenrir - WARNING - port_scanner:334 -   2121/tcp  open  unknown
+2026-02-24 19:00:25,180 - fenrir - WARNING - port_scanner:334 -   3306/tcp  open  mysql
+2026-02-24 19:00:25,180 - fenrir - WARNING - port_scanner:334 -   5432/tcp  open  postgresql
+2026-02-24 19:00:25,180 - fenrir - WARNING - port_scanner:334 -   5900/tcp  open  vnc
+2026-02-24 19:00:25,180 - fenrir - WARNING - port_scanner:334 -   6000/tcp  open  unknown
+2026-02-24 19:00:25,180 - fenrir - WARNING - port_scanner:334 -   6667/tcp  open  unknown
+2026-02-24 19:00:25,180 - fenrir - WARNING - port_scanner:334 -   8009/tcp  open  unknown
+2026-02-24 19:00:25,180 - fenrir - WARNING - port_scanner:334 -   8180/tcp  open  unknown
+2026-02-24 19:00:25,181 - fenrir - ERROR - fenrir_gui:193 - An error occurred in the scan thread: 'NoneType' object is not callable
+2026-02-24 19:10:50,747 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: NOT SET | OTX key: NOT SET | NVD key: NOT SET
+2026-02-24 19:10:50,965 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-02-24 19:10:51,443 - fenrir - WARNING - __init__:122 - IotScanner could not be loaded: No module named 'androguard.core.bytecodes'
+2026-02-24 19:10:51,443 - fenrir - WARNING - __init__:134 - MobileScanner could not be loaded: No module named 'androguard.core.bytecodes'
+2026-02-24 19:10:56,897 - fenrir - INFO - fenrir_gui:199 - --- Starting new scan on 192.168.56.101 ---
+2026-02-24 19:10:56,897 - fenrir - INFO - report_manager:90 - Report session started. Target: 192.168.56.101
+2026-02-24 19:10:56,897 - fenrir - INFO - report_manager:91 -   TXT report : /home/kali/Desktop/Project_fenrirv2/fenrir_report_192.168.56.101_20260224_191056.txt
+2026-02-24 19:10:56,897 - fenrir - INFO - report_manager:92 -   JSON report: /home/kali/Desktop/Project_fenrirv2/fenrir_report_192.168.56.101_20260224_191056.json
+2026-02-24 19:10:56,899 - fenrir - INFO - port_scanner:300 - No ports specified — using default top-1000 port list.
+2026-02-24 19:10:56,899 - fenrir - INFO - port_scanner:302 - Starting port scan on 192.168.56.101 (1000 ports to check)...
+2026-02-24 19:10:56,899 - fenrir - INFO - port_scanner:303 - Concurrency: 200 | Timeout: 1.0s per port
+2026-02-24 19:11:01,994 - fenrir - INFO - port_scanner:324 - Port scan complete. Scanned: 1000 | Open: 23 | Closed/Filtered: 977
+2026-02-24 19:11:01,994 - fenrir - WARNING - port_scanner:331 - Open ports on 192.168.56.101:
+2026-02-24 19:11:01,994 - fenrir - WARNING - port_scanner:334 -   21/tcp  open  ftp
+2026-02-24 19:11:01,994 - fenrir - WARNING - port_scanner:334 -   22/tcp  open  ssh
+2026-02-24 19:11:01,994 - fenrir - WARNING - port_scanner:334 -   23/tcp  open  telnet
+2026-02-24 19:11:01,994 - fenrir - WARNING - port_scanner:334 -   25/tcp  open  smtp
+2026-02-24 19:11:01,994 - fenrir - WARNING - port_scanner:334 -   53/tcp  open  dns
+2026-02-24 19:11:01,994 - fenrir - WARNING - port_scanner:334 -   80/tcp  open  http
+2026-02-24 19:11:01,994 - fenrir - WARNING - port_scanner:334 -   111/tcp  open  rpcbind
+2026-02-24 19:11:01,995 - fenrir - WARNING - port_scanner:334 -   139/tcp  open  netbios-ssn
+2026-02-24 19:11:01,995 - fenrir - WARNING - port_scanner:334 -   445/tcp  open  microsoft-ds
+2026-02-24 19:11:01,995 - fenrir - WARNING - port_scanner:334 -   512/tcp  open  exec
+2026-02-24 19:11:01,995 - fenrir - WARNING - port_scanner:334 -   513/tcp  open  login
+2026-02-24 19:11:01,995 - fenrir - WARNING - port_scanner:334 -   514/tcp  open  shell
+2026-02-24 19:11:01,995 - fenrir - WARNING - port_scanner:334 -   1099/tcp  open  unknown
+2026-02-24 19:11:01,995 - fenrir - WARNING - port_scanner:334 -   1524/tcp  open  unknown
+2026-02-24 19:11:01,995 - fenrir - WARNING - port_scanner:334 -   2049/tcp  open  nfs
+2026-02-24 19:11:01,995 - fenrir - WARNING - port_scanner:334 -   2121/tcp  open  unknown
+2026-02-24 19:11:01,995 - fenrir - WARNING - port_scanner:334 -   3306/tcp  open  mysql
+2026-02-24 19:11:01,995 - fenrir - WARNING - port_scanner:334 -   5432/tcp  open  postgresql
+2026-02-24 19:11:01,995 - fenrir - WARNING - port_scanner:334 -   5900/tcp  open  vnc
+2026-02-24 19:11:01,995 - fenrir - WARNING - port_scanner:334 -   6000/tcp  open  unknown
+2026-02-24 19:11:01,995 - fenrir - WARNING - port_scanner:334 -   6667/tcp  open  unknown
+2026-02-24 19:11:01,995 - fenrir - WARNING - port_scanner:334 -   8009/tcp  open  unknown
+2026-02-24 19:11:01,995 - fenrir - WARNING - port_scanner:334 -   8180/tcp  open  unknown
+2026-02-24 19:11:01,996 - fenrir - INFO - vulnerability_scanner:311 - Starting vulnerability scan on 192.168.56.101 (23 open port(s))...
+2026-02-24 19:11:01,996 - fenrir - INFO - vulnerability_scanner:319 - Stage 1/2: Service and version detection...
+2026-02-24 19:11:01,997 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:21...
+2026-02-24 19:11:01,998 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:22...
+2026-02-24 19:11:01,999 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:23...
+2026-02-24 19:11:02,002 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:25...
+2026-02-24 19:11:02,006 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:53...
+2026-02-24 19:11:03,031 - fenrir - INFO - vulnerability_scanner:137 -   25/tcp  open  Postfix smtpd
+2026-02-24 19:11:03,031 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:80...
+2026-02-24 19:11:03,036 - fenrir - INFO - vulnerability_scanner:137 -   22/tcp  open  OpenSSH 4.7p1 Debian 8ubuntu1 protocol 2.0
+2026-02-24 19:11:03,037 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:111...
+2026-02-24 19:11:03,049 - fenrir - INFO - vulnerability_scanner:137 -   21/tcp  open  vsftpd 2.3.4
+2026-02-24 19:11:03,050 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:139...
+2026-02-24 19:11:03,093 - fenrir - INFO - vulnerability_scanner:137 -   23/tcp  open  Linux telnetd
+2026-02-24 19:11:03,093 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:445...
+2026-02-24 19:11:09,044 - fenrir - INFO - vulnerability_scanner:137 -   53/tcp  open  ISC BIND 9.4.2
+2026-02-24 19:11:09,044 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:512...
+2026-02-24 19:11:09,888 - fenrir - INFO - vulnerability_scanner:137 -   512/tcp  open  netkit-rsh rexecd
+2026-02-24 19:11:09,888 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:513...
+2026-02-24 19:11:09,996 - fenrir - INFO - vulnerability_scanner:141 -   111/tcp  open  rpcbind (no version detected)
+2026-02-24 19:11:09,996 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:514...
+2026-02-24 19:11:10,011 - fenrir - INFO - vulnerability_scanner:137 -   445/tcp  open  Samba smbd 3.X - 4.X workgroup: WORKGROUP
+2026-02-24 19:11:10,012 - fenrir - INFO - vulnerability_scanner:137 -   80/tcp  open  Apache httpd 2.2.8 (Ubuntu) DAV/2
+2026-02-24 19:11:10,013 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:1099...
+2026-02-24 19:11:10,013 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:1524...
+2026-02-24 19:11:10,824 - fenrir - INFO - vulnerability_scanner:137 -   514/tcp  open  Netkit rshd
+2026-02-24 19:11:10,824 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:2049...
+2026-02-24 19:11:10,846 - fenrir - INFO - vulnerability_scanner:137 -   1524/tcp  open  Metasploitable root shell
+2026-02-24 19:11:10,847 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:2121...
+2026-02-24 19:11:14,977 - fenrir - INFO - vulnerability_scanner:137 -   139/tcp  open  Samba smbd 3.X - 4.X workgroup: WORKGROUP
+2026-02-24 19:11:14,978 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:3306...
+2026-02-24 19:11:15,801 - fenrir - INFO - vulnerability_scanner:137 -   3306/tcp  open  MySQL 5.0.51a-3ubuntu5
+2026-02-24 19:11:15,801 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:5432...
+2026-02-24 19:11:16,805 - fenrir - INFO - vulnerability_scanner:141 -   513/tcp  open  login (no version detected)
+2026-02-24 19:11:16,805 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:5900...
+2026-02-24 19:11:16,853 - fenrir - INFO - vulnerability_scanner:137 -   1099/tcp  open  GNU Classpath grmiregistry
+2026-02-24 19:11:16,854 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:6000...
+2026-02-24 19:11:17,589 - fenrir - INFO - vulnerability_scanner:137 -   5900/tcp  open  VNC protocol 3.3
+2026-02-24 19:11:17,589 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:6667...
+2026-02-24 19:11:17,750 - fenrir - INFO - vulnerability_scanner:141 -   2049/tcp  open  rpcbind (no version detected)
+2026-02-24 19:11:17,751 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:8009...
+2026-02-24 19:11:19,637 - fenrir - INFO - vulnerability_scanner:137 -   6667/tcp  open  UnrealIRCd
+2026-02-24 19:11:19,637 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:8180...
+2026-02-24 19:11:21,704 - fenrir - INFO - vulnerability_scanner:137 -   2121/tcp  open  ProFTPD 1.3.1
+2026-02-24 19:11:22,673 - fenrir - INFO - vulnerability_scanner:137 -   5432/tcp  open  PostgreSQL DB 8.3.0 - 8.3.7
+2026-02-24 19:11:23,675 - fenrir - INFO - vulnerability_scanner:141 -   6000/tcp  open  X11 (no version detected)
+2026-02-24 19:11:29,605 - fenrir - INFO - vulnerability_scanner:137 -   8009/tcp  open  Apache Jserv Protocol v1.3
+2026-02-24 19:11:31,516 - fenrir - INFO - vulnerability_scanner:137 -   8180/tcp  open  Apache Tomcat/Coyote JSP engine 1.1
+2026-02-24 19:11:31,517 - fenrir - INFO - vulnerability_scanner:347 - Service detection complete. Identified 23/23 service(s).
+2026-02-24 19:11:31,517 - fenrir - INFO - vulnerability_scanner:357 - Stage 2/2: CVE lookup against NVD...
+2026-02-24 19:11:31,517 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'vsftpd 2.3.4'...
+2026-02-24 19:11:31,517 - fenrir - WARNING - vulnerability_scanner:202 - NVD_API_KEY is not set. The Vulnerability Scanner will be skipped. Add it to your .env file to enable this feature.
+2026-02-24 19:11:31,517 - fenrir - WARNING - vulnerability_scanner:203 - Continuing without NVD key — requests will be rate-limited.
+2026-02-24 19:11:31,517 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'OpenSSH 4.7p1 Debian 8ubuntu1'...
+2026-02-24 19:11:31,517 - fenrir - WARNING - vulnerability_scanner:202 - NVD_API_KEY is not set. The Vulnerability Scanner will be skipped. Add it to your .env file to enable this feature.
+2026-02-24 19:11:31,517 - fenrir - WARNING - vulnerability_scanner:203 - Continuing without NVD key — requests will be rate-limited.
+2026-02-24 19:11:38,477 - fenrir - WARNING - vulnerability_scanner:265 - Found 1 CVE(s) for 'vsftpd 2.3.4' on port 21:
+2026-02-24 19:11:38,478 - fenrir - WARNING - vulnerability_scanner:269 -   [CRITICAL] CVE-2011-2523  Score: 9.8  |  vsftpd 2.3.4 downloaded between 20110630 and 20110703 contains a backdoor which opens a shell on por...
+2026-02-24 19:11:38,478 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2011-2523
+2026-02-24 19:11:38,478 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'Linux telnetd'...
+2026-02-24 19:11:38,478 - fenrir - WARNING - vulnerability_scanner:202 - NVD_API_KEY is not set. The Vulnerability Scanner will be skipped. Add it to your .env file to enable this feature.
+2026-02-24 19:11:38,478 - fenrir - WARNING - vulnerability_scanner:203 - Continuing without NVD key — requests will be rate-limited.
+2026-02-24 19:11:38,480 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'OpenSSH 4.7p1 Debian 8ubuntu1'.
+2026-02-24 19:11:38,480 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'Postfix smtpd'...
+2026-02-24 19:11:38,480 - fenrir - WARNING - vulnerability_scanner:202 - NVD_API_KEY is not set. The Vulnerability Scanner will be skipped. Add it to your .env file to enable this feature.
+2026-02-24 19:11:38,480 - fenrir - WARNING - vulnerability_scanner:203 - Continuing without NVD key — requests will be rate-limited.
+2026-02-24 19:11:45,337 - fenrir - WARNING - vulnerability_scanner:265 - Found 4 CVE(s) for 'Linux telnetd' on port 23:
+2026-02-24 19:11:45,338 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2000-1195  Score: 7.5  |  telnet daemon (telnetd) from the Linux netkit package before netkit-telnet-0.16 allows remote attack...
+2026-02-24 19:11:45,338 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2000-1195
+2026-02-24 19:11:45,338 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2020-8797  Score: 6.7  |  Juplink RX4-1500 v1.0.3 allows remote attackers to gain root access to the Linux subsystem via an un...
+2026-02-24 19:11:45,338 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2020-8797
+2026-02-24 19:11:45,338 - fenrir - WARNING - vulnerability_scanner:269 -   [CRITICAL] CVE-2021-27171  Score: 9.8  |  An issue was discovered on FiberHome HG6245D devices through RP2613. It is possible to start a Linux...
+2026-02-24 19:11:45,338 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2021-27171
+2026-02-24 19:11:45,338 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2022-39028  Score: 7.5  |  telnetd in GNU Inetutils through 2.3, MIT krb5-appl through 1.0.3, and derivative works has a NULL p...
+2026-02-24 19:11:45,338 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2022-39028
+2026-02-24 19:11:45,338 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'ISC BIND 9.4.2'...
+2026-02-24 19:11:45,338 - fenrir - WARNING - vulnerability_scanner:202 - NVD_API_KEY is not set. The Vulnerability Scanner will be skipped. Add it to your .env file to enable this feature.
+2026-02-24 19:11:45,338 - fenrir - WARNING - vulnerability_scanner:203 - Continuing without NVD key — requests will be rate-limited.
+2026-02-24 19:11:45,412 - fenrir - WARNING - vulnerability_scanner:265 - Found 4 CVE(s) for 'Postfix smtpd' on port 25:
+2026-02-24 19:11:45,412 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2004-0925  Score: 5.0  |  Postfix on Mac OS X 10.3.x through 10.3.5, with SMTPD AUTH enabled, does not properly clear the user...
+2026-02-24 19:11:45,412 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2004-0925
+2026-02-24 19:11:45,412 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2005-0337  Score: 7.5  |  Postfix 2.1.3, when /proc/net/if_inet6 is not available and permit_mx_backup is enabled in smtpd_rec...
+2026-02-24 19:11:45,412 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2005-0337
+2026-02-24 19:11:45,412 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2023-51764  Score: 5.3  |  Postfix through 3.8.5 allows SMTP smuggling unless configured with smtpd_data_restrictions=reject_un...
+2026-02-24 19:11:45,412 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2023-51764
+2026-02-24 19:11:45,412 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2024-27305  Score: 5.3  |  aiosmtpd is a reimplementation of the Python stdlib smtpd.py based on asyncio. aiosmtpd is vulnerabl...
+2026-02-24 19:11:45,412 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2024-27305
+2026-02-24 19:11:45,412 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'Apache httpd 2.2.8'...
+2026-02-24 19:11:45,412 - fenrir - WARNING - vulnerability_scanner:202 - NVD_API_KEY is not set. The Vulnerability Scanner will be skipped. Add it to your .env file to enable this feature.
+2026-02-24 19:11:45,412 - fenrir - WARNING - vulnerability_scanner:203 - Continuing without NVD key — requests will be rate-limited.
+2026-02-24 19:11:52,255 - fenrir - WARNING - vulnerability_scanner:265 - Found 2 CVE(s) for 'ISC BIND 9.4.2' on port 53:
+2026-02-24 19:11:52,255 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2008-0122  Score: 10.0  |  Off-by-one error in the inet_network function in libbind in ISC BIND 9.4.2 and earlier, as used in l...
+2026-02-24 19:11:52,255 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2008-0122
+2026-02-24 19:11:52,255 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2008-4163  Score: 7.8  |  Unspecified vulnerability in ISC BIND 9.3.5-P2-W1, 9.4.2-P2-W1, and 9.5.0-P2-W1 on Windows allows re...
+2026-02-24 19:11:52,256 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2008-4163
+2026-02-24 19:11:52,256 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'rpcbind'...
+2026-02-24 19:11:52,256 - fenrir - WARNING - vulnerability_scanner:202 - NVD_API_KEY is not set. The Vulnerability Scanner will be skipped. Add it to your .env file to enable this feature.
+2026-02-24 19:11:52,256 - fenrir - WARNING - vulnerability_scanner:203 - Continuing without NVD key — requests will be rate-limited.
+2026-02-24 19:11:52,271 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'Apache httpd 2.2.8'.
+2026-02-24 19:11:52,272 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'Samba smbd 3.X - 4.X'...
+2026-02-24 19:11:52,272 - fenrir - WARNING - vulnerability_scanner:202 - NVD_API_KEY is not set. The Vulnerability Scanner will be skipped. Add it to your .env file to enable this feature.
+2026-02-24 19:11:52,272 - fenrir - WARNING - vulnerability_scanner:203 - Continuing without NVD key — requests will be rate-limited.
+2026-02-24 19:11:59,122 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'Samba smbd 3.X - 4.X'.
+2026-02-24 19:11:59,122 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'Samba smbd 3.X - 4.X'...
+2026-02-24 19:11:59,122 - fenrir - WARNING - vulnerability_scanner:202 - NVD_API_KEY is not set. The Vulnerability Scanner will be skipped. Add it to your .env file to enable this feature.
+2026-02-24 19:11:59,122 - fenrir - WARNING - vulnerability_scanner:203 - Continuing without NVD key — requests will be rate-limited.
+2026-02-24 19:11:59,372 - fenrir - WARNING - vulnerability_scanner:265 - Found 5 CVE(s) for 'rpcbind' on port 111:
+2026-02-24 19:11:59,372 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-0189  Score: 7.5  |  Solaris rpcbind listens on a high numbered UDP port, which may not be filtered since the standard po...
+2026-02-24 19:11:59,372 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-0189
+2026-02-24 19:11:59,372 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-0190  Score: 7.2  |  Solaris rpcbind can be exploited to overwrite arbitrary files and gain root access.
+2026-02-24 19:11:59,372 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-0190
+2026-02-24 19:11:59,374 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-0213  Score: 10.0  |  libnsl in Solaris allowed an attacker to perform a denial of service of rpcbind.
+2026-02-24 19:11:59,375 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-0213
+2026-02-24 19:11:59,375 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-0461  Score: 10.0  |  Versions of rpcbind including Linux, IRIX, and Wietse Venema's rpcbind allow a remote attacker to in...
+2026-02-24 19:11:59,375 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-0461
+2026-02-24 19:11:59,375 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2001-1124  Score: 5.0  |  rpcbind in HP-UX 11.00, 11.04 and 11.11 allows remote attackers to cause a denial of service (core d...
+2026-02-24 19:11:59,375 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2001-1124
+2026-02-24 19:11:59,375 - fenrir - WARNING - vulnerability_scanner:277 -   NOTE: More CVEs exist for 'rpcbind' beyond the current limit of 5. Increase --cve-limit to retrieve more.
+2026-02-24 19:11:59,375 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'netkit-rsh rexecd'...
+2026-02-24 19:11:59,375 - fenrir - WARNING - vulnerability_scanner:202 - NVD_API_KEY is not set. The Vulnerability Scanner will be skipped. Add it to your .env file to enable this feature.
+2026-02-24 19:11:59,375 - fenrir - WARNING - vulnerability_scanner:203 - Continuing without NVD key — requests will be rate-limited.
+2026-02-24 19:12:06,019 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'Samba smbd 3.X - 4.X'.
+2026-02-24 19:12:06,019 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'login'...
+2026-02-24 19:12:06,019 - fenrir - WARNING - vulnerability_scanner:202 - NVD_API_KEY is not set. The Vulnerability Scanner will be skipped. Add it to your .env file to enable this feature.
+2026-02-24 19:12:06,019 - fenrir - WARNING - vulnerability_scanner:203 - Continuing without NVD key — requests will be rate-limited.
+2026-02-24 19:12:06,187 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'netkit-rsh rexecd'.
+2026-02-24 19:12:06,188 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'Netkit rshd'...
+2026-02-24 19:12:06,188 - fenrir - WARNING - vulnerability_scanner:202 - NVD_API_KEY is not set. The Vulnerability Scanner will be skipped. Add it to your .env file to enable this feature.
+2026-02-24 19:12:06,188 - fenrir - WARNING - vulnerability_scanner:203 - Continuing without NVD key — requests will be rate-limited.
+2026-02-24 19:12:13,102 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'Netkit rshd'.
+2026-02-24 19:12:13,102 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'GNU Classpath grmiregistry'...
+2026-02-24 19:12:13,102 - fenrir - WARNING - vulnerability_scanner:202 - NVD_API_KEY is not set. The Vulnerability Scanner will be skipped. Add it to your .env file to enable this feature.
+2026-02-24 19:12:13,103 - fenrir - WARNING - vulnerability_scanner:203 - Continuing without NVD key — requests will be rate-limited.
+2026-02-24 19:12:13,162 - fenrir - WARNING - vulnerability_scanner:265 - Found 5 CVE(s) for 'login' on port 513:
+2026-02-24 19:12:13,162 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-1034  Score: 7.2  |  Vulnerability in login in AT&T System V Release 4 allows local users to gain privileges.
+2026-02-24 19:12:13,162 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-1034
+2026-02-24 19:12:13,162 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-1142  Score: 7.2  |  SunOS 4.1.2 and earlier allows local users to gain privileges via "LD_*" environmental variables to ...
+2026-02-24 19:12:13,162 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-1142
+2026-02-24 19:12:13,162 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-1999-1215  Score: 4.6  |  LOGIN.EXE program in Novell Netware 4.0 and 4.01 temporarily writes user name and password informati...
+2026-02-24 19:12:13,162 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-1215
+2026-02-24 19:12:13,162 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-1304  Score: 7.2  |  Vulnerability in login in SCO UNIX 4.2 and earlier allows local users to gain root access.
+2026-02-24 19:12:13,163 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-1304
+2026-02-24 19:12:13,163 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-0180  Score: 7.5  |  in.rshd allows users to login with a NULL username and execute commands.
+2026-02-24 19:12:13,163 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-0180
+2026-02-24 19:12:13,163 - fenrir - WARNING - vulnerability_scanner:277 -   NOTE: More CVEs exist for 'login' beyond the current limit of 5. Increase --cve-limit to retrieve more.
+2026-02-24 19:12:13,163 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'Metasploitable root shell'...
+2026-02-24 19:12:13,163 - fenrir - WARNING - vulnerability_scanner:202 - NVD_API_KEY is not set. The Vulnerability Scanner will be skipped. Add it to your .env file to enable this feature.
+2026-02-24 19:12:13,163 - fenrir - WARNING - vulnerability_scanner:203 - Continuing without NVD key — requests will be rate-limited.
+2026-02-24 19:12:20,047 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'Metasploitable root shell'.
+2026-02-24 19:12:20,047 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'rpcbind'...
+2026-02-24 19:12:20,047 - fenrir - WARNING - vulnerability_scanner:202 - NVD_API_KEY is not set. The Vulnerability Scanner will be skipped. Add it to your .env file to enable this feature.
+2026-02-24 19:12:20,048 - fenrir - WARNING - vulnerability_scanner:203 - Continuing without NVD key — requests will be rate-limited.
+2026-02-24 19:12:20,151 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'GNU Classpath grmiregistry'.
+2026-02-24 19:12:20,152 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'ProFTPD 1.3.1'...
+2026-02-24 19:12:20,152 - fenrir - WARNING - vulnerability_scanner:202 - NVD_API_KEY is not set. The Vulnerability Scanner will be skipped. Add it to your .env file to enable this feature.
+2026-02-24 19:12:20,152 - fenrir - WARNING - vulnerability_scanner:203 - Continuing without NVD key — requests will be rate-limited.
+2026-02-24 19:12:26,998 - fenrir - WARNING - vulnerability_scanner:265 - Found 5 CVE(s) for 'rpcbind' on port 2049:
+2026-02-24 19:12:26,999 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-0189  Score: 7.5  |  Solaris rpcbind listens on a high numbered UDP port, which may not be filtered since the standard po...
+2026-02-24 19:12:26,999 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-0189
+2026-02-24 19:12:26,999 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-0190  Score: 7.2  |  Solaris rpcbind can be exploited to overwrite arbitrary files and gain root access.
+2026-02-24 19:12:26,999 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-0190
+2026-02-24 19:12:26,999 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-0213  Score: 10.0  |  libnsl in Solaris allowed an attacker to perform a denial of service of rpcbind.
+2026-02-24 19:12:26,999 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-0213
+2026-02-24 19:12:26,999 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-0461  Score: 10.0  |  Versions of rpcbind including Linux, IRIX, and Wietse Venema's rpcbind allow a remote attacker to in...
+2026-02-24 19:12:26,999 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-0461
+2026-02-24 19:12:26,999 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2001-1124  Score: 5.0  |  rpcbind in HP-UX 11.00, 11.04 and 11.11 allows remote attackers to cause a denial of service (core d...
+2026-02-24 19:12:26,999 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2001-1124
+2026-02-24 19:12:26,999 - fenrir - WARNING - vulnerability_scanner:277 -   NOTE: More CVEs exist for 'rpcbind' beyond the current limit of 5. Increase --cve-limit to retrieve more.
+2026-02-24 19:12:26,999 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'MySQL 5.0.51a-3ubuntu5'...
+2026-02-24 19:12:26,999 - fenrir - WARNING - vulnerability_scanner:202 - NVD_API_KEY is not set. The Vulnerability Scanner will be skipped. Add it to your .env file to enable this feature.
+2026-02-24 19:12:26,999 - fenrir - WARNING - vulnerability_scanner:203 - Continuing without NVD key — requests will be rate-limited.
+2026-02-24 19:12:27,100 - fenrir - WARNING - vulnerability_scanner:265 - Found 4 CVE(s) for 'ProFTPD 1.3.1' on port 2121:
+2026-02-24 19:12:27,101 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2006-6563  Score: 6.6  |  Stack-based buffer overflow in the pr_ctrls_recv_request function in ctrls.c in the mod_ctrls module...
+2026-02-24 19:12:27,101 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2006-6563
+2026-02-24 19:12:27,101 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2008-4242  Score: 6.8  |  ProFTPD 1.3.1 interprets long commands from an FTP client as multiple commands, which allows remote ...
+2026-02-24 19:12:27,101 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2008-4242
+2026-02-24 19:12:27,101 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2009-0542  Score: 7.5  |  SQL injection vulnerability in ProFTPD Server 1.3.1 through 1.3.2rc2 allows remote attackers to exec...
+2026-02-24 19:12:27,101 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2009-0542
+2026-02-24 19:12:27,101 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2009-0543  Score: 6.8  |  ProFTPD Server 1.3.1, with NLS support enabled, allows remote attackers to bypass SQL injection prot...
+2026-02-24 19:12:27,101 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2009-0543
+2026-02-24 19:12:27,101 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'PostgreSQL DB 8.3.0 - 8.3.7'...
+2026-02-24 19:12:27,102 - fenrir - WARNING - vulnerability_scanner:202 - NVD_API_KEY is not set. The Vulnerability Scanner will be skipped. Add it to your .env file to enable this feature.
+2026-02-24 19:12:27,102 - fenrir - WARNING - vulnerability_scanner:203 - Continuing without NVD key — requests will be rate-limited.
+2026-02-24 19:12:33,858 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'MySQL 5.0.51a-3ubuntu5'.
+2026-02-24 19:12:33,860 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'VNC'...
+2026-02-24 19:12:33,860 - fenrir - WARNING - vulnerability_scanner:202 - NVD_API_KEY is not set. The Vulnerability Scanner will be skipped. Add it to your .env file to enable this feature.
+2026-02-24 19:12:33,860 - fenrir - WARNING - vulnerability_scanner:203 - Continuing without NVD key — requests will be rate-limited.
+2026-02-24 19:12:33,954 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'PostgreSQL DB 8.3.0 - 8.3.7'.
+2026-02-24 19:12:33,954 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'X11'...
+2026-02-24 19:12:33,954 - fenrir - WARNING - vulnerability_scanner:202 - NVD_API_KEY is not set. The Vulnerability Scanner will be skipped. Add it to your .env file to enable this feature.
+2026-02-24 19:12:33,954 - fenrir - WARNING - vulnerability_scanner:203 - Continuing without NVD key — requests will be rate-limited.
+2026-02-24 19:12:40,850 - fenrir - WARNING - vulnerability_scanner:265 - Found 5 CVE(s) for 'VNC' on port 5900:
+2026-02-24 19:12:40,850 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2001-1422  Score: 7.5  |  WinVNC 3.3.3 and earlier generates the same challenge string for multiple connections, which allows ...
+2026-02-24 19:12:40,850 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2001-1422
+2026-02-24 19:12:40,850 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2002-0971  Score: 4.6  |  Vulnerability in VNC, TightVNC, and TridiaVNC allows local users to execute arbitrary code as LocalS...
+2026-02-24 19:12:40,850 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2002-0971
+2026-02-24 19:12:40,850 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2002-0994  Score: 7.5  |  SunPCi II VNC uses a weak authentication scheme, which allows remote attackers to obtain the VNC pas...
+2026-02-24 19:12:40,850 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2002-0994
+2026-02-24 19:12:40,850 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2002-1336  Score: 7.5  |  TightVNC before 1.2.6 generates the same challenge string for multiple connections, which allows rem...
+2026-02-24 19:12:40,850 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2002-1336
+2026-02-24 19:12:40,851 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2002-2088  Score: 10.0  |  The MOSIX Project clump/os 5.4 creates a default VNC account without a password, which allows remote...
+2026-02-24 19:12:40,851 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2002-2088
+2026-02-24 19:12:40,851 - fenrir - WARNING - vulnerability_scanner:277 -   NOTE: More CVEs exist for 'VNC' beyond the current limit of 5. Increase --cve-limit to retrieve more.
+2026-02-24 19:12:40,851 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'UnrealIRCd'...
+2026-02-24 19:12:40,851 - fenrir - WARNING - vulnerability_scanner:202 - NVD_API_KEY is not set. The Vulnerability Scanner will be skipped. Add it to your .env file to enable this feature.
+2026-02-24 19:12:40,851 - fenrir - WARNING - vulnerability_scanner:203 - Continuing without NVD key — requests will be rate-limited.
+2026-02-24 19:12:40,907 - fenrir - WARNING - vulnerability_scanner:265 - Found 5 CVE(s) for 'X11' on port 6000:
+2026-02-24 19:12:40,907 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2000-1169  Score: 7.5  |  OpenSSH SSH client before 2.3.0 does not properly disable X11 or agent forwarding, which could allow...
+2026-02-24 19:12:40,908 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2000-1169
+2026-02-24 19:12:40,908 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2002-0402  Score: 7.5  |  Buffer overflow in X11 dissector in Ethereal 0.9.3 and earlier allows remote attackers to cause a de...
+2026-02-24 19:12:40,908 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2002-0402
+2026-02-24 19:12:40,908 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2002-0517  Score: 7.2  |  Buffer overflow in X11 library (libX11) on Caldera Open UNIX 8.0.0, UnixWare 7.1.1, and possibly oth...
+2026-02-24 19:12:40,908 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2002-0517
+2026-02-24 19:12:40,908 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2004-0157  Score: 4.6  |  x11.c in xonix 1.4 and earlier uses the current working directory to find and execute the rmail prog...
+2026-02-24 19:12:40,908 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2004-0157
+2026-02-24 19:12:40,908 - fenrir - WARNING - vulnerability_scanner:269 -   [LOW     ] CVE-2004-2097  Score: 2.1  |  Multiple scripts on SuSE Linux 9.0 allow local users to overwrite arbitrary files via a symlink atta...
+2026-02-24 19:12:40,908 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2004-2097
+2026-02-24 19:12:40,908 - fenrir - WARNING - vulnerability_scanner:277 -   NOTE: More CVEs exist for 'X11' beyond the current limit of 5. Increase --cve-limit to retrieve more.
+2026-02-24 19:12:40,908 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'Apache Jserv'...
+2026-02-24 19:12:40,908 - fenrir - WARNING - vulnerability_scanner:202 - NVD_API_KEY is not set. The Vulnerability Scanner will be skipped. Add it to your .env file to enable this feature.
+2026-02-24 19:12:40,908 - fenrir - WARNING - vulnerability_scanner:203 - Continuing without NVD key — requests will be rate-limited.
+2026-02-24 19:12:47,792 - fenrir - WARNING - vulnerability_scanner:265 - Found 5 CVE(s) for 'UnrealIRCd' on port 6667:
+2026-02-24 19:12:47,792 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2004-0679  Score: 5.0  |  The IP cloaking feature (cloak.c) in UnrealIRCd 3.2, and possibly other versions, uses a weak hashin...
+2026-02-24 19:12:47,792 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2004-0679
+2026-02-24 19:12:47,792 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2006-1214  Score: 5.0  |  UnrealIRCd 3.2.3 allows remote attackers to cause an unspecified denial of service by causing a link...
+2026-02-24 19:12:47,792 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2006-1214
+2026-02-24 19:12:47,792 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2009-4893  Score: 6.8  |  Buffer overflow in UnrealIRCd 3.2beta11 through 3.2.8, when allow::options::noident is enabled, allo...
+2026-02-24 19:12:47,792 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2009-4893
+2026-02-24 19:12:47,792 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2010-2075  Score: 7.5  |  UnrealIRCd 3.2.8.1, as distributed on certain mirror sites from November 2009 through June 2010, con...
+2026-02-24 19:12:47,792 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2010-2075
+2026-02-24 19:12:47,793 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2013-6413  Score: 5.0  |  Use-after-free vulnerability in UnrealIRCd 3.2.10 before 3.2.10.2 allows remote attackers to cause a...
+2026-02-24 19:12:47,793 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2013-6413
+2026-02-24 19:12:47,793 - fenrir - WARNING - vulnerability_scanner:277 -   NOTE: More CVEs exist for 'UnrealIRCd' beyond the current limit of 5. Increase --cve-limit to retrieve more.
+2026-02-24 19:12:47,793 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'Apache Tomcat/Coyote JSP engine 1.1'...
+2026-02-24 19:12:47,793 - fenrir - WARNING - vulnerability_scanner:202 - NVD_API_KEY is not set. The Vulnerability Scanner will be skipped. Add it to your .env file to enable this feature.
+2026-02-24 19:12:47,793 - fenrir - WARNING - vulnerability_scanner:203 - Continuing without NVD key — requests will be rate-limited.
+2026-02-24 19:12:47,889 - fenrir - WARNING - vulnerability_scanner:265 - Found 2 CVE(s) for 'Apache Jserv' on port 8009:
+2026-02-24 19:12:47,889 - fenrir - WARNING - vulnerability_scanner:269 -   [LOW     ] CVE-2000-1247  Score: 2.1  |  The default configuration of the jserv-status handler in jserv.conf in Apache JServ 1.1.2 includes a...
+2026-02-24 19:12:47,889 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2000-1247
+2026-02-24 19:12:47,889 - fenrir - WARNING - vulnerability_scanner:269 -   [CRITICAL] CVE-2020-1938  Score: 9.8  |  When using the Apache JServ Protocol (AJP), care must be taken when trusting incoming connections to...
+2026-02-24 19:12:47,889 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2020-1938
+2026-02-24 19:12:54,586 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'Apache Tomcat/Coyote JSP engine 1.1'.
+2026-02-24 19:12:54,586 - fenrir - INFO - vulnerability_scanner:412 - Vulnerability scan complete. Services detected: 23 | CVEs found: 47
+2026-02-24 19:12:54,587 - fenrir - INFO - fenrir_gui:213 - --- All selected scans complete ---
