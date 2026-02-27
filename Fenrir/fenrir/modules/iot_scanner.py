@@ -1,211 +1,380 @@
-# File: fenrir/modules/iot_scanner.py
+# fenrir/modules/iot_scanner.py
+#
+# Fix 17 — Changes from original:
+#   - Stripped corrupted appended content (extra ```python blocks were in source)
+#   - BLE scan runs unconditionally regardless of MQTT port findings
+#   - Added default credentials check from offline DB (iot_default_creds table)
+#   - Added Shodan-style service banner grabbing on common IoT ports
+#   - Structured findings dict for every check — ReportManager integration
+#   - run() returns dict of all findings keyed by check type
+#   - Improved MQTT error messages (rc code descriptions)
+#   - BleakScanner.discover() wrapped in availability check — graceful on
+#     systems without Bluetooth hardware
+#   - Added scan_duration parameter for BLE scan timeout
+
 import asyncio
-import json
-from bleak import BleakScanner
-from paho.mqtt.client import Client as MqttClient, MQTTv5
-from ..logging_config import log
+import socket
+from typing import Optional
+
+from ..database import get_db_manager
+from ..logging_config import get_logger
+from ..report_manager import ReportManager
+
+log = get_logger()
+
+# BLE optional import
+try:
+    from bleak import BleakScanner
+    _BLEAK_AVAILABLE = True
+except ImportError:
+    _BLEAK_AVAILABLE = False
+    log.debug("bleak not installed — BLE scanning unavailable.")
+
+# MQTT optional import
+try:
+    from paho.mqtt.client import Client as MqttClient, MQTTv5
+    _MQTT_AVAILABLE = True
+except ImportError:
+    _MQTT_AVAILABLE = False
+    log.debug("paho-mqtt not installed — MQTT scanning unavailable.")
+
+# MQTT return code descriptions
+_MQTT_RC = {
+    0: "Connection accepted",
+    1: "Refused — unacceptable protocol version",
+    2: "Refused — identifier rejected",
+    3: "Refused — server unavailable",
+    4: "Refused — bad username or password",
+    5: "Refused — not authorised",
+}
+
+# Common IoT banner ports to probe
+_IOT_BANNER_PORTS = {
+    23:   "Telnet",
+    80:   "HTTP",
+    443:  "HTTPS",
+    502:  "Modbus",
+    1883: "MQTT",
+    5683: "CoAP",
+    8080: "HTTP-Alt",
+    8883: "MQTT-TLS",
+    47808:"BACnet",
+}
+
 
 class IotScanner:
-    """Scans for common IoT protocols like MQTT and Bluetooth LE."""
-    def __init__(self):
-        log.debug("IoT Scanner module initialized.")
+    """
+    Scans for common IoT device vulnerabilities and exposed services.
 
-    async def scan_ble_devices(self):
-        """Scans for Bluetooth Low Energy (BLE) devices."""
-        log.info("Starting BLE device scan for 10 seconds...")
+    Checks:
+      - MQTT anonymous login (ports 1883, 8883)
+      - Default credential match from offline database
+      - Service banner grabbing on common IoT ports
+      - Bluetooth Low Energy device discovery (local, not target-specific)
+    """
+
+    def __init__(self) -> None:
+        log.debug("IotScanner initialised.")
+        self._db = get_db_manager()
+
+    async def run(
+        self,
+        target_ip: str,
+        open_ports: list[int],
+        ble_duration: float = 10.0,
+        report: Optional[ReportManager] = None,
+    ) -> dict:
+        """
+        Run IoT scan against target_ip with open_ports discovered by PortScanner.
+
+        Args:
+            target_ip:    Target IP address.
+            open_ports:   List of open ports from prior port scan.
+            ble_duration: Duration in seconds for BLE scan. Default 10.0.
+            report:       Optional ReportManager.
+
+        Returns:
+            Dict with keys: mqtt, default_creds, banners, ble
+        """
+        log.info(f"Starting IoT scan on {target_ip}...")
+        results = {
+            "target":        target_ip,
+            "mqtt":          [],
+            "default_creds": [],
+            "banners":       [],
+            "ble":           [],
+        }
+
+        # Run all checks concurrently
+        tasks = [
+            self._check_mqtt(target_ip, open_ports, results),
+            self._check_default_creds(target_ip, open_ports, results),
+            self._grab_banners(target_ip, open_ports, results),
+            self._scan_ble(ble_duration, results),
+        ]
+        await asyncio.gather(*tasks, return_exceptions=True)
+
+        # --- ReportManager ---
+        if report:
+            section_findings = []
+            for check, findings in results.items():
+                if check == "target" or not findings:
+                    continue
+                for f in (findings if isinstance(findings, list) else [findings]):
+                    if isinstance(f, dict):
+                        section_findings.append(f)
+                    else:
+                        section_findings.append({"check": check, "detail": str(f)})
+            if section_findings:
+                report.add_section("IoT Scan", section_findings)
+            else:
+                report.add_section(
+                    "IoT Scan",
+                    [f"No IoT vulnerabilities detected on {target_ip}."],
+                )
+
+        log.info("IoT scan finished.")
+        return results
+
+    # ------------------------------------------------------------------
+    # MQTT anonymous login
+    # ------------------------------------------------------------------
+
+    async def _check_mqtt(
+        self,
+        target_ip: str,
+        open_ports: list[int],
+        results: dict,
+    ) -> None:
+        """Check all MQTT ports for anonymous login."""
+        if not _MQTT_AVAILABLE:
+            log.warning("paho-mqtt not installed — skipping MQTT checks.")
+            return
+
+        mqtt_ports = [p for p in open_ports if p in (1883, 8883)]
+        if not mqtt_ports:
+            log.debug(f"No MQTT ports open on {target_ip}.")
+            return
+
+        for port in mqtt_ports:
+            finding = await self._try_mqtt_anonymous(target_ip, port)
+            if finding:
+                results["mqtt"].append(finding)
+
+    async def _try_mqtt_anonymous(self, host: str, port: int) -> Optional[dict]:
+        """
+        Attempt anonymous MQTT connection. Returns a finding dict on success,
+        None if connection refused or authentication required.
+        """
+        log.info(f"Checking MQTT anonymous login on {host}:{port}...")
+        loop      = asyncio.get_event_loop()
+        connected = asyncio.Event()
+        rc_holder = [None]
+
+        def on_connect(client, userdata, flags, rc, properties=None):
+            rc_holder[0] = rc
+            connected.set()
+            client.disconnect()
+
         try:
-            devices = await BleakScanner.discover(timeout=10.0)
+            client = MqttClient(protocol=MQTTv5)
+            client.on_connect = on_connect
+            # Run blocking connect in thread pool
+            await asyncio.to_thread(client.connect, host, port, 60)
+            client.loop_start()
+
+            try:
+                await asyncio.wait_for(connected.wait(), timeout=10)
+            except asyncio.TimeoutError:
+                log.debug(f"MQTT {host}:{port} — connection timed out.")
+                client.loop_stop(force=True)
+                return None
+
+            client.loop_stop(force=True)
+            rc = rc_holder[0]
+
+            if rc == 0:
+                log.warning(
+                    f"MQTT ANONYMOUS LOGIN ACCEPTED on {host}:{port} — "
+                    "broker allows unauthenticated connections!"
+                )
+                return {
+                    "check":   "mqtt_anonymous_login",
+                    "host":    host,
+                    "port":    port,
+                    "result":  "VULNERABLE",
+                    "detail":  "Broker accepts anonymous (unauthenticated) connections.",
+                    "severity": "HIGH",
+                }
+            else:
+                desc = _MQTT_RC.get(rc, f"Unknown code {rc}")
+                log.info(f"MQTT {host}:{port} rejected anonymous: {desc}")
+                return {
+                    "check":  "mqtt_anonymous_login",
+                    "host":   host,
+                    "port":   port,
+                    "result": "SECURE",
+                    "detail": desc,
+                }
+
+        except Exception as exc:
+            log.debug(f"MQTT {host}:{port} error: {exc}")
+            return None
+
+    # ------------------------------------------------------------------
+    # Default credentials
+    # ------------------------------------------------------------------
+
+    async def _check_default_creds(
+        self,
+        target_ip: str,
+        open_ports: list[int],
+        results: dict,
+    ) -> None:
+        """Match open ports against IoT default credentials in offline DB."""
+        if not self._db.is_available():
+            log.debug("Offline DB not available — skipping default cred check.")
+            return
+
+        cred_hits = await asyncio.to_thread(
+            self._lookup_default_creds, open_ports
+        )
+
+        for hit in cred_hits:
+            log.warning(
+                f"DEFAULT CREDS MATCH on {target_ip}: "
+                f"{hit['vendor']} {hit['model']} — "
+                f"{hit['service']} (port {hit['port']}): "
+                f"{hit['username']} / {hit['password']}"
+            )
+            results["default_creds"].append({
+                "check":    "default_credentials",
+                "host":     target_ip,
+                "port":     hit["port"],
+                "service":  hit["service"],
+                "vendor":   hit["vendor"],
+                "model":    hit["model"],
+                "username": hit["username"],
+                "password": hit["password"],
+                "severity": "CRITICAL",
+            })
+
+        if not cred_hits:
+            log.info(f"No default credential matches for open ports on {target_ip}.")
+
+    def _lookup_default_creds(self, open_ports: list[int]) -> list[dict]:
+        """Synchronous DB query — called via asyncio.to_thread."""
+        try:
+            import sqlite3
+            from ..database.db_manager import DB_PATH
+            if not DB_PATH.exists():
+                return []
+
+            conn = sqlite3.connect(str(DB_PATH))
+            conn.row_factory = sqlite3.Row
+            conn.execute("PRAGMA journal_mode=WAL")
+
+            placeholders = ",".join("?" * len(open_ports))
+            cursor = conn.execute(
+                f"""SELECT * FROM iot_default_creds
+                WHERE port IN ({placeholders})
+                ORDER BY vendor, model""",
+                open_ports,
+            )
+            rows = [dict(r) for r in cursor.fetchall()]
+            conn.close()
+            return rows
+        except Exception as exc:
+            log.debug(f"Default cred DB lookup error: {exc}")
+            return []
+
+    # ------------------------------------------------------------------
+    # Banner grabbing
+    # ------------------------------------------------------------------
+
+    async def _grab_banners(
+        self,
+        target_ip: str,
+        open_ports: list[int],
+        results: dict,
+    ) -> None:
+        """Grab service banners from open IoT ports."""
+        iot_open = [p for p in open_ports if p in _IOT_BANNER_PORTS]
+        if not iot_open:
+            return
+
+        log.info(f"Grabbing banners from {len(iot_open)} IoT port(s) on {target_ip}...")
+        tasks = [self._grab_one_banner(target_ip, port) for port in iot_open]
+        banners = await asyncio.gather(*tasks, return_exceptions=True)
+
+        for banner in banners:
+            if isinstance(banner, dict):
+                results["banners"].append(banner)
+
+    async def _grab_one_banner(self, host: str, port: int) -> Optional[dict]:
+        """TCP banner grab on a single port."""
+        service_name = _IOT_BANNER_PORTS.get(port, "unknown")
+        try:
+            reader, writer = await asyncio.wait_for(
+                asyncio.open_connection(host, port),
+                timeout=5,
+            )
+            # Send a basic probe
+            writer.write(b"\r\n")
+            await writer.drain()
+            try:
+                banner = await asyncio.wait_for(reader.read(1024), timeout=3)
+                banner_str = banner.decode(errors="replace").strip()
+            except asyncio.TimeoutError:
+                banner_str = ""
+            writer.close()
+            try:
+                await writer.wait_closed()
+            except Exception:
+                pass
+
+            if banner_str:
+                log.info(f"  [{service_name}] {host}:{port} banner: {banner_str[:120]}")
+                return {
+                    "check":   "banner",
+                    "host":    host,
+                    "port":    port,
+                    "service": service_name,
+                    "banner":  banner_str[:512],
+                }
+        except Exception as exc:
+            log.debug(f"Banner grab {host}:{port} failed: {exc}")
+        return None
+
+    # ------------------------------------------------------------------
+    # BLE scan
+    # ------------------------------------------------------------------
+
+    async def _scan_ble(self, duration: float, results: dict) -> None:
+        """Discover local Bluetooth Low Energy devices."""
+        if not _BLEAK_AVAILABLE:
+            log.warning("bleak not installed — BLE scan unavailable.")
+            return
+
+        log.info(f"BLE scan: discovering devices for {duration:.0f} seconds...")
+        try:
+            devices = await BleakScanner.discover(timeout=duration)
             if devices:
                 log.info(f"Found {len(devices)} BLE device(s):")
                 for dev in devices:
-                    log.info(f"  - {dev.address} - {dev.name or 'Unknown'}")
+                    name = dev.name or "Unknown"
+                    rssi = getattr(dev, "rssi", "N/A")
+                    log.info(f"  {dev.address} — {name} (RSSI: {rssi})")
+                    results["ble"].append({
+                        "check":   "ble_discovery",
+                        "address": dev.address,
+                        "name":    name,
+                        "rssi":    rssi,
+                    })
             else:
-                log.info("No BLE devices found in the vicinity.")
-        except Exception as e:
-            log.error(f"Failed to scan for BLE devices. Ensure Bluetooth is enabled. Error: {e}")
-
-    async def check_mqtt_anonymous_login(self, target_ip: str, port: int):
-        """Checks if an MQTT broker allows anonymous login."""
-        log.info(f"Checking for anonymous MQTT login on {target_ip}:{port}...")
-        try:
-            connected = asyncio.Event()
-            
-            def on_connect(client, userdata, flags, rc, properties):
-                if rc == 0:
-                    log.warning(f"SUCCESS: Anonymous login accepted on MQTT broker at {target_ip}:{port}")
-                    client.disconnect()
-                else:
-                    log.info(f"Anonymous MQTT login failed with code: {rc}")
-                connected.set()
-
-            client = MqttClient(protocol=MQTTv5)
-            client.on_connect = on_connect
-            client.connect(target_ip, port, 60)
-            client.loop_start()
-            await asyncio.wait_for(connected.wait(), timeout=10)
-            client.loop_stop(force=True)
-        except Exception as e:
-            log.info(f"Could not connect to MQTT broker at {target_ip}:{port}. Error: {e}")
-
-    async def run(self, target_ip: str, open_ports: list[int]):
-        """Runs the IoT scan."""
-        log.info(f"Starting IoT scan on {target_ip}...")
-        tasks = []
-        # Check for MQTT on common ports
-        mqtt_ports = [p for p in open_ports if p in [1883, 8883]]
-        for port in mqtt_ports:
-            tasks.append(self.check_mqtt_anonymous_login(target_ip, port))
-        
-        # Run BLE scan (not target-specific)
-        tasks.append(self.scan_ble_devices())
-        
-        await asyncio.gather(*tasks)
-        log.info("IoT scan finished.")
-#   python
-# File: fenrir/modules/ot_scanner.py
-import asyncio
-from scapy.all import sniff, TCP
-from ..logging_config import log
-
-class OtScanner:
-    """Performs passive scanning for common Operational Technology (OT) protocols."""
-    def __init__(self):
-        log.debug("OT Scanner module initialized.")
-        self.detected_devices = {}
-
-    def packet_handler(self, pkt):
-        """Packet handler for Scapy to identify OT protocols."""
-        if pkt.haslayer(TCP):
-            src_ip, dst_ip = pkt[1].src, pkt[1].dst
-            sport, dport = pkt[TCP].sport, pkt[TCP].dport
-            
-            # Modbus TCP default port
-            if dport == 502 or sport == 502:
-                if src_ip not in self.detected_devices:
-                    log.warning(f"Detected potential Modbus traffic from {src_ip}:{sport} to {dst_ip}:{dport}")
-                    self.detected_devices[src_ip] = "Modbus"
-
-            # Siemens S7 default port
-            if dport == 102 or sport == 102:
-                if src_ip not in self.detected_devices:
-                    log.warning(f"Detected potential Siemens S7 traffic from {src_ip}:{sport} to {dst_ip}:{dport}")
-                    self.detected_devices[src_ip] = "Siemens S7"
-
-    async def run(self, duration: int = 30):
-        """Runs the passive OT scan."""
-        log.info(f"Starting passive OT network scan for {duration} seconds...")
-        log.info("Listening for Modbus (port 502) and Siemens S7 (port 102) traffic...")
-        log.warning("This requires root privileges to run.")
-        
-        try:
-            # Run the synchronous sniff function in a separate thread
-            await asyncio.to_thread(
-                sniff,
-                prn=self.packet_handler,
-                filter="tcp",
-                store=0,
-                timeout=duration
+                log.info("BLE scan: no devices found in range.")
+        except Exception as exc:
+            log.warning(
+                f"BLE scan failed — ensure Bluetooth hardware is present "
+                f"and the process has sufficient permissions. Error: {exc}"
             )
-            
-            if not self.detected_devices:
-                log.info("No common OT protocol traffic detected during the scan.")
-
-        except Exception as e:
-            log.error(f"An error occurred during the passive OT scan. Do you have root privileges? Error: {e}")
-        
-        log.info("Passive OT scan finished.")
-#python
-# File: fenrir/modules/mobile_scanner.py
-import os
-import zipfile
-import hashlib
-from androguard.core.bytecodes.apk import APK
-from ..logging_config import log
-
-class MobileScanner:
-    """Performs static analysis on mobile application files (APKs)."""
-    def __init__(self):
-        log.debug("Mobile Scanner module initialized.")
-
-    def analyze_apk(self, file_path: str):
-        """Analyzes a single Android APK file."""
-        try:
-            log.info(f"Analyzing APK: {os.path.basename(file_path)}")
-            a = APK(file_path)
-            
-            if not a.is_valid_apk():
-                log.error("Invalid APK file provided.")
-                return
-
-            log.info("Basic APK Information:")
-            log.info(f"  - Package Name: {a.get_package()}")
-            log.info(f"  - Main Activity: {a.get_main_activity()}")
-            log.info(f"  - App Name: {a.get_app_name()}")
-            
-            permissions = a.get_permissions()
-            log.info(f"Found {len(permissions)} permission(s):")
-            # Check for potentially dangerous permissions
-            dangerous_perms = [
-                "android.permission.READ_SMS", "android.permission.SEND_SMS",
-                "android.permission.READ_CONTACTS", "android.permission.WRITE_CONTACTS",
-                "android.permission.ACCESS_FINE_LOCATION", "android.permission.RECORD_AUDIO"
-            ]
-            for perm in sorted(permissions):
-                if any(dp in perm for dp in dangerous_perms):
-                    log.warning(f"  - {perm} (Potentially Dangerous)")
-                else:
-                    log.info(f"  - {perm}")
-
-        except Exception as e:
-            log.error(f"Failed to analyze APK {file_path}. Is it a valid file? Error: {e}")
-
-    async def run(self, file_path: str):
-        """Runs the mobile application scan."""
-        log.info(f"Starting mobile application scan on {file_path}...")
-        
-        if not os.path.exists(file_path):
-            log.error(f"File not found: {file_path}")
-            return
-
-        if file_path.lower().endswith(".apk"):
-            # Run synchronous analysis in a thread
-            await asyncio.to_thread(self.analyze_apk, file_path)
-        else:
-            log.error("Unsupported file type. This module currently only supports .apk files.")
-            
-        log.info("Mobile application scan finished.")
-#python
-# File: fenrir/modules/rf_scanner.py
-import asyncio
-from ..logging_config import log
-
-class RfScanner:
-    """
-    Simulates scanning for common RF signals.
-    NOTE: Real RF scanning requires specific hardware (SDR) and complex libraries.
-          This is a placeholder demonstrating the tool's structure.
-    """
-    def __init__(self):
-        log.debug("RF Scanner module initialized.")
-
-    async def run(self, duration: int = 20):
-        """Runs the RF scan simulation."""
-        log.info(f"Starting RF scan simulation for {duration} seconds...")
-        log.warning("This is a SIMULATION. Real RF scanning requires an SDR and is not implemented.")
-        
-        # --- Placeholder Logic ---
-        # A real implementation would:
-        # 1. Initialize an SDR device (e.g., using pyrtlsdr or SoapySDR).
-        # 2. Scan a range of frequencies (e.g., 300-900 MHz for common devices).
-        # 3. Analyze the power spectrum to find signals.
-        # 4. Attempt to demodulate and decode found signals.
-        
-        log.info("Scanning common frequencies (433MHz, 915MHz, 2.4GHz)...")
-        await asyncio.sleep(duration / 2)
-        
-        log.info("RF scan simulation complete.")
-        log.info("Found the following signals (simulation):")
-        log.warning("  - 433.92 MHz: Strong ASK/OOK signal detected (likely a remote control or sensor).")
-        log.info("  - 2.45 GHz: Wideband signal detected (likely Wi-Fi or Bluetooth).")
-        
-        log.info("RF scan finished.")
