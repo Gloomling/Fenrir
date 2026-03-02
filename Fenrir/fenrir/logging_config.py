@@ -17,9 +17,9 @@ import logging.handlers
 import sys
 from typing import Optional
 
-import colorama; from colorama import Fore, Style; colorama.init()
+from colorama import Fore, Style, init as colorama_init
 
-colorama.init(autoreset=True)
+colorama_init(autoreset=True)
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -57,29 +57,37 @@ class _ColoredFormatter(logging.Formatter):
 
 
 # ---------------------------------------------------------------------------
-# Queue formatter — delivers pre-formatted strings to the GUI
+# Queue handler — puts pre-formatted strings (not LogRecords) onto the queue
 # ---------------------------------------------------------------------------
+#
+# Python's built-in QueueHandler.emit() intentionally skips formatting and
+# places the raw LogRecord on the queue (designed for use with QueueListener).
+# For the Fenrir GUI we need plain formatted strings so the Tkinter thread can
+# insert them directly without touching LogRecord internals.
+# We override emit() to format first, then enqueue the string.
+#
+# Format placed on queue:  "LEVELNO:<int>|<formatted message>"
+# The GUI splits on the first "|" to extract the level number for colour tags.
 
-class _QueueFormatter(logging.Formatter):
+import queue as _queue_module
+
+class _FormattingQueueHandler(logging.Handler):
     """
-    Formatter used by the QueueHandler.
-
-    Records are formatted into plain strings before being placed on the queue
-    so the GUI consumer only needs to call queue.get() and insert the string
-    directly into the text widget — no further formatting required.
-
-    A 'levelno' attribute is preserved in the formatted message via a prefix
-    token so the GUI can apply colour tags without needing to inspect the raw
-    LogRecord (which is no longer on the queue after formatting).
-
-    Format delivered: "LEVELNO:<int>|<formatted message>"
-    The GUI strips the prefix after reading the colour tag.
+    Logging handler that formats records into strings and enqueues those
+    strings (not LogRecord objects) for consumption by the GUI thread.
     """
 
-    def format(self, record: logging.LogRecord) -> str:
-        msg = super().format(record)
-        # Prefix with level number so GUI can colour-code without the LogRecord
-        return f"LEVELNO:{record.levelno}|{msg}"
+    def __init__(self, q: _queue_module.Queue) -> None:
+        super().__init__()
+        self._queue = q
+        self.setFormatter(logging.Formatter(LOG_FORMAT_QUEUE))
+
+    def emit(self, record: logging.LogRecord) -> None:
+        try:
+            msg = self.format(record)
+            self._queue.put_nowait(f"LEVELNO:{record.levelno}|{msg}")
+        except Exception:
+            self.handleError(record)
 
 
 # ---------------------------------------------------------------------------
@@ -150,9 +158,8 @@ def setup_logging(
     # 3. Queue handler — GUI mode only
     # ------------------------------------------------------------------
     if log_queue is not None:
-        queue_handler = logging.handlers.QueueHandler(log_queue)
+        queue_handler = _FormattingQueueHandler(log_queue)
         queue_handler.setLevel(logging.DEBUG)
-        queue_handler.setFormatter(_QueueFormatter(LOG_FORMAT_QUEUE))
         logger.addHandler(queue_handler)
         logger.debug("GUI queue handler attached to logger.")
 

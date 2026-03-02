@@ -16,7 +16,7 @@ fenrir = "fenrir.cli:main"
 
 [tool.poetry.dependencies]
 # Pinned Python version to ensure compatibility with all dependencies (e.g., nvdlib).
-python = ">=3.10" 
+python = ">=3.10, <3.13" 
 python-nmap = "^0.7.1"
 requests = "^2.31.0"
 beautifulsoup4 = "^4.12.3"
@@ -29,16 +29,17 @@ aiodns = "^3.2.0"
 python-whois = "^0.8.0"
 webtech = "^1.2.1"
 asyncio-nmap = "^0.1.1"
-nvdlib = "*"
+nvdlib = "^1.1.1"
 paramiko = "^3.4.0"
+bleak = "^0.21.1"
 paho-mqtt = "^2.1.0"
 androguard = "^4.1.2"
+PyYAML = "^6.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.0"
 black = "^24.4.2"
 ruff = "^0.4.2"
-PyYAML = "^6.0"
 
 # --- Tool Configuration ---
 

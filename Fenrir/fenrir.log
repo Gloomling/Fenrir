@@ -1727,3 +1727,934 @@
 2026-02-24 19:59:06,769 - fenrir - WARNING - web_scanner:388 -   http://192.168.56.101:3000 is not reachable — skipping analysis.
 2026-02-24 19:59:06,769 - fenrir - INFO - web_scanner:514 - Web reconnaissance complete. Ports scanned: 4 | Reachable: 1 | Findings: 10
 2026-02-24 19:59:06,769 - fenrir - INFO - fenrir_gui:213 - --- All selected scans complete ---
+2026-02-26 21:43:26,057 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: NOT SET | OTX key: NOT SET | NVD key: NOT SET
+2026-02-26 21:43:26,214 - fenrir - WARNING - __init__:64 - ThreatIntelScanner could not be loaded: No module named 'yaml'
+2026-02-26 21:43:26,226 - fenrir - WARNING - __init__:86 - ExploitScanner could not be loaded: No module named 'yaml'
+2026-02-26 21:43:26,232 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-02-26 21:43:26,281 - fenrir - WARNING - __init__:122 - IotScanner could not be loaded: No module named 'yaml'
+2026-02-26 21:43:26,569 - fenrir - WARNING - __init__:134 - MobileScanner could not be loaded: No module named 'yaml'
+2026-02-26 21:43:33,231 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: NOT SET | OTX key: NOT SET | NVD key: NOT SET
+2026-02-26 21:43:33,359 - fenrir - WARNING - __init__:64 - ThreatIntelScanner could not be loaded: No module named 'yaml'
+2026-02-26 21:43:33,363 - fenrir - WARNING - __init__:86 - ExploitScanner could not be loaded: No module named 'yaml'
+2026-02-26 21:43:33,363 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-02-26 21:43:33,408 - fenrir - WARNING - __init__:122 - IotScanner could not be loaded: No module named 'yaml'
+2026-02-26 21:43:33,689 - fenrir - WARNING - __init__:134 - MobileScanner could not be loaded: No module named 'yaml'
+2026-03-01 19:07:13,070 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: set | OTX key: set | NVD key: set
+2026-03-01 19:07:13,199 - fenrir - WARNING - __init__:64 - ThreatIntelScanner could not be loaded: No module named 'yaml'
+2026-03-01 19:07:13,203 - fenrir - WARNING - __init__:86 - ExploitScanner could not be loaded: No module named 'yaml'
+2026-03-01 19:07:13,204 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-03-01 19:07:13,251 - fenrir - WARNING - __init__:122 - IotScanner could not be loaded: No module named 'yaml'
+2026-03-01 19:07:13,535 - fenrir - WARNING - __init__:134 - MobileScanner could not be loaded: No module named 'yaml'
+2026-03-01 19:25:45,743 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: set | OTX key: set | NVD key: set
+2026-03-01 19:25:50,560 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: set | OTX key: set | NVD key: set
+2026-03-01 19:27:15,066 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: set | OTX key: set | NVD key: set
+2026-03-01 19:27:45,381 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: set | OTX key: set | NVD key: set
+2026-03-01 19:28:07,171 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: set | OTX key: set | NVD key: set
+2026-03-01 19:28:07,303 - fenrir - WARNING - __init__:64 - ThreatIntelScanner could not be loaded: No module named 'yaml'
+2026-03-01 19:28:07,308 - fenrir - WARNING - __init__:86 - ExploitScanner could not be loaded: No module named 'yaml'
+2026-03-01 19:28:07,309 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-03-01 19:28:07,353 - fenrir - WARNING - __init__:122 - IotScanner could not be loaded: No module named 'yaml'
+2026-03-01 19:28:07,642 - fenrir - WARNING - __init__:134 - MobileScanner could not be loaded: No module named 'yaml'
+2026-03-01 19:43:03,842 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: set | OTX key: set | NVD key: set
+2026-03-01 19:43:03,967 - fenrir - WARNING - __init__:64 - ThreatIntelScanner could not be loaded: No module named 'yaml'
+2026-03-01 19:43:03,972 - fenrir - WARNING - __init__:88 - ExploitScanner could not be loaded: No module named 'yaml'
+2026-03-01 19:43:03,973 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-03-01 19:43:04,019 - fenrir - WARNING - __init__:124 - IotScanner could not be loaded: No module named 'yaml'
+2026-03-01 19:43:04,312 - fenrir - WARNING - __init__:136 - MobileScanner could not be loaded: No module named 'yaml'
+2026-03-01 19:43:04,372 - fenrir - ERROR - cli:450 - A target is required. Use: fenrir <target> [options]
+2026-03-01 19:43:11,981 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: set | OTX key: set | NVD key: set
+2026-03-01 19:43:12,106 - fenrir - WARNING - __init__:64 - ThreatIntelScanner could not be loaded: No module named 'yaml'
+2026-03-01 19:43:12,109 - fenrir - WARNING - __init__:88 - ExploitScanner could not be loaded: No module named 'yaml'
+2026-03-01 19:43:12,110 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-03-01 19:43:12,153 - fenrir - WARNING - __init__:124 - IotScanner could not be loaded: No module named 'yaml'
+2026-03-01 19:43:12,434 - fenrir - WARNING - __init__:136 - MobileScanner could not be loaded: No module named 'yaml'
+2026-03-01 19:43:12,636 - fenrir - DEBUG - logging_config:157 - GUI queue handler attached to logger.
+2026-03-01 19:45:21,301 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: set | OTX key: set | NVD key: set
+2026-03-01 19:45:21,421 - fenrir - WARNING - __init__:64 - ThreatIntelScanner could not be loaded: No module named 'yaml'
+2026-03-01 19:45:21,425 - fenrir - WARNING - __init__:88 - ExploitScanner could not be loaded: No module named 'yaml'
+2026-03-01 19:45:21,426 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-03-01 19:45:21,473 - fenrir - WARNING - __init__:124 - IotScanner could not be loaded: No module named 'yaml'
+2026-03-01 19:45:21,760 - fenrir - WARNING - __init__:136 - MobileScanner could not be loaded: No module named 'yaml'
+2026-03-01 19:45:21,989 - fenrir - DEBUG - logging_config:157 - GUI queue handler attached to logger.
+2026-03-01 19:56:58,805 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: set | OTX key: set | NVD key: set
+2026-03-01 19:56:58,942 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-03-01 19:56:58,983 - fenrir - DEBUG - iot_scanner:31 - bleak not installed — BLE scanning unavailable.
+2026-03-01 19:56:58,983 - fenrir - DEBUG - iot_scanner:39 - paho-mqtt not installed — MQTT scanning unavailable.
+2026-03-01 19:56:59,531 - fenrir - DEBUG - logging_config:164 - GUI queue handler attached to logger.
+2026-03-01 19:57:26,904 - fenrir - INFO - fenrir_gui:648 - ────────────────────────────────────────────────────────
+2026-03-01 19:57:26,905 - fenrir - INFO - fenrir_gui:649 -   Fenrir scan started — target: 192.168.56.101
+2026-03-01 19:57:26,905 - fenrir - INFO - fenrir_gui:650 - ────────────────────────────────────────────────────────
+2026-03-01 19:57:26,905 - fenrir - INFO - report_manager:90 - Report session started. Target: 192.168.56.101
+2026-03-01 19:57:26,905 - fenrir - INFO - report_manager:91 -   TXT report : /home/kali/Desktop/Fenrir/Fenrir/fenrir_report_192.168.56.101_20260301_195726.txt
+2026-03-01 19:57:26,905 - fenrir - INFO - report_manager:92 -   JSON report: /home/kali/Desktop/Fenrir/Fenrir/fenrir_report_192.168.56.101_20260301_195726.json
+2026-03-01 19:57:26,925 - fenrir - INFO - fenrir_gui:679 - Phase 1: Port scan
+2026-03-01 19:57:26,925 - fenrir - DEBUG - port_scanner:231 - PortScanner initialised. Concurrency: 200, Timeout: 1.0s
+2026-03-01 19:57:26,925 - fenrir - INFO - port_scanner:300 - No ports specified — using default top-1000 port list.
+2026-03-01 19:57:26,925 - fenrir - INFO - port_scanner:302 - Starting port scan on 192.168.56.101 (1000 ports to check)...
+2026-03-01 19:57:26,925 - fenrir - INFO - port_scanner:303 - Concurrency: 200 | Timeout: 1.0s per port
+2026-03-01 19:57:31,977 - fenrir - INFO - port_scanner:324 - Port scan complete. Scanned: 1000 | Open: 23 | Closed/Filtered: 977
+2026-03-01 19:57:31,978 - fenrir - WARNING - port_scanner:331 - Open ports on 192.168.56.101:
+2026-03-01 19:57:31,978 - fenrir - WARNING - port_scanner:334 -   21/tcp  open  ftp
+2026-03-01 19:57:31,978 - fenrir - WARNING - port_scanner:334 -   22/tcp  open  ssh
+2026-03-01 19:57:31,978 - fenrir - WARNING - port_scanner:334 -   23/tcp  open  telnet
+2026-03-01 19:57:31,978 - fenrir - WARNING - port_scanner:334 -   25/tcp  open  smtp
+2026-03-01 19:57:31,978 - fenrir - WARNING - port_scanner:334 -   53/tcp  open  dns
+2026-03-01 19:57:31,978 - fenrir - WARNING - port_scanner:334 -   80/tcp  open  http
+2026-03-01 19:57:31,978 - fenrir - WARNING - port_scanner:334 -   111/tcp  open  rpcbind
+2026-03-01 19:57:31,978 - fenrir - WARNING - port_scanner:334 -   139/tcp  open  netbios-ssn
+2026-03-01 19:57:31,978 - fenrir - WARNING - port_scanner:334 -   445/tcp  open  microsoft-ds
+2026-03-01 19:57:31,978 - fenrir - WARNING - port_scanner:334 -   512/tcp  open  exec
+2026-03-01 19:57:31,978 - fenrir - WARNING - port_scanner:334 -   513/tcp  open  login
+2026-03-01 19:57:31,978 - fenrir - WARNING - port_scanner:334 -   514/tcp  open  shell
+2026-03-01 19:57:31,979 - fenrir - WARNING - port_scanner:334 -   1099/tcp  open  unknown
+2026-03-01 19:57:31,979 - fenrir - WARNING - port_scanner:334 -   1524/tcp  open  unknown
+2026-03-01 19:57:31,979 - fenrir - WARNING - port_scanner:334 -   2049/tcp  open  nfs
+2026-03-01 19:57:31,979 - fenrir - WARNING - port_scanner:334 -   2121/tcp  open  unknown
+2026-03-01 19:57:31,979 - fenrir - WARNING - port_scanner:334 -   3306/tcp  open  mysql
+2026-03-01 19:57:31,979 - fenrir - WARNING - port_scanner:334 -   5432/tcp  open  postgresql
+2026-03-01 19:57:31,979 - fenrir - WARNING - port_scanner:334 -   5900/tcp  open  vnc
+2026-03-01 19:57:31,979 - fenrir - WARNING - port_scanner:334 -   6000/tcp  open  unknown
+2026-03-01 19:57:31,979 - fenrir - WARNING - port_scanner:334 -   6667/tcp  open  unknown
+2026-03-01 19:57:31,979 - fenrir - WARNING - port_scanner:334 -   8009/tcp  open  unknown
+2026-03-01 19:57:31,979 - fenrir - WARNING - port_scanner:334 -   8180/tcp  open  unknown
+2026-03-01 19:57:31,979 - fenrir - DEBUG - report_manager:138 - Report section added: 'Open Ports' (23 finding(s)).
+2026-03-01 19:57:31,979 - fenrir - INFO - fenrir_gui:683 -   Open ports: [21, 22, 23, 25, 53, 80, 111, 139, 445, 512, 513, 514, 1099, 1524, 2049, 2121, 3306, 5432, 5900, 6000, 6667, 8009, 8180]
+2026-03-01 19:57:31,979 - fenrir - INFO - fenrir_gui:694 - Phase 2: Analysis & recon
+2026-03-01 19:57:31,980 - fenrir - DEBUG - vulnerability_scanner:58 - VulnerabilityScanner initialised. CVE limit: 5 | Concurrency: 5 | NVD key: set
+2026-03-01 19:57:31,980 - fenrir - INFO - vulnerability_scanner:311 - Starting vulnerability scan on 192.168.56.101 (23 open port(s))...
+2026-03-01 19:57:31,980 - fenrir - INFO - vulnerability_scanner:319 - Stage 1/2: Service and version detection...
+2026-03-01 19:57:31,981 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:21...
+2026-03-01 19:57:31,983 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:22...
+2026-03-01 19:57:31,983 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:23...
+2026-03-01 19:57:31,984 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:25...
+2026-03-01 19:57:31,985 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:53...
+2026-03-01 19:57:32,895 - fenrir - INFO - vulnerability_scanner:137 -   25/tcp  open  Postfix smtpd
+2026-03-01 19:57:32,902 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:80...
+2026-03-01 19:57:32,912 - fenrir - INFO - vulnerability_scanner:137 -   23/tcp  open  Linux telnetd
+2026-03-01 19:57:32,914 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:111...
+2026-03-01 19:57:32,922 - fenrir - INFO - vulnerability_scanner:137 -   22/tcp  open  OpenSSH 4.7p1 Debian 8ubuntu1 protocol 2.0
+2026-03-01 19:57:32,924 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:139...
+2026-03-01 19:57:32,937 - fenrir - INFO - vulnerability_scanner:137 -   21/tcp  open  vsftpd 2.3.4
+2026-03-01 19:57:32,938 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:445...
+2026-03-01 19:57:38,893 - fenrir - INFO - vulnerability_scanner:137 -   53/tcp  open  ISC BIND 9.4.2
+2026-03-01 19:57:38,893 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:512...
+2026-03-01 19:57:39,670 - fenrir - INFO - vulnerability_scanner:137 -   512/tcp  open  netkit-rsh rexecd
+2026-03-01 19:57:39,671 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:513...
+2026-03-01 19:57:39,769 - fenrir - INFO - vulnerability_scanner:137 -   80/tcp  open  Apache httpd 2.2.8 (Ubuntu) DAV/2
+2026-03-01 19:57:39,770 - fenrir - INFO - vulnerability_scanner:141 -   111/tcp  open  rpcbind (no version detected)
+2026-03-01 19:57:39,770 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:514...
+2026-03-01 19:57:39,771 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:1099...
+2026-03-01 19:57:39,805 - fenrir - INFO - vulnerability_scanner:137 -   445/tcp  open  Samba smbd 3.X - 4.X workgroup: WORKGROUP
+2026-03-01 19:57:39,805 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:1524...
+2026-03-01 19:57:40,643 - fenrir - INFO - vulnerability_scanner:137 -   514/tcp  open  Netkit rshd
+2026-03-01 19:57:40,644 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:2049...
+2026-03-01 19:57:40,685 - fenrir - INFO - vulnerability_scanner:137 -   1524/tcp  open  Metasploitable root shell
+2026-03-01 19:57:40,686 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:2121...
+2026-03-01 19:57:44,772 - fenrir - INFO - vulnerability_scanner:137 -   139/tcp  open  Samba smbd 3.X - 4.X workgroup: WORKGROUP
+2026-03-01 19:57:44,772 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:3306...
+2026-03-01 19:57:45,576 - fenrir - INFO - vulnerability_scanner:137 -   3306/tcp  open  MySQL 5.0.51a-3ubuntu5
+2026-03-01 19:57:45,577 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:5432...
+2026-03-01 19:57:46,522 - fenrir - INFO - vulnerability_scanner:141 -   513/tcp  open  login (no version detected)
+2026-03-01 19:57:46,522 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:5900...
+2026-03-01 19:57:46,624 - fenrir - INFO - vulnerability_scanner:137 -   1099/tcp  open  GNU Classpath grmiregistry
+2026-03-01 19:57:46,624 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:6000...
+2026-03-01 19:57:47,294 - fenrir - INFO - vulnerability_scanner:137 -   5900/tcp  open  VNC protocol 3.3
+2026-03-01 19:57:47,294 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:6667...
+2026-03-01 19:57:47,480 - fenrir - INFO - vulnerability_scanner:141 -   2049/tcp  open  rpcbind (no version detected)
+2026-03-01 19:57:47,481 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:8009...
+2026-03-01 19:57:49,065 - fenrir - INFO - vulnerability_scanner:137 -   6667/tcp  open  UnrealIRCd
+2026-03-01 19:57:49,065 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:8180...
+2026-03-01 19:57:51,500 - fenrir - INFO - vulnerability_scanner:137 -   2121/tcp  open  ProFTPD 1.3.1
+2026-03-01 19:57:52,352 - fenrir - INFO - vulnerability_scanner:137 -   5432/tcp  open  PostgreSQL DB 8.3.0 - 8.3.7
+2026-03-01 19:57:53,424 - fenrir - INFO - vulnerability_scanner:141 -   6000/tcp  open  X11 (no version detected)
+2026-03-01 19:57:59,304 - fenrir - INFO - vulnerability_scanner:137 -   8009/tcp  open  Apache Jserv Protocol v1.3
+2026-03-01 19:58:00,864 - fenrir - INFO - vulnerability_scanner:137 -   8180/tcp  open  Apache Tomcat/Coyote JSP engine 1.1
+2026-03-01 19:58:00,865 - fenrir - INFO - vulnerability_scanner:347 - Service detection complete. Identified 23/23 service(s).
+2026-03-01 19:58:00,865 - fenrir - INFO - vulnerability_scanner:357 - Stage 2/2: CVE lookup against NVD...
+2026-03-01 19:58:00,865 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'vsftpd 2.3.4'...
+2026-03-01 19:58:00,865 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'OpenSSH 4.7p1 Debian 8ubuntu1'...
+2026-03-01 19:58:07,786 - fenrir - WARNING - vulnerability_scanner:265 - Found 1 CVE(s) for 'vsftpd 2.3.4' on port 21:
+2026-03-01 19:58:07,786 - fenrir - WARNING - vulnerability_scanner:269 -   [CRITICAL] CVE-2011-2523  Score: 9.8  |  vsftpd 2.3.4 downloaded between 20110630 and 20110703 contains a backdoor which opens a shell on por...
+2026-03-01 19:58:07,786 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2011-2523
+2026-03-01 19:58:07,786 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'Linux telnetd'...
+2026-03-01 19:58:07,861 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'OpenSSH 4.7p1 Debian 8ubuntu1'.
+2026-03-01 19:58:07,861 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'Postfix smtpd'...
+2026-03-01 19:58:14,682 - fenrir - WARNING - vulnerability_scanner:265 - Found 4 CVE(s) for 'Linux telnetd' on port 23:
+2026-03-01 19:58:14,683 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2000-1195  Score: 7.5  |  telnet daemon (telnetd) from the Linux netkit package before netkit-telnet-0.16 allows remote attack...
+2026-03-01 19:58:14,683 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2000-1195
+2026-03-01 19:58:14,683 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2020-8797  Score: 6.7  |  Juplink RX4-1500 v1.0.3 allows remote attackers to gain root access to the Linux subsystem via an un...
+2026-03-01 19:58:14,683 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2020-8797
+2026-03-01 19:58:14,683 - fenrir - WARNING - vulnerability_scanner:269 -   [CRITICAL] CVE-2021-27171  Score: 9.8  |  An issue was discovered on FiberHome HG6245D devices through RP2613. It is possible to start a Linux...
+2026-03-01 19:58:14,683 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2021-27171
+2026-03-01 19:58:14,683 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2022-39028  Score: 7.5  |  telnetd in GNU Inetutils through 2.3, MIT krb5-appl through 1.0.3, and derivative works has a NULL p...
+2026-03-01 19:58:14,683 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2022-39028
+2026-03-01 19:58:14,683 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'ISC BIND 9.4.2'...
+2026-03-01 19:58:14,783 - fenrir - WARNING - vulnerability_scanner:265 - Found 4 CVE(s) for 'Postfix smtpd' on port 25:
+2026-03-01 19:58:14,783 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2004-0925  Score: 5.0  |  Postfix on Mac OS X 10.3.x through 10.3.5, with SMTPD AUTH enabled, does not properly clear the user...
+2026-03-01 19:58:14,783 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2004-0925
+2026-03-01 19:58:14,783 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2005-0337  Score: 7.5  |  Postfix 2.1.3, when /proc/net/if_inet6 is not available and permit_mx_backup is enabled in smtpd_rec...
+2026-03-01 19:58:14,783 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2005-0337
+2026-03-01 19:58:14,784 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2023-51764  Score: 5.3  |  Postfix through 3.8.5 allows SMTP smuggling unless configured with smtpd_data_restrictions=reject_un...
+2026-03-01 19:58:14,784 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2023-51764
+2026-03-01 19:58:14,784 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2024-27305  Score: 5.3  |  aiosmtpd is a reimplementation of the Python stdlib smtpd.py based on asyncio. aiosmtpd is vulnerabl...
+2026-03-01 19:58:14,784 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2024-27305
+2026-03-01 19:58:14,784 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'Apache httpd 2.2.8'...
+2026-03-01 19:58:21,604 - fenrir - WARNING - vulnerability_scanner:265 - Found 2 CVE(s) for 'ISC BIND 9.4.2' on port 53:
+2026-03-01 19:58:21,604 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2008-0122  Score: 10.0  |  Off-by-one error in the inet_network function in libbind in ISC BIND 9.4.2 and earlier, as used in l...
+2026-03-01 19:58:21,605 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2008-0122
+2026-03-01 19:58:21,605 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2008-4163  Score: 7.8  |  Unspecified vulnerability in ISC BIND 9.3.5-P2-W1, 9.4.2-P2-W1, and 9.5.0-P2-W1 on Windows allows re...
+2026-03-01 19:58:21,605 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2008-4163
+2026-03-01 19:58:21,605 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'rpcbind'...
+2026-03-01 19:58:21,665 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'Apache httpd 2.2.8'.
+2026-03-01 19:58:21,665 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'Samba smbd 3.X - 4.X'...
+2026-03-01 19:58:28,498 - fenrir - WARNING - vulnerability_scanner:265 - Found 5 CVE(s) for 'rpcbind' on port 111:
+2026-03-01 19:58:28,498 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-0189  Score: 7.5  |  Solaris rpcbind listens on a high numbered UDP port, which may not be filtered since the standard po...
+2026-03-01 19:58:28,498 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-0189
+2026-03-01 19:58:28,498 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-0190  Score: 7.2  |  Solaris rpcbind can be exploited to overwrite arbitrary files and gain root access.
+2026-03-01 19:58:28,498 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-0190
+2026-03-01 19:58:28,498 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-0213  Score: 10.0  |  libnsl in Solaris allowed an attacker to perform a denial of service of rpcbind.
+2026-03-01 19:58:28,498 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-0213
+2026-03-01 19:58:28,498 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-0461  Score: 10.0  |  Versions of rpcbind including Linux, IRIX, and Wietse Venema's rpcbind allow a remote attacker to in...
+2026-03-01 19:58:28,499 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-0461
+2026-03-01 19:58:28,499 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2001-1124  Score: 5.0  |  rpcbind in HP-UX 11.00, 11.04 and 11.11 allows remote attackers to cause a denial of service (core d...
+2026-03-01 19:58:28,499 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2001-1124
+2026-03-01 19:58:28,499 - fenrir - WARNING - vulnerability_scanner:277 -   NOTE: More CVEs exist for 'rpcbind' beyond the current limit of 5. Increase --cve-limit to retrieve more.
+2026-03-01 19:58:28,499 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'Samba smbd 3.X - 4.X'...
+2026-03-01 19:58:28,525 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'Samba smbd 3.X - 4.X'.
+2026-03-01 19:58:28,525 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'netkit-rsh rexecd'...
+2026-03-01 19:58:35,306 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'Samba smbd 3.X - 4.X'.
+2026-03-01 19:58:35,306 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'login'...
+2026-03-01 19:58:35,421 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'netkit-rsh rexecd'.
+2026-03-01 19:58:35,422 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'Netkit rshd'...
+2026-03-01 19:58:42,234 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'Netkit rshd'.
+2026-03-01 19:58:42,235 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'GNU Classpath grmiregistry'...
+2026-03-01 19:58:42,303 - fenrir - WARNING - vulnerability_scanner:265 - Found 5 CVE(s) for 'login' on port 513:
+2026-03-01 19:58:42,303 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-1034  Score: 7.2  |  Vulnerability in login in AT&T System V Release 4 allows local users to gain privileges.
+2026-03-01 19:58:42,303 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-1034
+2026-03-01 19:58:42,303 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-1142  Score: 7.2  |  SunOS 4.1.2 and earlier allows local users to gain privileges via "LD_*" environmental variables to ...
+2026-03-01 19:58:42,303 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-1142
+2026-03-01 19:58:42,303 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-1999-1215  Score: 4.6  |  LOGIN.EXE program in Novell Netware 4.0 and 4.01 temporarily writes user name and password informati...
+2026-03-01 19:58:42,303 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-1215
+2026-03-01 19:58:42,303 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-1304  Score: 7.2  |  Vulnerability in login in SCO UNIX 4.2 and earlier allows local users to gain root access.
+2026-03-01 19:58:42,303 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-1304
+2026-03-01 19:58:42,303 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-0180  Score: 7.5  |  in.rshd allows users to login with a NULL username and execute commands.
+2026-03-01 19:58:42,303 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-0180
+2026-03-01 19:58:42,305 - fenrir - WARNING - vulnerability_scanner:277 -   NOTE: More CVEs exist for 'login' beyond the current limit of 5. Increase --cve-limit to retrieve more.
+2026-03-01 19:58:42,305 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'Metasploitable root shell'...
+2026-03-01 19:58:49,052 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'GNU Classpath grmiregistry'.
+2026-03-01 19:58:49,052 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'rpcbind'...
+2026-03-01 19:58:49,187 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'Metasploitable root shell'.
+2026-03-01 19:58:49,187 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'ProFTPD 1.3.1'...
+2026-03-01 19:58:55,966 - fenrir - WARNING - vulnerability_scanner:265 - Found 5 CVE(s) for 'rpcbind' on port 2049:
+2026-03-01 19:58:55,966 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-0189  Score: 7.5  |  Solaris rpcbind listens on a high numbered UDP port, which may not be filtered since the standard po...
+2026-03-01 19:58:55,966 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-0189
+2026-03-01 19:58:55,966 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-0190  Score: 7.2  |  Solaris rpcbind can be exploited to overwrite arbitrary files and gain root access.
+2026-03-01 19:58:55,966 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-0190
+2026-03-01 19:58:55,966 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-0213  Score: 10.0  |  libnsl in Solaris allowed an attacker to perform a denial of service of rpcbind.
+2026-03-01 19:58:55,966 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-0213
+2026-03-01 19:58:55,966 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-0461  Score: 10.0  |  Versions of rpcbind including Linux, IRIX, and Wietse Venema's rpcbind allow a remote attacker to in...
+2026-03-01 19:58:55,967 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-0461
+2026-03-01 19:58:55,967 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2001-1124  Score: 5.0  |  rpcbind in HP-UX 11.00, 11.04 and 11.11 allows remote attackers to cause a denial of service (core d...
+2026-03-01 19:58:55,967 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2001-1124
+2026-03-01 19:58:55,967 - fenrir - WARNING - vulnerability_scanner:277 -   NOTE: More CVEs exist for 'rpcbind' beyond the current limit of 5. Increase --cve-limit to retrieve more.
+2026-03-01 19:58:55,967 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'MySQL 5.0.51a-3ubuntu5'...
+2026-03-01 19:58:56,081 - fenrir - WARNING - vulnerability_scanner:265 - Found 4 CVE(s) for 'ProFTPD 1.3.1' on port 2121:
+2026-03-01 19:58:56,081 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2006-6563  Score: 6.6  |  Stack-based buffer overflow in the pr_ctrls_recv_request function in ctrls.c in the mod_ctrls module...
+2026-03-01 19:58:56,081 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2006-6563
+2026-03-01 19:58:56,081 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2008-4242  Score: 6.8  |  ProFTPD 1.3.1 interprets long commands from an FTP client as multiple commands, which allows remote ...
+2026-03-01 19:58:56,081 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2008-4242
+2026-03-01 19:58:56,081 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2009-0542  Score: 7.5  |  SQL injection vulnerability in ProFTPD Server 1.3.1 through 1.3.2rc2 allows remote attackers to exec...
+2026-03-01 19:58:56,081 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2009-0542
+2026-03-01 19:58:56,081 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2009-0543  Score: 6.8  |  ProFTPD Server 1.3.1, with NLS support enabled, allows remote attackers to bypass SQL injection prot...
+2026-03-01 19:58:56,081 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2009-0543
+2026-03-01 19:58:56,081 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'PostgreSQL DB 8.3.0 - 8.3.7'...
+2026-03-01 19:59:02,791 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'MySQL 5.0.51a-3ubuntu5'.
+2026-03-01 19:59:02,792 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'VNC'...
+2026-03-01 19:59:03,162 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'PostgreSQL DB 8.3.0 - 8.3.7'.
+2026-03-01 19:59:03,162 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'X11'...
+2026-03-01 19:59:09,639 - fenrir - WARNING - vulnerability_scanner:265 - Found 5 CVE(s) for 'VNC' on port 5900:
+2026-03-01 19:59:09,639 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2001-1422  Score: 7.5  |  WinVNC 3.3.3 and earlier generates the same challenge string for multiple connections, which allows ...
+2026-03-01 19:59:09,639 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2001-1422
+2026-03-01 19:59:09,639 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2002-0971  Score: 4.6  |  Vulnerability in VNC, TightVNC, and TridiaVNC allows local users to execute arbitrary code as LocalS...
+2026-03-01 19:59:09,639 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2002-0971
+2026-03-01 19:59:09,639 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2002-0994  Score: 7.5  |  SunPCi II VNC uses a weak authentication scheme, which allows remote attackers to obtain the VNC pas...
+2026-03-01 19:59:09,639 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2002-0994
+2026-03-01 19:59:09,639 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2002-1336  Score: 7.5  |  TightVNC before 1.2.6 generates the same challenge string for multiple connections, which allows rem...
+2026-03-01 19:59:09,639 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2002-1336
+2026-03-01 19:59:09,639 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2002-2088  Score: 10.0  |  The MOSIX Project clump/os 5.4 creates a default VNC account without a password, which allows remote...
+2026-03-01 19:59:09,639 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2002-2088
+2026-03-01 19:59:09,639 - fenrir - WARNING - vulnerability_scanner:277 -   NOTE: More CVEs exist for 'VNC' beyond the current limit of 5. Increase --cve-limit to retrieve more.
+2026-03-01 19:59:09,639 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'UnrealIRCd'...
+2026-03-01 19:59:10,021 - fenrir - WARNING - vulnerability_scanner:265 - Found 5 CVE(s) for 'X11' on port 6000:
+2026-03-01 19:59:10,022 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2000-1169  Score: 7.5  |  OpenSSH SSH client before 2.3.0 does not properly disable X11 or agent forwarding, which could allow...
+2026-03-01 19:59:10,022 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2000-1169
+2026-03-01 19:59:10,022 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2002-0402  Score: 7.5  |  Buffer overflow in X11 dissector in Ethereal 0.9.3 and earlier allows remote attackers to cause a de...
+2026-03-01 19:59:10,022 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2002-0402
+2026-03-01 19:59:10,022 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2002-0517  Score: 7.2  |  Buffer overflow in X11 library (libX11) on Caldera Open UNIX 8.0.0, UnixWare 7.1.1, and possibly oth...
+2026-03-01 19:59:10,022 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2002-0517
+2026-03-01 19:59:10,022 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2004-0157  Score: 4.6  |  x11.c in xonix 1.4 and earlier uses the current working directory to find and execute the rmail prog...
+2026-03-01 19:59:10,022 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2004-0157
+2026-03-01 19:59:10,022 - fenrir - WARNING - vulnerability_scanner:269 -   [LOW     ] CVE-2004-2097  Score: 2.1  |  Multiple scripts on SuSE Linux 9.0 allow local users to overwrite arbitrary files via a symlink atta...
+2026-03-01 19:59:10,022 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2004-2097
+2026-03-01 19:59:10,022 - fenrir - WARNING - vulnerability_scanner:277 -   NOTE: More CVEs exist for 'X11' beyond the current limit of 5. Increase --cve-limit to retrieve more.
+2026-03-01 19:59:10,022 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'Apache Jserv'...
+2026-03-01 19:59:16,536 - fenrir - WARNING - vulnerability_scanner:265 - Found 5 CVE(s) for 'UnrealIRCd' on port 6667:
+2026-03-01 19:59:16,537 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2004-0679  Score: 5.0  |  The IP cloaking feature (cloak.c) in UnrealIRCd 3.2, and possibly other versions, uses a weak hashin...
+2026-03-01 19:59:16,537 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2004-0679
+2026-03-01 19:59:16,537 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2006-1214  Score: 5.0  |  UnrealIRCd 3.2.3 allows remote attackers to cause an unspecified denial of service by causing a link...
+2026-03-01 19:59:16,537 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2006-1214
+2026-03-01 19:59:16,537 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2009-4893  Score: 6.8  |  Buffer overflow in UnrealIRCd 3.2beta11 through 3.2.8, when allow::options::noident is enabled, allo...
+2026-03-01 19:59:16,537 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2009-4893
+2026-03-01 19:59:16,537 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2010-2075  Score: 7.5  |  UnrealIRCd 3.2.8.1, as distributed on certain mirror sites from November 2009 through June 2010, con...
+2026-03-01 19:59:16,537 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2010-2075
+2026-03-01 19:59:16,537 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2013-6413  Score: 5.0  |  Use-after-free vulnerability in UnrealIRCd 3.2.10 before 3.2.10.2 allows remote attackers to cause a...
+2026-03-01 19:59:16,538 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2013-6413
+2026-03-01 19:59:16,538 - fenrir - WARNING - vulnerability_scanner:277 -   NOTE: More CVEs exist for 'UnrealIRCd' beyond the current limit of 5. Increase --cve-limit to retrieve more.
+2026-03-01 19:59:16,538 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'Apache Tomcat/Coyote JSP engine 1.1'...
+2026-03-01 19:59:16,976 - fenrir - WARNING - vulnerability_scanner:265 - Found 2 CVE(s) for 'Apache Jserv' on port 8009:
+2026-03-01 19:59:16,976 - fenrir - WARNING - vulnerability_scanner:269 -   [LOW     ] CVE-2000-1247  Score: 2.1  |  The default configuration of the jserv-status handler in jserv.conf in Apache JServ 1.1.2 includes a...
+2026-03-01 19:59:16,976 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2000-1247
+2026-03-01 19:59:16,976 - fenrir - WARNING - vulnerability_scanner:269 -   [CRITICAL] CVE-2020-1938  Score: 9.8  |  When using the Apache JServ Protocol (AJP), care must be taken when trusting incoming connections to...
+2026-03-01 19:59:16,976 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2020-1938
+2026-03-01 19:59:23,352 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'Apache Tomcat/Coyote JSP engine 1.1'.
+2026-03-01 19:59:23,352 - fenrir - DEBUG - report_manager:138 - Report section added: 'Detected Services' (23 finding(s)).
+2026-03-01 19:59:23,352 - fenrir - DEBUG - report_manager:138 - Report section added: 'CVE Findings' (47 finding(s)).
+2026-03-01 19:59:23,352 - fenrir - INFO - vulnerability_scanner:412 - Vulnerability scan complete. Services detected: 23 | CVEs found: 47
+2026-03-01 19:59:23,353 - fenrir - INFO - fenrir_gui:750 - Phase 4: Specialised modules
+2026-03-01 19:59:23,355 - fenrir - INFO - report_manager:156 - Finalising scan report...
+2026-03-01 19:59:23,356 - fenrir - INFO - report_manager:161 - Reports saved:
+2026-03-01 19:59:23,356 - fenrir - INFO - report_manager:162 -   TXT  → /home/kali/Desktop/Fenrir/Fenrir/fenrir_report_192.168.56.101_20260301_195726.txt
+2026-03-01 19:59:23,356 - fenrir - INFO - report_manager:163 -   JSON → /home/kali/Desktop/Fenrir/Fenrir/fenrir_report_192.168.56.101_20260301_195726.json
+2026-03-01 19:59:23,356 - fenrir - INFO - fenrir_gui:809 - ────────────────────────────────────────────────────────
+2026-03-01 19:59:23,356 - fenrir - INFO - fenrir_gui:810 -   Scan complete.
+2026-03-01 19:59:23,357 - fenrir - INFO - fenrir_gui:814 - ────────────────────────────────────────────────────────
+2026-03-01 20:01:58,193 - fenrir - INFO - fenrir_gui:648 - ────────────────────────────────────────────────────────
+2026-03-01 20:01:58,193 - fenrir - INFO - fenrir_gui:649 -   Fenrir scan started — target: 192.168.56.101
+2026-03-01 20:01:58,193 - fenrir - INFO - fenrir_gui:650 - ────────────────────────────────────────────────────────
+2026-03-01 20:01:58,193 - fenrir - INFO - report_manager:90 - Report session started. Target: 192.168.56.101
+2026-03-01 20:01:58,194 - fenrir - INFO - report_manager:91 -   TXT report : /home/kali/Desktop/Fenrir/Fenrir/fenrir_report_192.168.56.101_20260301_200158.txt
+2026-03-01 20:01:58,194 - fenrir - INFO - report_manager:92 -   JSON report: /home/kali/Desktop/Fenrir/Fenrir/fenrir_report_192.168.56.101_20260301_200158.json
+2026-03-01 20:01:58,198 - fenrir - INFO - fenrir_gui:679 - Phase 1: Port scan
+2026-03-01 20:01:58,199 - fenrir - DEBUG - port_scanner:231 - PortScanner initialised. Concurrency: 200, Timeout: 1.0s
+2026-03-01 20:01:58,199 - fenrir - INFO - port_scanner:300 - No ports specified — using default top-1000 port list.
+2026-03-01 20:01:58,199 - fenrir - INFO - port_scanner:302 - Starting port scan on 192.168.56.101 (1000 ports to check)...
+2026-03-01 20:01:58,199 - fenrir - INFO - port_scanner:303 - Concurrency: 200 | Timeout: 1.0s per port
+2026-03-01 20:02:03,240 - fenrir - INFO - port_scanner:324 - Port scan complete. Scanned: 1000 | Open: 23 | Closed/Filtered: 977
+2026-03-01 20:02:03,240 - fenrir - WARNING - port_scanner:331 - Open ports on 192.168.56.101:
+2026-03-01 20:02:03,240 - fenrir - WARNING - port_scanner:334 -   21/tcp  open  ftp
+2026-03-01 20:02:03,240 - fenrir - WARNING - port_scanner:334 -   22/tcp  open  ssh
+2026-03-01 20:02:03,240 - fenrir - WARNING - port_scanner:334 -   23/tcp  open  telnet
+2026-03-01 20:02:03,240 - fenrir - WARNING - port_scanner:334 -   25/tcp  open  smtp
+2026-03-01 20:02:03,240 - fenrir - WARNING - port_scanner:334 -   53/tcp  open  dns
+2026-03-01 20:02:03,240 - fenrir - WARNING - port_scanner:334 -   80/tcp  open  http
+2026-03-01 20:02:03,240 - fenrir - WARNING - port_scanner:334 -   111/tcp  open  rpcbind
+2026-03-01 20:02:03,240 - fenrir - WARNING - port_scanner:334 -   139/tcp  open  netbios-ssn
+2026-03-01 20:02:03,240 - fenrir - WARNING - port_scanner:334 -   445/tcp  open  microsoft-ds
+2026-03-01 20:02:03,240 - fenrir - WARNING - port_scanner:334 -   512/tcp  open  exec
+2026-03-01 20:02:03,240 - fenrir - WARNING - port_scanner:334 -   513/tcp  open  login
+2026-03-01 20:02:03,240 - fenrir - WARNING - port_scanner:334 -   514/tcp  open  shell
+2026-03-01 20:02:03,240 - fenrir - WARNING - port_scanner:334 -   1099/tcp  open  unknown
+2026-03-01 20:02:03,240 - fenrir - WARNING - port_scanner:334 -   1524/tcp  open  unknown
+2026-03-01 20:02:03,240 - fenrir - WARNING - port_scanner:334 -   2049/tcp  open  nfs
+2026-03-01 20:02:03,240 - fenrir - WARNING - port_scanner:334 -   2121/tcp  open  unknown
+2026-03-01 20:02:03,240 - fenrir - WARNING - port_scanner:334 -   3306/tcp  open  mysql
+2026-03-01 20:02:03,241 - fenrir - WARNING - port_scanner:334 -   5432/tcp  open  postgresql
+2026-03-01 20:02:03,241 - fenrir - WARNING - port_scanner:334 -   5900/tcp  open  vnc
+2026-03-01 20:02:03,241 - fenrir - WARNING - port_scanner:334 -   6000/tcp  open  unknown
+2026-03-01 20:02:03,241 - fenrir - WARNING - port_scanner:334 -   6667/tcp  open  unknown
+2026-03-01 20:02:03,241 - fenrir - WARNING - port_scanner:334 -   8009/tcp  open  unknown
+2026-03-01 20:02:03,241 - fenrir - WARNING - port_scanner:334 -   8180/tcp  open  unknown
+2026-03-01 20:02:03,241 - fenrir - DEBUG - report_manager:138 - Report section added: 'Open Ports' (23 finding(s)).
+2026-03-01 20:02:03,241 - fenrir - INFO - fenrir_gui:683 -   Open ports: [21, 22, 23, 25, 53, 80, 111, 139, 445, 512, 513, 514, 1099, 1524, 2049, 2121, 3306, 5432, 5900, 6000, 6667, 8009, 8180]
+2026-03-01 20:02:03,241 - fenrir - INFO - fenrir_gui:694 - Phase 2: Analysis & recon
+2026-03-01 20:02:03,241 - fenrir - DEBUG - vulnerability_scanner:58 - VulnerabilityScanner initialised. CVE limit: 5 | Concurrency: 5 | NVD key: set
+2026-03-01 20:02:03,242 - fenrir - DEBUG - web_scanner:120 - WebScanner initialised. Timeout: 10.0s
+2026-03-01 20:02:03,242 - fenrir - DEBUG - tech_detector:297 - TechDetector initialised. Timeout: 10.0s | webtech: not available (fallback mode)
+2026-03-01 20:02:03,243 - fenrir - DEBUG - dns_scanner:89 - DnsScanner initialised. Nameserver: system default | Timeout: 5.0s
+2026-03-01 20:02:03,243 - fenrir - DEBUG - whois_scanner:68 - WhoisScanner initialised. Timeout: 15.0s
+2026-03-01 20:02:03,244 - fenrir - DEBUG - subdomain_scanner:165 - SubdomainScanner: using built-in default wordlist.
+2026-03-01 20:02:03,244 - fenrir - DEBUG - subdomain_scanner:141 - SubdomainScanner initialised. Wordlist: 203 entries | Concurrency: 50 | Timeout: 3.0s
+2026-03-01 20:02:03,244 - fenrir - DEBUG - threat_intel_scanner:50 - ThreatIntelScanner initialised.
+2026-03-01 20:02:03,245 - fenrir - WARNING - db_manager:80 - Offline database not found at '/home/kali/Desktop/Fenrir/Fenrir/data/db/fenrir.db'. Run 'fenrir --db-build' to build it. Some modules will fall back to live API calls if configured.
+2026-03-01 20:02:03,245 - fenrir - DEBUG - osint_scanner:98 - OsintScanner initialised. Timeout: 15.0s | theHarvester: found
+2026-03-01 20:02:03,246 - fenrir - INFO - vulnerability_scanner:311 - Starting vulnerability scan on 192.168.56.101 (23 open port(s))...
+2026-03-01 20:02:03,246 - fenrir - INFO - vulnerability_scanner:319 - Stage 1/2: Service and version detection...
+2026-03-01 20:02:03,247 - fenrir - INFO - web_scanner:432 - Starting web reconnaissance on 192.168.56.101 (ports: 80)...
+2026-03-01 20:02:03,280 - fenrir - INFO - tech_detector:529 - Starting technology detection on 192.168.56.101 (ports: 80)...
+2026-03-01 20:02:03,280 - fenrir - INFO - dns_scanner:480 - Starting DNS enumeration for '192.168.56.101'...
+2026-03-01 20:02:03,281 - fenrir - INFO - dns_scanner:485 - Querying DNS records...
+2026-03-01 20:02:03,281 - fenrir - INFO - whois_scanner:379 - Starting WHOIS lookup for '192.168.56.101'...
+2026-03-01 20:02:03,281 - fenrir - INFO - whois_scanner:279 - Performing IP WHOIS lookup for '192.168.56.101'...
+2026-03-01 20:02:03,282 - fenrir - INFO - subdomain_scanner:362 - Starting subdomain enumeration on '192.168.56.101' (203 candidates)...
+2026-03-01 20:02:03,282 - fenrir - INFO - subdomain_scanner:370 - Checking for wildcard DNS configuration...
+2026-03-01 20:02:03,283 - fenrir - INFO - threat_intel_scanner:71 - Starting threat intelligence scan for: 192.168.56.101
+2026-03-01 20:02:03,283 - fenrir - INFO - osint_scanner:620 - Starting OSINT scan for '192.168.56.101'...
+2026-03-01 20:02:03,283 - fenrir - INFO - osint_scanner:621 - Note: OSINT sources include search engine scraping which may be rate-limited or blocked. Negative results should be manually verified.
+2026-03-01 20:02:03,284 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:21...
+2026-03-01 20:02:03,285 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:22...
+2026-03-01 20:02:03,287 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:23...
+2026-03-01 20:02:03,288 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:25...
+2026-03-01 20:02:03,288 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:53...
+2026-03-01 20:02:03,289 - fenrir - INFO - web_scanner:372 - Scanning http://192.168.56.101:80...
+2026-03-01 20:02:03,294 - fenrir - INFO - tech_detector:457 - Technology detection on http://192.168.56.101:80...
+2026-03-01 20:02:03,294 - fenrir - DEBUG - tech_detector:470 - webtech returned None for http://192.168.56.101:80 — switching to fallback.
+2026-03-01 20:02:03,300 - fenrir - DEBUG - tech_detector:361 - Running fallback fingerprinting on http://192.168.56.101:80...
+2026-03-01 20:02:03,306 - fenrir - DEBUG - threat_intel_scanner:136 - Offline DB not available — skipping local threat intel lookup.
+2026-03-01 20:02:03,306 - fenrir - INFO - threat_intel_scanner:241 - Querying VirusTotal for 192.168.56.101...
+2026-03-01 20:02:03,316 - fenrir - INFO - threat_intel_scanner:292 - Querying AlienVault OTX for 192.168.56.101...
+2026-03-01 20:02:03,323 - fenrir - INFO - osint_scanner:196 - Searching for email addresses @192.168.56.101...
+2026-03-01 20:02:03,325 - fenrir - INFO - osint_scanner:252 - Searching for exposed documents for '192.168.56.101'...
+2026-03-01 20:02:03,326 - fenrir - INFO - osint_scanner:337 - Querying crt.sh for SSL certificate records on '192.168.56.101'...
+2026-03-01 20:02:03,327 - fenrir - INFO - osint_scanner:525 - Checking HaveIBeenPwned for breaches related to '192.168.56.101'...
+2026-03-01 20:02:03,344 - fenrir - DEBUG - dns_scanner:108 -   A record query failed for 192.168.56.101: (4, 'Domain name not found')
+2026-03-01 20:02:03,345 - fenrir - DEBUG - dns_scanner:198 -   TXT record query failed for 192.168.56.101: (4, 'Domain name not found')
+2026-03-01 20:02:03,351 - fenrir - DEBUG - dns_scanner:122 -   AAAA record query failed for 192.168.56.101: (4, 'Domain name not found')
+2026-03-01 20:02:03,351 - fenrir - DEBUG - dns_scanner:146 -   MX record query failed for 192.168.56.101: (4, 'Domain name not found')
+2026-03-01 20:02:03,351 - fenrir - DEBUG - dns_scanner:239 -   CNAME record query failed for 192.168.56.101: (4, 'Domain name not found')
+2026-03-01 20:02:03,366 - fenrir - ERROR - tech_detector:545 - TechDetector: unexpected error on port 80: name 'x' is not defined
+2026-03-01 20:02:03,367 - fenrir - DEBUG - report_manager:138 - Report section added: 'Technology Detection' (1 finding(s)).
+2026-03-01 20:02:03,367 - fenrir - INFO - tech_detector:571 - Technology detection complete. Ports scanned: 1 | Technologies identified: 0
+2026-03-01 20:02:03,367 - fenrir - INFO - web_scanner:147 -   http://192.168.56.101:80  →  HTTP 200  (final URL: http://192.168.56.101)
+2026-03-01 20:02:03,368 - fenrir - INFO - web_scanner:184 -   Information disclosure headers:
+2026-03-01 20:02:03,368 - fenrir - WARNING - web_scanner:190 -     [INFO DISCLOSURE]  Server: Apache/2.2.8 (Ubuntu) DAV/2
+2026-03-01 20:02:03,368 - fenrir - WARNING - web_scanner:190 -     [INFO DISCLOSURE]  X-Powered-By: PHP/5.2.4-2ubuntu5.10
+2026-03-01 20:02:03,368 - fenrir - INFO - web_scanner:226 -   Security header analysis:
+2026-03-01 20:02:03,368 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | HIGH]  Strict-Transport-Security
+2026-03-01 20:02:03,368 - fenrir - WARNING - web_scanner:237 -         → Add 'Strict-Transport-Security: max-age=31536000; includeSubDomains' to enforce HTTPS and prevent protocol downgrade attacks.
+2026-03-01 20:02:03,368 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | HIGH]  Content-Security-Policy
+2026-03-01 20:02:03,368 - fenrir - WARNING - web_scanner:237 -         → Add a Content-Security-Policy header to prevent XSS and data injection attacks.
+2026-03-01 20:02:03,368 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | MEDIUM]  X-Frame-Options
+2026-03-01 20:02:03,368 - fenrir - WARNING - web_scanner:237 -         → Add 'X-Frame-Options: DENY' or 'SAMEORIGIN' to prevent clickjacking attacks.
+2026-03-01 20:02:03,368 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | MEDIUM]  X-Content-Type-Options
+2026-03-01 20:02:03,368 - fenrir - WARNING - web_scanner:237 -         → Add 'X-Content-Type-Options: nosniff' to prevent MIME-type sniffing.
+2026-03-01 20:02:03,368 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | LOW]  Referrer-Policy
+2026-03-01 20:02:03,368 - fenrir - WARNING - web_scanner:237 -         → Add a Referrer-Policy header to control information sent in the Referer header.
+2026-03-01 20:02:03,368 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | LOW]  Permissions-Policy
+2026-03-01 20:02:03,369 - fenrir - WARNING - web_scanner:237 -         → Add a Permissions-Policy header to restrict access to browser features (camera, microphone, geolocation, etc.).
+2026-03-01 20:02:03,369 - fenrir - WARNING - web_scanner:234 -     [✗ MISSING | LOW]  X-XSS-Protection
+2026-03-01 20:02:03,369 - fenrir - WARNING - web_scanner:237 -         → Consider adding 'X-XSS-Protection: 1; mode=block' for legacy browser support, though CSP is the modern replacement.
+2026-03-01 20:02:03,369 - fenrir - WARNING - web_scanner:333 -   [NO HTTPS REDIRECT]  Port 80 does not redirect to HTTPS.
+2026-03-01 20:02:03,370 - fenrir - DEBUG - report_manager:138 - Report section added: 'Web — Information Disclosure Headers' (2 finding(s)).
+2026-03-01 20:02:03,370 - fenrir - DEBUG - report_manager:138 - Report section added: 'Web — Missing Security Headers' (7 finding(s)).
+2026-03-01 20:02:03,370 - fenrir - DEBUG - report_manager:138 - Report section added: 'Web — HTTPS Configuration Issues' (1 finding(s)).
+2026-03-01 20:02:03,370 - fenrir - INFO - web_scanner:514 - Web reconnaissance complete. Ports scanned: 1 | Reachable: 1 | Findings: 10
+2026-03-01 20:02:03,449 - fenrir - DEBUG - dns_scanner:288 -   SOA record query failed for 192.168.56.101: (4, 'Domain name not found')
+2026-03-01 20:02:03,579 - fenrir - INFO - osint_scanner:569 - HIBP: no breaches found for domain '192.168.56.101'.
+2026-03-01 20:02:03,594 - fenrir - ERROR - threat_intel_scanner:335 - [OTX] HTTP 400: {"detail": "IP is private."}
+2026-03-01 20:02:03,599 - fenrir - DEBUG - dns_scanner:212 -   NS record query failed for 192.168.56.101: (4, 'Domain name not found')
+2026-03-01 20:02:03,600 - fenrir - DEBUG - dns_scanner:517 - PTR lookup skipped — no IP address available.
+2026-03-01 20:02:03,600 - fenrir - DEBUG - dns_scanner:537 - Zone transfer skipped — no NS records found to target.
+2026-03-01 20:02:03,600 - fenrir - INFO - dns_scanner:565 - DNS enumeration complete. Total records found: 0
+2026-03-01 20:02:03,847 - fenrir - INFO - subdomain_scanner:386 - No wildcard DNS detected — proceeding with enumeration.
+2026-03-01 20:02:04,066 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: www3.192.168.56.101
+2026-03-01 20:02:04,106 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: website.192.168.56.101
+2026-03-01 20:02:04,107 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: site.192.168.56.101
+2026-03-01 20:02:04,118 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: www.192.168.56.101
+2026-03-01 20:02:04,118 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: web.192.168.56.101
+2026-03-01 20:02:04,118 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: www2.192.168.56.101
+2026-03-01 20:02:04,127 - fenrir - INFO - vulnerability_scanner:137 -   23/tcp  open  Linux telnetd
+2026-03-01 20:02:04,127 - fenrir - INFO - vulnerability_scanner:137 -   25/tcp  open  Postfix smtpd
+2026-03-01 20:02:04,128 - fenrir - INFO - vulnerability_scanner:137 -   21/tcp  open  vsftpd 2.3.4
+2026-03-01 20:02:04,128 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:80...
+2026-03-01 20:02:04,129 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:111...
+2026-03-01 20:02:04,129 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:139...
+2026-03-01 20:02:04,144 - fenrir - INFO - vulnerability_scanner:137 -   22/tcp  open  OpenSSH 4.7p1 Debian 8ubuntu1 protocol 2.0
+2026-03-01 20:02:04,145 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:445...
+2026-03-01 20:02:04,163 - fenrir - INFO - threat_intel_scanner:262 - [VirusTotal] 192.168.56.101: malicious=0, suspicious=0, reputation=1
+2026-03-01 20:02:04,164 - fenrir - INFO - threat_intel_scanner:116 - VirusTotal: 192.168.56.101 appears clean (0 malicious detections).
+2026-03-01 20:02:04,166 - fenrir - DEBUG - report_manager:138 - Report section added: 'Threat Intelligence' (1 finding(s)).
+2026-03-01 20:02:04,166 - fenrir - INFO - threat_intel_scanner:126 - Threat intelligence scan complete.
+2026-03-01 20:02:04,319 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: mail.192.168.56.101
+2026-03-01 20:02:04,327 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: smtp.192.168.56.101
+2026-03-01 20:02:04,351 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: mx.192.168.56.101
+2026-03-01 20:02:04,369 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: pop.192.168.56.101
+2026-03-01 20:02:04,379 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: imap.192.168.56.101
+2026-03-01 20:02:04,381 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: pop3.192.168.56.101
+2026-03-01 20:02:04,384 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: email.192.168.56.101
+2026-03-01 20:02:04,402 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: webmail.192.168.56.101
+2026-03-01 20:02:04,406 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: autodiscover.192.168.56.101
+2026-03-01 20:02:04,427 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: autoconfig.192.168.56.101
+2026-03-01 20:02:04,455 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: exchange.192.168.56.101
+2026-03-01 20:02:04,577 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: ns.192.168.56.101
+2026-03-01 20:02:04,583 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: ns1.192.168.56.101
+2026-03-01 20:02:04,608 - fenrir - INFO - whois_scanner:324 - IP WHOIS results:
+2026-03-01 20:02:04,609 - fenrir - WARNING - whois_scanner:326 -   Organisation  : N/A
+2026-03-01 20:02:04,610 - fenrir - INFO - whois_scanner:328 -   Country       : N/A
+2026-03-01 20:02:04,610 - fenrir - INFO - whois_scanner:330 -   ASN           : N/A
+2026-03-01 20:02:04,610 - fenrir - INFO - whois_scanner:332 -   CIDR          : N/A
+2026-03-01 20:02:04,610 - fenrir - INFO - whois_scanner:334 -   Registry (RIR): N/A
+2026-03-01 20:02:04,610 - fenrir - INFO - whois_scanner:338 -   Raw WHOIS output:
+2026-03-01 20:02:04,610 - fenrir - INFO - whois_scanner:342 -     #
+2026-03-01 20:02:04,610 - fenrir - INFO - whois_scanner:342 -     # ARIN WHOIS data and services are subject to the Terms of Use
+2026-03-01 20:02:04,610 - fenrir - INFO - whois_scanner:342 -     # available at: https://www.arin.net/resources/registry/whois/tou/
+2026-03-01 20:02:04,610 - fenrir - INFO - whois_scanner:342 -     #
+2026-03-01 20:02:04,610 - fenrir - INFO - whois_scanner:342 -     # If you see inaccuracies in the results, please report at
+2026-03-01 20:02:04,610 - fenrir - INFO - whois_scanner:342 -     # https://www.arin.net/resources/registry/whois/inaccuracy_reporting/
+2026-03-01 20:02:04,610 - fenrir - INFO - whois_scanner:342 -     #
+2026-03-01 20:02:04,610 - fenrir - INFO - whois_scanner:342 -     # Copyright 1997-2026, American Registry for Internet Numbers, Ltd.
+2026-03-01 20:02:04,610 - fenrir - INFO - whois_scanner:342 -     #
+2026-03-01 20:02:04,610 - fenrir - INFO - whois_scanner:342 -     #
+2026-03-01 20:02:04,610 - fenrir - INFO - whois_scanner:342 -     # Query terms are ambiguous.  The query is assumed to be:
+2026-03-01 20:02:04,611 - fenrir - INFO - whois_scanner:342 -     #     "n 192.168.56.101"
+2026-03-01 20:02:04,611 - fenrir - INFO - whois_scanner:342 -     #
+2026-03-01 20:02:04,611 - fenrir - INFO - whois_scanner:342 -     # Use "?" to get help.
+2026-03-01 20:02:04,611 - fenrir - INFO - whois_scanner:342 -     #
+2026-03-01 20:02:04,611 - fenrir - INFO - whois_scanner:342 -     NetRange:       192.168.0.0 - 192.168.255.255
+2026-03-01 20:02:04,611 - fenrir - INFO - whois_scanner:342 -     CIDR:           192.168.0.0/16
+2026-03-01 20:02:04,612 - fenrir - INFO - whois_scanner:342 -     NetName:        PRIVATE-ADDRESS-CBLK-RFC1918-IANA-RESERVED
+2026-03-01 20:02:04,612 - fenrir - INFO - whois_scanner:342 -     NetHandle:      NET-192-168-0-0-1
+2026-03-01 20:02:04,612 - fenrir - INFO - whois_scanner:342 -     Parent:         NET192 (NET-192-0-0-0-0)
+2026-03-01 20:02:04,612 - fenrir - INFO - whois_scanner:342 -     NetType:        IANA Special Use
+2026-03-01 20:02:04,612 - fenrir - INFO - whois_scanner:342 -     OriginAS:       
+2026-03-01 20:02:04,612 - fenrir - INFO - whois_scanner:342 -     Organization:   Internet Assigned Numbers Authority (IANA)
+2026-03-01 20:02:04,612 - fenrir - INFO - whois_scanner:342 -     RegDate:        1994-03-15
+2026-03-01 20:02:04,612 - fenrir - INFO - whois_scanner:342 -     Updated:        2024-05-24
+2026-03-01 20:02:04,612 - fenrir - INFO - whois_scanner:342 -     Comment:        These addresses are in use by many millions of independently operated networks, which might be as small as a single computer connected to a home gateway, and are automatically configured in hundreds of millions of devices.  They are only intended for use within a private context  and traffic that needs to cross the Internet will need to use a different, unique address.
+2026-03-01 20:02:04,612 - fenrir - INFO - whois_scanner:342 -     Comment:        
+2026-03-01 20:02:04,612 - fenrir - INFO - whois_scanner:342 -     Comment:        These addresses can be used by anyone without any need to coordinate with IANA or an Internet registry.  The traffic from these addresses does not come from ICANN or IANA.  We are not the source of activity you may see on logs or in e-mail records.  Please refer to http://www.iana.org/abuse/answers
+2026-03-01 20:02:04,612 - fenrir - INFO - whois_scanner:342 -     Comment:        
+2026-03-01 20:02:04,612 - fenrir - INFO - whois_scanner:342 -     Comment:        These addresses were assigned by the IETF, the organization that develops Internet protocols, in the Best Current Practice document, RFC 1918 which can be found at:
+2026-03-01 20:02:04,612 - fenrir - INFO - whois_scanner:342 -     Comment:        http://datatracker.ietf.org/doc/rfc1918
+2026-03-01 20:02:04,612 - fenrir - INFO - whois_scanner:342 -     Ref:            https://rdap.arin.net/registry/ip/192.168.0.0
+2026-03-01 20:02:04,612 - fenrir - INFO - whois_scanner:342 -     OrgName:        Internet Assigned Numbers Authority
+2026-03-01 20:02:04,612 - fenrir - INFO - whois_scanner:342 -     OrgId:          IANA
+2026-03-01 20:02:04,613 - fenrir - INFO - whois_scanner:344 -     ... (33 more lines in report)
+2026-03-01 20:02:04,613 - fenrir - DEBUG - report_manager:138 - Report section added: 'WHOIS Information' (1 finding(s)).
+2026-03-01 20:02:04,613 - fenrir - DEBUG - report_manager:138 - Report section added: 'WHOIS Raw Text' (1 finding(s)).
+2026-03-01 20:02:04,613 - fenrir - INFO - whois_scanner:410 - WHOIS lookup finished.
+2026-03-01 20:02:04,613 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: ns2.192.168.56.101
+2026-03-01 20:02:04,623 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: dns2.192.168.56.101
+2026-03-01 20:02:04,625 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: ns3.192.168.56.101
+2026-03-01 20:02:04,635 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: ns4.192.168.56.101
+2026-03-01 20:02:04,635 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: dns.192.168.56.101
+2026-03-01 20:02:04,640 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: dns1.192.168.56.101
+2026-03-01 20:02:04,663 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: ftp.192.168.56.101
+2026-03-01 20:02:04,682 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: sftp.192.168.56.101
+2026-03-01 20:02:04,709 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: ftps.192.168.56.101
+2026-03-01 20:02:04,834 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: ssh.192.168.56.101
+2026-03-01 20:02:04,836 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: whm.192.168.56.101
+2026-03-01 20:02:04,840 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: vpn.192.168.56.101
+2026-03-01 20:02:04,855 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: hosting.192.168.56.101
+2026-03-01 20:02:04,855 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: directadmin.192.168.56.101
+2026-03-01 20:02:04,864 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: remote.192.168.56.101
+2026-03-01 20:02:04,865 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: cpanel.192.168.56.101
+2026-03-01 20:02:04,880 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: plesk.192.168.56.101
+2026-03-01 20:02:04,895 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: webdisk.192.168.56.101
+2026-03-01 20:02:04,918 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: webdav.192.168.56.101
+2026-03-01 20:02:04,930 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: api2.192.168.56.101
+2026-03-01 20:02:04,938 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: api.192.168.56.101
+2026-03-01 20:02:05,077 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: ws.192.168.56.101
+2026-03-01 20:02:05,082 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: socket.192.168.56.101
+2026-03-01 20:02:05,090 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: rest.192.168.56.101
+2026-03-01 20:02:05,090 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: apis.192.168.56.101
+2026-03-01 20:02:05,097 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: graphql.192.168.56.101
+2026-03-01 20:02:05,111 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: websocket.192.168.56.101
+2026-03-01 20:02:05,117 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: cdn2.192.168.56.101
+2026-03-01 20:02:05,120 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: cdn.192.168.56.101
+2026-03-01 20:02:05,149 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: cdn1.192.168.56.101
+2026-03-01 20:02:05,175 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: static.192.168.56.101
+2026-03-01 20:02:05,185 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: assets.192.168.56.101
+2026-03-01 20:02:05,193 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: media.192.168.56.101
+2026-03-01 20:02:05,312 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: stream.192.168.56.101
+2026-03-01 20:02:05,333 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: img.192.168.56.101
+2026-03-01 20:02:05,339 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: images.192.168.56.101
+2026-03-01 20:02:05,350 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: video.192.168.56.101
+2026-03-01 20:02:05,393 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: download.192.168.56.101
+2026-03-01 20:02:05,433 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: downloads.192.168.56.101
+2026-03-01 20:02:05,440 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: upload.192.168.56.101
+2026-03-01 20:02:05,451 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: uploads.192.168.56.101
+2026-03-01 20:02:05,567 - fenrir - INFO - osint_scanner:385 - crt.sh: no subdomain certificates found for '192.168.56.101'.
+2026-03-01 20:02:05,568 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: dev.192.168.56.101
+2026-03-01 20:02:05,571 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: test.192.168.56.101
+2026-03-01 20:02:05,591 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: development.192.168.56.101
+2026-03-01 20:02:05,598 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: develop.192.168.56.101
+2026-03-01 20:02:05,650 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: testing.192.168.56.101
+2026-03-01 20:02:05,659 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: uat.192.168.56.101
+2026-03-01 20:02:05,688 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: qa.192.168.56.101
+2026-03-01 20:02:05,704 - fenrir - INFO - osint_scanner:303 - No exposed documents found for '192.168.56.101' via search engines. Note: DDG redirect wrapping and rate limiting may cause false negatives — manually verify with Google dorks if needed.
+2026-03-01 20:02:05,714 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: staging.192.168.56.101
+2026-03-01 20:02:05,793 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: stg.192.168.56.101
+2026-03-01 20:02:05,831 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: stage.192.168.56.101
+2026-03-01 20:02:05,874 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: sandbox.192.168.56.101
+2026-03-01 20:02:05,894 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: beta.192.168.56.101
+2026-03-01 20:02:05,943 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: alpha.192.168.56.101
+2026-03-01 20:02:05,969 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: rc.192.168.56.101
+2026-03-01 20:02:06,049 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: old.192.168.56.101
+2026-03-01 20:02:06,090 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: legacy.192.168.56.101
+2026-03-01 20:02:06,098 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: demo.192.168.56.101
+2026-03-01 20:02:06,125 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: preview.192.168.56.101
+2026-03-01 20:02:06,129 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: archive.192.168.56.101
+2026-03-01 20:02:06,151 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: new.192.168.56.101
+2026-03-01 20:02:06,181 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: next.192.168.56.101
+2026-03-01 20:02:06,226 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: v2.192.168.56.101
+2026-03-01 20:02:06,305 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: auth.192.168.56.101
+2026-03-01 20:02:06,342 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: oauth.192.168.56.101
+2026-03-01 20:02:06,349 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: login.192.168.56.101
+2026-03-01 20:02:06,355 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: sso.192.168.56.101
+2026-03-01 20:02:06,386 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: id.192.168.56.101
+2026-03-01 20:02:06,407 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: identity.192.168.56.101
+2026-03-01 20:02:06,438 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: account.192.168.56.101
+2026-03-01 20:02:06,483 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: accounts.192.168.56.101
+2026-03-01 20:02:06,564 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: secure.192.168.56.101
+2026-03-01 20:02:06,567 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: portal.192.168.56.101
+2026-03-01 20:02:06,569 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: security.192.168.56.101
+2026-03-01 20:02:06,591 - fenrir - INFO - osint_scanner:222 - No email addresses found for @192.168.56.101 via search engines. Note: search engine scraping may be blocked or rate-limited — a negative result does not guarantee no emails exist.
+2026-03-01 20:02:06,592 - fenrir - INFO - osint_scanner:428 - Running theHarvester against '192.168.56.101'...
+2026-03-01 20:02:06,608 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: administrator.192.168.56.101
+2026-03-01 20:02:06,615 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: admin.192.168.56.101
+2026-03-01 20:02:06,663 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: manage.192.168.56.101
+2026-03-01 20:02:06,696 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: management.192.168.56.101
+2026-03-01 20:02:06,739 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: dashboard.192.168.56.101
+2026-03-01 20:02:06,818 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: panel.192.168.56.101
+2026-03-01 20:02:06,822 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: cp.192.168.56.101
+2026-03-01 20:02:06,827 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: staff.192.168.56.101
+2026-03-01 20:02:06,869 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: internal.192.168.56.101
+2026-03-01 20:02:06,874 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: intranet.192.168.56.101
+2026-03-01 20:02:06,884 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: corp.192.168.56.101
+2026-03-01 20:02:06,955 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: corporate.192.168.56.101
+2026-03-01 20:02:06,997 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: monitor.192.168.56.101
+2026-03-01 20:02:07,047 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: status.192.168.56.101
+2026-03-01 20:02:07,075 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: monitoring.192.168.56.101
+2026-03-01 20:02:07,079 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: metrics.192.168.56.101
+2026-03-01 20:02:07,093 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: uptime.192.168.56.101
+2026-03-01 20:02:07,127 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: health.192.168.56.101
+2026-03-01 20:02:07,140 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: log.192.168.56.101
+2026-03-01 20:02:07,195 - fenrir - INFO - osint_scanner:491 - theHarvester returned no results.
+2026-03-01 20:02:07,196 - fenrir - DEBUG - report_manager:138 - Report section added: 'OSINT — Summary' (1 finding(s)).
+2026-03-01 20:02:07,196 - fenrir - INFO - osint_scanner:725 - OSINT scan complete.
+2026-03-01 20:02:07,196 - fenrir - INFO - osint_scanner:726 -   Email addresses  : 0
+2026-03-01 20:02:07,196 - fenrir - INFO - osint_scanner:727 -   Documents        : 0
+2026-03-01 20:02:07,196 - fenrir - INFO - osint_scanner:728 -   CT subdomains    : 0
+2026-03-01 20:02:07,196 - fenrir - INFO - osint_scanner:729 -   HIBP breaches    : 0
+2026-03-01 20:02:07,214 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: logs.192.168.56.101
+2026-03-01 20:02:07,253 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: logging.192.168.56.101
+2026-03-01 20:02:07,302 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: grafana.192.168.56.101
+2026-03-01 20:02:07,330 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: kibana.192.168.56.101
+2026-03-01 20:02:07,334 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: elastic.192.168.56.101
+2026-03-01 20:02:07,349 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: jenkins.192.168.56.101
+2026-03-01 20:02:07,350 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: splunk.192.168.56.101
+2026-03-01 20:02:07,395 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: ci.192.168.56.101
+2026-03-01 20:02:07,473 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: cd.192.168.56.101
+2026-03-01 20:02:07,474 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: build.192.168.56.101
+2026-03-01 20:02:07,559 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: deploy.192.168.56.101
+2026-03-01 20:02:07,586 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: git.192.168.56.101
+2026-03-01 20:02:07,589 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: gitlab.192.168.56.101
+2026-03-01 20:02:07,606 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: bitbucket.192.168.56.101
+2026-03-01 20:02:07,606 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: github.192.168.56.101
+2026-03-01 20:02:07,652 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: svn.192.168.56.101
+2026-03-01 20:02:07,689 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: jira.192.168.56.101
+2026-03-01 20:02:07,730 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: confluence.192.168.56.101
+2026-03-01 20:02:07,806 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: docs.192.168.56.101
+2026-03-01 20:02:07,814 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: wiki.192.168.56.101
+2026-03-01 20:02:07,827 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: mysql.192.168.56.101
+2026-03-01 20:02:07,829 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: elastic.192.168.56.101
+2026-03-01 20:02:07,846 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: db.192.168.56.101
+2026-03-01 20:02:07,864 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: database.192.168.56.101
+2026-03-01 20:02:07,906 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: postgres.192.168.56.101
+2026-03-01 20:02:07,910 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: mongo.192.168.56.101
+2026-03-01 20:02:07,944 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: redis.192.168.56.101
+2026-03-01 20:02:08,035 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: memcache.192.168.56.101
+2026-03-01 20:02:08,045 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: data.192.168.56.101
+2026-03-01 20:02:08,065 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: cache.192.168.56.101
+2026-03-01 20:02:08,102 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: analytics.192.168.56.101
+2026-03-01 20:02:08,119 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: reporting.192.168.56.101
+2026-03-01 20:02:08,165 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: report.192.168.56.101
+2026-03-01 20:02:08,167 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: k8s.192.168.56.101
+2026-03-01 20:02:08,202 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: kubernetes.192.168.56.101
+2026-03-01 20:02:08,260 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: docker.192.168.56.101
+2026-03-01 20:02:08,303 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: registry.192.168.56.101
+2026-03-01 20:02:08,321 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: consul.192.168.56.101
+2026-03-01 20:02:08,341 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: nomad.192.168.56.101
+2026-03-01 20:02:08,357 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: vault.192.168.56.101
+2026-03-01 20:02:08,422 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: aws.192.168.56.101
+2026-03-01 20:02:08,423 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: azure.192.168.56.101
+2026-03-01 20:02:08,459 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: gcp.192.168.56.101
+2026-03-01 20:02:08,518 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: chat.192.168.56.101
+2026-03-01 20:02:08,530 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: slack.192.168.56.101
+2026-03-01 20:02:08,581 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: teams.192.168.56.101
+2026-03-01 20:02:08,612 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: support.192.168.56.101
+2026-03-01 20:02:08,614 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: help.192.168.56.101
+2026-03-01 20:02:08,648 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: ticket.192.168.56.101
+2026-03-01 20:02:08,692 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: helpdesk.192.168.56.101
+2026-03-01 20:02:08,714 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: tickets.192.168.56.101
+2026-03-01 20:02:08,744 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: community.192.168.56.101
+2026-03-01 20:02:08,775 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: forum.192.168.56.101
+2026-03-01 20:02:08,830 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: shop.192.168.56.101
+2026-03-01 20:02:08,835 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: news.192.168.56.101
+2026-03-01 20:02:08,836 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: blog.192.168.56.101
+2026-03-01 20:02:08,905 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: store.192.168.56.101
+2026-03-01 20:02:08,936 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: checkout.192.168.56.101
+2026-03-01 20:02:08,949 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: cart.192.168.56.101
+2026-03-01 20:02:08,964 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: pay.192.168.56.101
+2026-03-01 20:02:09,032 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: payment.192.168.56.101
+2026-03-01 20:02:09,086 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: payments.192.168.56.101
+2026-03-01 20:02:09,091 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: billing.192.168.56.101
+2026-03-01 20:02:09,093 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: app.192.168.56.101
+2026-03-01 20:02:09,158 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: mobile.192.168.56.101
+2026-03-01 20:02:09,162 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: apps.192.168.56.101
+2026-03-01 20:02:09,184 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: gateway.192.168.56.101
+2026-03-01 20:02:09,205 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: m.192.168.56.101
+2026-03-01 20:02:09,287 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: proxy.192.168.56.101
+2026-03-01 20:02:09,312 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: loadbalancer.192.168.56.101
+2026-03-01 20:02:09,341 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: lb.192.168.56.101
+2026-03-01 20:02:09,349 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: backup.192.168.56.101
+2026-03-01 20:02:09,382 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: dr.192.168.56.101
+2026-03-01 20:02:09,415 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: bkp.192.168.56.101
+2026-03-01 20:02:09,424 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: noc.192.168.56.101
+2026-03-01 20:02:09,427 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: video.192.168.56.101
+2026-03-01 20:02:09,441 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: failover.192.168.56.101
+2026-03-01 20:02:09,543 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: ops.192.168.56.101
+2026-03-01 20:02:09,570 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: solr.192.168.56.101
+2026-03-01 20:02:09,571 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: sre.192.168.56.101
+2026-03-01 20:02:09,601 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: search.192.168.56.101
+2026-03-01 20:02:09,635 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: meet.192.168.56.101
+2026-03-01 20:02:09,644 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: office.192.168.56.101
+2026-03-01 20:02:09,684 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: mx1.192.168.56.101
+2026-03-01 20:02:09,697 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: mx2.192.168.56.101
+2026-03-01 20:02:09,789 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: bounce.192.168.56.101
+2026-03-01 20:02:09,801 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: relay.192.168.56.101
+2026-03-01 20:02:09,825 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: smtp1.192.168.56.101
+2026-03-01 20:02:09,858 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: smtp2.192.168.56.101
+2026-03-01 20:02:09,894 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: mail1.192.168.56.101
+2026-03-01 20:02:09,900 - fenrir - DEBUG - subdomain_scanner:330 -   Not found: mail2.192.168.56.101
+2026-03-01 20:02:09,900 - fenrir - DEBUG - report_manager:138 - Report section added: 'Subdomain Enumeration' (1 finding(s)).
+2026-03-01 20:02:09,901 - fenrir - INFO - subdomain_scanner:429 - Subdomain enumeration complete. Candidates tested: 203 | Discovered: 0
+2026-03-01 20:02:10,137 - fenrir - INFO - vulnerability_scanner:137 -   53/tcp  open  ISC BIND 9.4.2
+2026-03-01 20:02:10,137 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:512...
+2026-03-01 20:02:10,900 - fenrir - INFO - vulnerability_scanner:137 -   512/tcp  open  netkit-rsh rexecd
+2026-03-01 20:02:10,900 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:513...
+2026-03-01 20:02:11,916 - fenrir - INFO - vulnerability_scanner:141 -   111/tcp  open  rpcbind (no version detected)
+2026-03-01 20:02:11,917 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:514...
+2026-03-01 20:02:11,917 - fenrir - INFO - vulnerability_scanner:137 -   80/tcp  open  Apache httpd 2.2.8 (Ubuntu) DAV/2
+2026-03-01 20:02:11,918 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:1099...
+2026-03-01 20:02:11,936 - fenrir - INFO - vulnerability_scanner:137 -   445/tcp  open  Samba smbd 3.X - 4.X workgroup: WORKGROUP
+2026-03-01 20:02:11,936 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:1524...
+2026-03-01 20:02:12,745 - fenrir - INFO - vulnerability_scanner:137 -   514/tcp  open  Netkit rshd
+2026-03-01 20:02:12,746 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:2049...
+2026-03-01 20:02:12,817 - fenrir - INFO - vulnerability_scanner:137 -   1524/tcp  open  Metasploitable root shell
+2026-03-01 20:02:12,818 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:2121...
+2026-03-01 20:02:16,940 - fenrir - INFO - vulnerability_scanner:137 -   139/tcp  open  Samba smbd 3.X - 4.X workgroup: WORKGROUP
+2026-03-01 20:02:16,940 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:3306...
+2026-03-01 20:02:17,781 - fenrir - INFO - vulnerability_scanner:137 -   3306/tcp  open  MySQL 5.0.51a-3ubuntu5
+2026-03-01 20:02:17,781 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:5432...
+2026-03-01 20:02:17,799 - fenrir - INFO - vulnerability_scanner:141 -   513/tcp  open  login (no version detected)
+2026-03-01 20:02:17,800 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:5900...
+2026-03-01 20:02:18,596 - fenrir - INFO - vulnerability_scanner:137 -   5900/tcp  open  VNC protocol 3.3
+2026-03-01 20:02:18,598 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:6000...
+2026-03-01 20:02:18,792 - fenrir - INFO - vulnerability_scanner:137 -   1099/tcp  open  GNU Classpath grmiregistry
+2026-03-01 20:02:18,793 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:6667...
+2026-03-01 20:02:19,548 - fenrir - INFO - vulnerability_scanner:141 -   2049/tcp  open  rpcbind (no version detected)
+2026-03-01 20:02:19,549 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:8009...
+2026-03-01 20:02:20,578 - fenrir - INFO - vulnerability_scanner:137 -   6667/tcp  open  UnrealIRCd
+2026-03-01 20:02:20,579 - fenrir - INFO - vulnerability_scanner:85 - Service detection on 192.168.56.101:8180...
+2026-03-01 20:02:23,480 - fenrir - INFO - vulnerability_scanner:137 -   2121/tcp  open  ProFTPD 1.3.1
+2026-03-01 20:02:24,613 - fenrir - INFO - vulnerability_scanner:137 -   5432/tcp  open  PostgreSQL DB 8.3.0 - 8.3.7
+2026-03-01 20:02:25,428 - fenrir - INFO - vulnerability_scanner:141 -   6000/tcp  open  X11 (no version detected)
+2026-03-01 20:02:31,364 - fenrir - INFO - vulnerability_scanner:137 -   8009/tcp  open  Apache Jserv Protocol v1.3
+2026-03-01 20:02:32,388 - fenrir - INFO - vulnerability_scanner:137 -   8180/tcp  open  Apache Tomcat/Coyote JSP engine 1.1
+2026-03-01 20:02:32,389 - fenrir - INFO - vulnerability_scanner:347 - Service detection complete. Identified 23/23 service(s).
+2026-03-01 20:02:32,389 - fenrir - INFO - vulnerability_scanner:357 - Stage 2/2: CVE lookup against NVD...
+2026-03-01 20:02:32,389 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'vsftpd 2.3.4'...
+2026-03-01 20:02:32,389 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'OpenSSH 4.7p1 Debian 8ubuntu1'...
+2026-03-01 20:02:39,194 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'OpenSSH 4.7p1 Debian 8ubuntu1'.
+2026-03-01 20:02:39,195 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'Linux telnetd'...
+2026-03-01 20:02:39,216 - fenrir - WARNING - vulnerability_scanner:265 - Found 1 CVE(s) for 'vsftpd 2.3.4' on port 21:
+2026-03-01 20:02:39,216 - fenrir - WARNING - vulnerability_scanner:269 -   [CRITICAL] CVE-2011-2523  Score: 9.8  |  vsftpd 2.3.4 downloaded between 20110630 and 20110703 contains a backdoor which opens a shell on por...
+2026-03-01 20:02:39,216 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2011-2523
+2026-03-01 20:02:39,216 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'Postfix smtpd'...
+2026-03-01 20:02:46,035 - fenrir - WARNING - vulnerability_scanner:265 - Found 4 CVE(s) for 'Linux telnetd' on port 23:
+2026-03-01 20:02:46,036 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2000-1195  Score: 7.5  |  telnet daemon (telnetd) from the Linux netkit package before netkit-telnet-0.16 allows remote attack...
+2026-03-01 20:02:46,037 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2000-1195
+2026-03-01 20:02:46,037 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2020-8797  Score: 6.7  |  Juplink RX4-1500 v1.0.3 allows remote attackers to gain root access to the Linux subsystem via an un...
+2026-03-01 20:02:46,037 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2020-8797
+2026-03-01 20:02:46,037 - fenrir - WARNING - vulnerability_scanner:269 -   [CRITICAL] CVE-2021-27171  Score: 9.8  |  An issue was discovered on FiberHome HG6245D devices through RP2613. It is possible to start a Linux...
+2026-03-01 20:02:46,037 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2021-27171
+2026-03-01 20:02:46,037 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2022-39028  Score: 7.5  |  telnetd in GNU Inetutils through 2.3, MIT krb5-appl through 1.0.3, and derivative works has a NULL p...
+2026-03-01 20:02:46,037 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2022-39028
+2026-03-01 20:02:46,037 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'ISC BIND 9.4.2'...
+2026-03-01 20:02:46,084 - fenrir - WARNING - vulnerability_scanner:265 - Found 4 CVE(s) for 'Postfix smtpd' on port 25:
+2026-03-01 20:02:46,086 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2004-0925  Score: 5.0  |  Postfix on Mac OS X 10.3.x through 10.3.5, with SMTPD AUTH enabled, does not properly clear the user...
+2026-03-01 20:02:46,086 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2004-0925
+2026-03-01 20:02:46,086 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2005-0337  Score: 7.5  |  Postfix 2.1.3, when /proc/net/if_inet6 is not available and permit_mx_backup is enabled in smtpd_rec...
+2026-03-01 20:02:46,086 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2005-0337
+2026-03-01 20:02:46,086 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2023-51764  Score: 5.3  |  Postfix through 3.8.5 allows SMTP smuggling unless configured with smtpd_data_restrictions=reject_un...
+2026-03-01 20:02:46,087 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2023-51764
+2026-03-01 20:02:46,087 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2024-27305  Score: 5.3  |  aiosmtpd is a reimplementation of the Python stdlib smtpd.py based on asyncio. aiosmtpd is vulnerabl...
+2026-03-01 20:02:46,087 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2024-27305
+2026-03-01 20:02:46,087 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'Apache httpd 2.2.8'...
+2026-03-01 20:02:52,847 - fenrir - WARNING - vulnerability_scanner:265 - Found 2 CVE(s) for 'ISC BIND 9.4.2' on port 53:
+2026-03-01 20:02:52,847 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2008-0122  Score: 10.0  |  Off-by-one error in the inet_network function in libbind in ISC BIND 9.4.2 and earlier, as used in l...
+2026-03-01 20:02:52,847 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2008-0122
+2026-03-01 20:02:52,847 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2008-4163  Score: 7.8  |  Unspecified vulnerability in ISC BIND 9.3.5-P2-W1, 9.4.2-P2-W1, and 9.5.0-P2-W1 on Windows allows re...
+2026-03-01 20:02:52,847 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2008-4163
+2026-03-01 20:02:52,847 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'rpcbind'...
+2026-03-01 20:02:52,903 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'Apache httpd 2.2.8'.
+2026-03-01 20:02:52,903 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'Samba smbd 3.X - 4.X'...
+2026-03-01 20:02:59,766 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'Samba smbd 3.X - 4.X'.
+2026-03-01 20:02:59,767 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'Samba smbd 3.X - 4.X'...
+2026-03-01 20:02:59,855 - fenrir - WARNING - vulnerability_scanner:265 - Found 5 CVE(s) for 'rpcbind' on port 111:
+2026-03-01 20:02:59,855 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-0189  Score: 7.5  |  Solaris rpcbind listens on a high numbered UDP port, which may not be filtered since the standard po...
+2026-03-01 20:02:59,856 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-0189
+2026-03-01 20:02:59,856 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-0190  Score: 7.2  |  Solaris rpcbind can be exploited to overwrite arbitrary files and gain root access.
+2026-03-01 20:02:59,856 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-0190
+2026-03-01 20:02:59,856 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-0213  Score: 10.0  |  libnsl in Solaris allowed an attacker to perform a denial of service of rpcbind.
+2026-03-01 20:02:59,856 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-0213
+2026-03-01 20:02:59,856 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-0461  Score: 10.0  |  Versions of rpcbind including Linux, IRIX, and Wietse Venema's rpcbind allow a remote attacker to in...
+2026-03-01 20:02:59,856 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-0461
+2026-03-01 20:02:59,856 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2001-1124  Score: 5.0  |  rpcbind in HP-UX 11.00, 11.04 and 11.11 allows remote attackers to cause a denial of service (core d...
+2026-03-01 20:02:59,856 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2001-1124
+2026-03-01 20:02:59,856 - fenrir - WARNING - vulnerability_scanner:277 -   NOTE: More CVEs exist for 'rpcbind' beyond the current limit of 5. Increase --cve-limit to retrieve more.
+2026-03-01 20:02:59,856 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'netkit-rsh rexecd'...
+2026-03-01 20:03:06,586 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'Samba smbd 3.X - 4.X'.
+2026-03-01 20:03:06,586 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'login'...
+2026-03-01 20:03:06,694 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'netkit-rsh rexecd'.
+2026-03-01 20:03:06,694 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'Netkit rshd'...
+2026-03-01 20:03:13,497 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'Netkit rshd'.
+2026-03-01 20:03:13,498 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'GNU Classpath grmiregistry'...
+2026-03-01 20:03:13,556 - fenrir - WARNING - vulnerability_scanner:265 - Found 5 CVE(s) for 'login' on port 513:
+2026-03-01 20:03:13,557 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-1034  Score: 7.2  |  Vulnerability in login in AT&T System V Release 4 allows local users to gain privileges.
+2026-03-01 20:03:13,557 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-1034
+2026-03-01 20:03:13,557 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-1142  Score: 7.2  |  SunOS 4.1.2 and earlier allows local users to gain privileges via "LD_*" environmental variables to ...
+2026-03-01 20:03:13,557 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-1142
+2026-03-01 20:03:13,557 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-1999-1215  Score: 4.6  |  LOGIN.EXE program in Novell Netware 4.0 and 4.01 temporarily writes user name and password informati...
+2026-03-01 20:03:13,557 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-1215
+2026-03-01 20:03:13,557 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-1304  Score: 7.2  |  Vulnerability in login in SCO UNIX 4.2 and earlier allows local users to gain root access.
+2026-03-01 20:03:13,557 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-1304
+2026-03-01 20:03:13,557 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-0180  Score: 7.5  |  in.rshd allows users to login with a NULL username and execute commands.
+2026-03-01 20:03:13,558 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-0180
+2026-03-01 20:03:13,558 - fenrir - WARNING - vulnerability_scanner:277 -   NOTE: More CVEs exist for 'login' beyond the current limit of 5. Increase --cve-limit to retrieve more.
+2026-03-01 20:03:13,558 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'Metasploitable root shell'...
+2026-03-01 20:03:20,311 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'GNU Classpath grmiregistry'.
+2026-03-01 20:03:20,312 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'rpcbind'...
+2026-03-01 20:03:20,377 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'Metasploitable root shell'.
+2026-03-01 20:03:20,377 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'ProFTPD 1.3.1'...
+2026-03-01 20:03:27,274 - fenrir - WARNING - vulnerability_scanner:265 - Found 5 CVE(s) for 'rpcbind' on port 2049:
+2026-03-01 20:03:27,275 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-0189  Score: 7.5  |  Solaris rpcbind listens on a high numbered UDP port, which may not be filtered since the standard po...
+2026-03-01 20:03:27,275 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-0189
+2026-03-01 20:03:27,275 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-0190  Score: 7.2  |  Solaris rpcbind can be exploited to overwrite arbitrary files and gain root access.
+2026-03-01 20:03:27,275 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-0190
+2026-03-01 20:03:27,275 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-0213  Score: 10.0  |  libnsl in Solaris allowed an attacker to perform a denial of service of rpcbind.
+2026-03-01 20:03:27,275 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-0213
+2026-03-01 20:03:27,275 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-1999-0461  Score: 10.0  |  Versions of rpcbind including Linux, IRIX, and Wietse Venema's rpcbind allow a remote attacker to in...
+2026-03-01 20:03:27,275 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-1999-0461
+2026-03-01 20:03:27,275 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2001-1124  Score: 5.0  |  rpcbind in HP-UX 11.00, 11.04 and 11.11 allows remote attackers to cause a denial of service (core d...
+2026-03-01 20:03:27,275 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2001-1124
+2026-03-01 20:03:27,275 - fenrir - WARNING - vulnerability_scanner:277 -   NOTE: More CVEs exist for 'rpcbind' beyond the current limit of 5. Increase --cve-limit to retrieve more.
+2026-03-01 20:03:27,275 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'MySQL 5.0.51a-3ubuntu5'...
+2026-03-01 20:03:27,287 - fenrir - WARNING - vulnerability_scanner:265 - Found 4 CVE(s) for 'ProFTPD 1.3.1' on port 2121:
+2026-03-01 20:03:27,288 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2006-6563  Score: 6.6  |  Stack-based buffer overflow in the pr_ctrls_recv_request function in ctrls.c in the mod_ctrls module...
+2026-03-01 20:03:27,288 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2006-6563
+2026-03-01 20:03:27,291 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2008-4242  Score: 6.8  |  ProFTPD 1.3.1 interprets long commands from an FTP client as multiple commands, which allows remote ...
+2026-03-01 20:03:27,291 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2008-4242
+2026-03-01 20:03:27,291 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2009-0542  Score: 7.5  |  SQL injection vulnerability in ProFTPD Server 1.3.1 through 1.3.2rc2 allows remote attackers to exec...
+2026-03-01 20:03:27,291 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2009-0542
+2026-03-01 20:03:27,291 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2009-0543  Score: 6.8  |  ProFTPD Server 1.3.1, with NLS support enabled, allows remote attackers to bypass SQL injection prot...
+2026-03-01 20:03:27,291 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2009-0543
+2026-03-01 20:03:27,291 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'PostgreSQL DB 8.3.0 - 8.3.7'...
+2026-03-01 20:03:34,086 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'MySQL 5.0.51a-3ubuntu5'.
+2026-03-01 20:03:34,087 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'VNC'...
+2026-03-01 20:03:34,238 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'PostgreSQL DB 8.3.0 - 8.3.7'.
+2026-03-01 20:03:34,239 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'X11'...
+2026-03-01 20:03:40,985 - fenrir - WARNING - vulnerability_scanner:265 - Found 5 CVE(s) for 'VNC' on port 5900:
+2026-03-01 20:03:40,985 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2001-1422  Score: 7.5  |  WinVNC 3.3.3 and earlier generates the same challenge string for multiple connections, which allows ...
+2026-03-01 20:03:40,985 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2001-1422
+2026-03-01 20:03:40,985 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2002-0971  Score: 4.6  |  Vulnerability in VNC, TightVNC, and TridiaVNC allows local users to execute arbitrary code as LocalS...
+2026-03-01 20:03:40,985 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2002-0971
+2026-03-01 20:03:40,985 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2002-0994  Score: 7.5  |  SunPCi II VNC uses a weak authentication scheme, which allows remote attackers to obtain the VNC pas...
+2026-03-01 20:03:40,985 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2002-0994
+2026-03-01 20:03:40,986 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2002-1336  Score: 7.5  |  TightVNC before 1.2.6 generates the same challenge string for multiple connections, which allows rem...
+2026-03-01 20:03:40,986 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2002-1336
+2026-03-01 20:03:40,986 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2002-2088  Score: 10.0  |  The MOSIX Project clump/os 5.4 creates a default VNC account without a password, which allows remote...
+2026-03-01 20:03:40,986 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2002-2088
+2026-03-01 20:03:40,986 - fenrir - WARNING - vulnerability_scanner:277 -   NOTE: More CVEs exist for 'VNC' beyond the current limit of 5. Increase --cve-limit to retrieve more.
+2026-03-01 20:03:40,986 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'UnrealIRCd'...
+2026-03-01 20:03:41,220 - fenrir - WARNING - vulnerability_scanner:265 - Found 5 CVE(s) for 'X11' on port 6000:
+2026-03-01 20:03:41,220 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2000-1169  Score: 7.5  |  OpenSSH SSH client before 2.3.0 does not properly disable X11 or agent forwarding, which could allow...
+2026-03-01 20:03:41,220 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2000-1169
+2026-03-01 20:03:41,220 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2002-0402  Score: 7.5  |  Buffer overflow in X11 dissector in Ethereal 0.9.3 and earlier allows remote attackers to cause a de...
+2026-03-01 20:03:41,220 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2002-0402
+2026-03-01 20:03:41,220 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2002-0517  Score: 7.2  |  Buffer overflow in X11 library (libX11) on Caldera Open UNIX 8.0.0, UnixWare 7.1.1, and possibly oth...
+2026-03-01 20:03:41,220 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2002-0517
+2026-03-01 20:03:41,220 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2004-0157  Score: 4.6  |  x11.c in xonix 1.4 and earlier uses the current working directory to find and execute the rmail prog...
+2026-03-01 20:03:41,221 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2004-0157
+2026-03-01 20:03:41,221 - fenrir - WARNING - vulnerability_scanner:269 -   [LOW     ] CVE-2004-2097  Score: 2.1  |  Multiple scripts on SuSE Linux 9.0 allow local users to overwrite arbitrary files via a symlink atta...
+2026-03-01 20:03:41,221 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2004-2097
+2026-03-01 20:03:41,221 - fenrir - WARNING - vulnerability_scanner:277 -   NOTE: More CVEs exist for 'X11' beyond the current limit of 5. Increase --cve-limit to retrieve more.
+2026-03-01 20:03:41,221 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'Apache Jserv'...
+2026-03-01 20:03:47,934 - fenrir - WARNING - vulnerability_scanner:265 - Found 5 CVE(s) for 'UnrealIRCd' on port 6667:
+2026-03-01 20:03:47,935 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2004-0679  Score: 5.0  |  The IP cloaking feature (cloak.c) in UnrealIRCd 3.2, and possibly other versions, uses a weak hashin...
+2026-03-01 20:03:47,935 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2004-0679
+2026-03-01 20:03:47,935 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2006-1214  Score: 5.0  |  UnrealIRCd 3.2.3 allows remote attackers to cause an unspecified denial of service by causing a link...
+2026-03-01 20:03:47,935 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2006-1214
+2026-03-01 20:03:47,935 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2009-4893  Score: 6.8  |  Buffer overflow in UnrealIRCd 3.2beta11 through 3.2.8, when allow::options::noident is enabled, allo...
+2026-03-01 20:03:47,935 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2009-4893
+2026-03-01 20:03:47,935 - fenrir - WARNING - vulnerability_scanner:269 -   [HIGH    ] CVE-2010-2075  Score: 7.5  |  UnrealIRCd 3.2.8.1, as distributed on certain mirror sites from November 2009 through June 2010, con...
+2026-03-01 20:03:47,935 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2010-2075
+2026-03-01 20:03:47,935 - fenrir - WARNING - vulnerability_scanner:269 -   [MEDIUM  ] CVE-2013-6413  Score: 5.0  |  Use-after-free vulnerability in UnrealIRCd 3.2.10 before 3.2.10.2 allows remote attackers to cause a...
+2026-03-01 20:03:47,935 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2013-6413
+2026-03-01 20:03:47,935 - fenrir - WARNING - vulnerability_scanner:277 -   NOTE: More CVEs exist for 'UnrealIRCd' beyond the current limit of 5. Increase --cve-limit to retrieve more.
+2026-03-01 20:03:47,936 - fenrir - INFO - vulnerability_scanner:197 - Searching NVD for CVEs matching 'Apache Tomcat/Coyote JSP engine 1.1'...
+2026-03-01 20:03:48,149 - fenrir - WARNING - vulnerability_scanner:265 - Found 2 CVE(s) for 'Apache Jserv' on port 8009:
+2026-03-01 20:03:48,149 - fenrir - WARNING - vulnerability_scanner:269 -   [LOW     ] CVE-2000-1247  Score: 2.1  |  The default configuration of the jserv-status handler in jserv.conf in Apache JServ 1.1.2 includes a...
+2026-03-01 20:03:48,150 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2000-1247
+2026-03-01 20:03:48,150 - fenrir - WARNING - vulnerability_scanner:269 -   [CRITICAL] CVE-2020-1938  Score: 9.8  |  When using the Apache JServ Protocol (AJP), care must be taken when trusting incoming connections to...
+2026-03-01 20:03:48,150 - fenrir - WARNING - vulnerability_scanner:274 -     → https://nvd.nist.gov/vuln/detail/CVE-2020-1938
+2026-03-01 20:03:54,790 - fenrir - INFO - vulnerability_scanner:261 - No CVEs found in NVD for 'Apache Tomcat/Coyote JSP engine 1.1'.
+2026-03-01 20:03:54,791 - fenrir - DEBUG - report_manager:138 - Report section added: 'Detected Services' (23 finding(s)).
+2026-03-01 20:03:54,791 - fenrir - DEBUG - report_manager:138 - Report section added: 'CVE Findings' (47 finding(s)).
+2026-03-01 20:03:54,792 - fenrir - INFO - vulnerability_scanner:412 - Vulnerability scan complete. Services detected: 23 | CVEs found: 47
+2026-03-01 20:03:54,794 - fenrir - INFO - fenrir_gui:744 - Phase 3: Directory brute-force
+2026-03-01 20:03:54,794 - fenrir - DEBUG - dir_brute_forcer:233 - DirBruteForcer: using built-in default wordlist.
+2026-03-01 20:03:54,795 - fenrir - DEBUG - dir_brute_forcer:207 - DirBruteForcer initialised. Wordlist: 237 entries | Concurrency: 50 | Timeout: 5.0s
+2026-03-01 20:03:54,795 - fenrir - INFO - dir_brute_forcer:451 - Starting directory brute-force on 192.168.56.101 (ports: 80 | wordlist: 237 entries)...
+2026-03-01 20:03:54,795 - fenrir - INFO - dir_brute_forcer:383 - Directory brute-force on http://192.168.56.101:80 (237 paths)...
+2026-03-01 20:03:54,937 - fenrir - WARNING - dir_brute_forcer:343 -   [200] http://192.168.56.101:80/test/  —  OK — accessible
+2026-03-01 20:03:54,995 - fenrir - WARNING - dir_brute_forcer:343 -   [403] http://192.168.56.101:80/.htaccess  —  Forbidden — path exists but access denied
+2026-03-01 20:03:54,995 - fenrir - WARNING - dir_brute_forcer:343 -   [403] http://192.168.56.101:80/.htpasswd  —  Forbidden — path exists but access denied
+2026-03-01 20:03:55,006 - fenrir - WARNING - dir_brute_forcer:343 -   [200] http://192.168.56.101:80/test  —  OK — accessible
+2026-03-01 20:03:55,147 - fenrir - WARNING - dir_brute_forcer:343 -   [200] http://192.168.56.101:80/phpinfo.php  —  OK — accessible
+2026-03-01 20:03:55,169 - fenrir - WARNING - dir_brute_forcer:343 -   [403] http://192.168.56.101:80/server-status  —  Forbidden — path exists but access denied
+2026-03-01 20:03:58,367 - fenrir - WARNING - dir_brute_forcer:411 - Directory scan complete on http://192.168.56.101:80: 6 path(s) discovered.
+2026-03-01 20:03:58,372 - fenrir - DEBUG - report_manager:138 - Report section added: 'Directory Brute-Force — Discovered Paths' (6 finding(s)).
+2026-03-01 20:03:58,372 - fenrir - INFO - dir_brute_forcer:491 - Directory brute-force complete. Ports scanned: 1 | Total paths discovered: 6
+2026-03-01 20:03:58,372 - fenrir - INFO - fenrir_gui:750 - Phase 4: Specialised modules
+2026-03-01 20:03:58,372 - fenrir - DEBUG - exploit_scanner:38 - ExploitScanner initialised.
+2026-03-01 20:03:58,372 - fenrir - DEBUG - iot_scanner:77 - IotScanner initialised.
+2026-03-01 20:03:58,373 - fenrir - DEBUG - rf_scanner:86 - RfScanner initialised.
+2026-03-01 20:03:58,376 - fenrir - INFO - exploit_scanner:75 - Starting exploit search: '192.168.56.101'
+2026-03-01 20:03:58,376 - fenrir - WARNING - exploit_scanner:159 - Offline database not available — falling back to searchsploit. Run 'fenrir --db-build' to build the offline database.
+2026-03-01 20:03:58,388 - fenrir - INFO - iot_scanner:99 - Starting IoT scan on 192.168.56.101...
+2026-03-01 20:03:58,389 - fenrir - INFO - rf_scanner:123 - RF scan: 24.000 MHz – 1.700 GHz | threshold -20.0 dBm | duration 20s
+2026-03-01 20:03:58,389 - fenrir - WARNING - rf_scanner:130 - No SDR library found. Install pyrtlsdr or SoapySDR:
+  pip install pyrtlsdr numpy
+  pip install SoapySDR numpy
+An RTL-SDR dongle (~$25 USD) is required for hardware RF scanning.
+2026-03-01 20:03:58,389 - fenrir - WARNING - iot_scanner:151 - paho-mqtt not installed — skipping MQTT checks.
+2026-03-01 20:03:58,389 - fenrir - DEBUG - iot_scanner:236 - Offline DB not available — skipping default cred check.
+2026-03-01 20:03:58,389 - fenrir - INFO - iot_scanner:306 - Grabbing banners from 2 IoT port(s) on 192.168.56.101...
+2026-03-01 20:03:58,389 - fenrir - WARNING - iot_scanner:356 - bleak not installed — BLE scan unavailable.
+2026-03-01 20:03:58,394 - fenrir - INFO - iot_scanner:337 -   [Telnet] 192.168.56.101:23 banner: ���� ��#��'
+2026-03-01 20:03:58,568 - fenrir - INFO - exploit_scanner:187 - No exploits found for '192.168.56.101'.
+2026-03-01 20:03:58,570 - fenrir - INFO - exploit_scanner:209 - Exploit search finished.
+2026-03-01 20:04:01,395 - fenrir - DEBUG - report_manager:138 - Report section added: 'IoT Scan' (1 finding(s)).
+2026-03-01 20:04:01,395 - fenrir - INFO - iot_scanner:136 - IoT scan finished.
+2026-03-01 20:04:01,397 - fenrir - WARNING - fenrir_gui:789 - Password spray: no password or usernames configured — skipping.
+2026-03-01 20:04:01,398 - fenrir - INFO - fenrir_gui:792 - Phase 5: OT/ICS passive scan (30s)
+2026-03-01 20:04:01,398 - fenrir - DEBUG - ot_scanner:75 - OtScanner initialised.
+2026-03-01 20:04:01,398 - fenrir - WARNING - ot_scanner:176 - Passive OT sniffing requires root privileges — falling back to active OT port scan.
+2026-03-01 20:04:01,398 - fenrir - INFO - ot_scanner:272 - Active OT scan: probing 192.168.56.101 for OT/ICS ports...
+2026-03-01 20:04:03,410 - fenrir - INFO - ot_scanner:214 - OT scan complete: no OT/ICS protocol traffic or open ports detected.
+2026-03-01 20:04:03,410 - fenrir - DEBUG - report_manager:138 - Report section added: 'OT/ICS Protocol Detection' (1 finding(s)).
+2026-03-01 20:04:03,411 - fenrir - WARNING - fenrir_gui:805 - Mobile scan: no APK path specified — skipping.
+2026-03-01 20:04:03,411 - fenrir - INFO - report_manager:156 - Finalising scan report...
+2026-03-01 20:04:03,412 - fenrir - INFO - report_manager:161 - Reports saved:
+2026-03-01 20:04:03,412 - fenrir - INFO - report_manager:162 -   TXT  → /home/kali/Desktop/Fenrir/Fenrir/fenrir_report_192.168.56.101_20260301_200158.txt
+2026-03-01 20:04:03,412 - fenrir - INFO - report_manager:163 -   JSON → /home/kali/Desktop/Fenrir/Fenrir/fenrir_report_192.168.56.101_20260301_200158.json
+2026-03-01 20:04:03,412 - fenrir - INFO - fenrir_gui:809 - ────────────────────────────────────────────────────────
+2026-03-01 20:04:03,413 - fenrir - INFO - fenrir_gui:810 -   Scan complete.
+2026-03-01 20:04:03,413 - fenrir - INFO - fenrir_gui:814 - ────────────────────────────────────────────────────────
+2026-03-01 20:10:51,087 - fenrir - DEBUG - config:113 - Config loaded. Version: 2.0.0 | VT key: set | OTX key: set | NVD key: set
+2026-03-01 20:10:51,266 - fenrir - DEBUG - tech_detector:56 - webtech library not available — fallback fingerprinting only.
+2026-03-01 20:10:51,314 - fenrir - DEBUG - iot_scanner:31 - bleak not installed — BLE scanning unavailable.
+2026-03-01 20:10:51,314 - fenrir - DEBUG - iot_scanner:39 - paho-mqtt not installed — MQTT scanning unavailable.
+2026-03-01 20:10:51,740 - fenrir - ERROR - cli:450 - A target is required. Use: fenrir <target> [options]

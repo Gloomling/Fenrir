@@ -637,7 +637,8 @@ async def _run_scans(args: argparse.Namespace) -> int:
 def _handle_db_commands(args: argparse.Namespace) -> int:
     """Handle --db-* commands. Returns exit code."""
     from .database import get_db_manager
-    from .database.db_builder import DatabaseBuilder
+    from .database import get_db_builder
+    DatabaseBuilder = get_db_builder()
 
     if args.db_status:
         db = get_db_manager()

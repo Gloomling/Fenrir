@@ -67,12 +67,14 @@ except ImportError as e:
 # --- Port Scanning & Vulnerability Analysis ---
 
 try:
-    from .port_scanner import PortScanner, parse_ports, DEFAULT_PORTS
+    from .port_scanner import PortScanner, parse_ports, DEFAULT_PORTS, WEB_PORTS, SSH_PORT
 except ImportError as e:
     log.warning(f"PortScanner could not be loaded: {e}")
     PortScanner = None      # type: ignore[assignment,misc]
     parse_ports = None      # type: ignore[assignment]
     DEFAULT_PORTS = []      # type: ignore[assignment]
+    WEB_PORTS = []          # type: ignore[assignment]
+    SSH_PORT = 22           # type: ignore[assignment]
 
 try:
     from .vulnerability_scanner import VulnerabilityScanner
@@ -155,6 +157,8 @@ __all__ = [
     "PortScanner",
     "parse_ports",
     "DEFAULT_PORTS",
+    "WEB_PORTS",
+    "SSH_PORT",
     "VulnerabilityScanner",
     "ExploitScanner",
     # Web Application
