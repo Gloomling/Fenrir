@@ -49,11 +49,60 @@ from .modules import (
     IotScanner,
     OtScanner,
     MobileScanner,
+    AndroidScanner,
     RfScanner,
 )
 from .report_manager import ReportManager
 
 log = get_logger()
+
+
+# =============================================================================
+# Scan helpers
+# =============================================================================
+
+import ipaddress as _ipaddress
+
+
+def _is_private_ip(target: str) -> bool:
+    """True if target is an RFC1918/loopback/link-local address."""
+    try:
+        addr = _ipaddress.ip_address(target)
+        return addr.is_private or addr.is_loopback or addr.is_link_local
+    except ValueError:
+        return False
+
+
+def _looks_like_ip(target: str) -> bool:
+    """True if target is a bare IP address rather than a hostname."""
+    try:
+        _ipaddress.ip_address(target)
+        return True
+    except ValueError:
+        return False
+
+
+async def _host_is_up(target: str, timeout: float = 2.0) -> bool:
+    """Quick multi-port reachability probe. Returns True if any port responds."""
+    probe_ports = [80, 443, 22, 5555, 23, 8080]
+
+    async def _probe(port: int) -> bool:
+        try:
+            _, writer = await asyncio.wait_for(
+                asyncio.open_connection(target, port), timeout=timeout
+            )
+            writer.close()
+            try:
+                await writer.wait_closed()
+            except Exception:
+                pass
+            return True
+        except Exception:
+            return False
+
+    results = await asyncio.gather(*[_probe(p) for p in probe_ports],
+                                    return_exceptions=True)
+    return any(r is True for r in results)
 
 
 # =============================================================================
@@ -133,6 +182,32 @@ Examples:
             "Ports to scan. Accepts comma-separated values and ranges.\n"
             "Examples: 80,443   22,80,1024-2048\n"
             "Default: nmap top-1000 ports."
+        ),
+    )
+    portscan.add_argument(
+        "--port-timeout",
+        type=float,
+        default=1.5,
+        metavar="SECONDS",
+        help="Per-port TCP connect timeout in seconds. Default: 1.5. "
+             "Increase for slow/local targets (e.g. 3.0 for Android/VMs).",
+    )
+    portscan.add_argument(
+        "--skip-hostup",
+        action="store_true",
+        help="Skip reachability pre-check and scan regardless.",
+    )
+    portscan.add_argument(
+        "--profile",
+        metavar="PROFILE",
+        default=None,
+        choices=["android", "web", "internal", "iot"],
+        help=(
+            "Scan profile shortcut.\n"
+            "  android  — ports 5555,5554,5556,8080,443,80 + vuln scan\n"
+            "  web      — ports 80,443,8080,8443,8000 + web/tech/dirs\n"
+            "  internal — full ports + vuln + dns + whois\n"
+            "  iot      — IoT ports + vuln + iot scan"
         ),
     )
 
@@ -488,17 +563,75 @@ async def _run_scans(args: argparse.Namespace) -> int:
     log.info(f"  Fenrir  |  Target: {target}")
     log.info("=" * 58)
 
+    # ── Profile shortcuts ─────────────────────────────────────────────────────
+    _PROFILES = {
+        "android":  ("5555,5554,5556,5558,8080,443,80", None),
+        "web":      ("80,443,8080,8443,8000,8888,3000", None),
+        "internal": (None, None),
+        "iot":      ("21,22,23,80,443,502,1883,4786,5683,8080,8883,47808", None),
+    }
+    if args.profile and not args.ports:
+        profile_ports, _ = _PROFILES[args.profile]
+        if profile_ports:
+            requested_ports = parse_ports(profile_ports)
+            log.info(f"Profile '{args.profile}': scanning ports {profile_ports}")
+
+    # ── Private IP detection ──────────────────────────────────────────────────
+    is_private = _is_private_ip(target)
+    if is_private:
+        log.info(
+            f"Target {target} is a private/RFC1918 address. "
+            "WHOIS, VirusTotal, OSINT, and Subdomain modules will be "
+            "skipped automatically (no useful results for private IPs)."
+        )
+
+    # ── Host-up pre-check ─────────────────────────────────────────────────────
+    if not getattr(args, "skip_hostup", False):
+        host_up = await _host_is_up(target, timeout=2.0)
+        if not host_up:
+            log.warning(
+                f"{target} did not respond to any probe. "
+                "Host may be offline, firewalled, or sleeping. "
+                "Continuing anyway. Use --skip-hostup to suppress this warning."
+            )
+        else:
+            log.info(f"{target} is reachable.")
+
     # ── Phase 1: Port scan ────────────────────────────────────────────────────
     open_ports: list[int] = []
+    port_timeout = getattr(args, "port_timeout", 1.5)
 
     if run_port_scan and not args.scan_exploits:
         log.info("[Phase 1] Port scan")
-        open_ports = await PortScanner().run(
+        open_ports = await PortScanner(timeout=port_timeout).run(
             target, ports=requested_ports, report=report
         )
+        if not open_ports:
+            log.warning(
+                f"No open ports found on {target}. "
+                "If scanning an Android device, ensure ADB over TCP is enabled:\n"
+                "  adb tcpip 5555  (run while connected via USB)\n"
+                "  Or: Settings → Developer Options → Wireless debugging\n"
+                "Try --port-timeout 3.0 if the device/VM is slow to respond."
+            )
 
     found_web_ports = [p for p in open_ports if p in WEB_PORTS]
-    found_ssh_ports = [p for p in open_ports if p == SSH_PORT]
+
+    # ── Auto: Android device scanner ─────────────────────────────────────────
+    adb_ports = [p for p in open_ports if p in (5555, 5554, 5556, 5558)]
+    if adb_ports and AndroidScanner is not None:
+        log.info(f"[Auto] ADB port(s) found: {adb_ports} — running AndroidScanner.")
+        for adb_port in adb_ports:
+            await AndroidScanner().run(target, port=adb_port, report=report)
+    elif args.profile == "android" and not adb_ports:
+        log.warning(
+            "Android profile selected but ADB port not found. "
+            "To enable ADB over TCP on the device:\n"
+            "  1. Connect via USB: adb tcpip 5555\n"
+            "  2. Settings → Developer Options → Wireless debugging\n"
+            "  3. Device may be sleeping — wake it and retry\n"
+            "  4. Try --port-timeout 3.0 for slow VMs"
+        )
 
     # ── Phase 2: Parallel recon / analysis ───────────────────────────────────
     phase2_tasks = []
@@ -510,9 +643,13 @@ async def _run_scans(args: argparse.Namespace) -> int:
                 target, open_ports, report=report
             )
         )
+    elif run_vuln_scan and not open_ports:
+        log.info("Vulnerability scan skipped — no open ports found.")
 
     if args.scan_web and found_web_ports:
         phase2_tasks.append(WebScanner().run(target, found_web_ports, report=report))
+    elif args.scan_web:
+        log.info("Web scan skipped — no web ports open.")
 
     if args.scan_tech and found_web_ports:
         phase2_tasks.append(TechDetector().run(target, found_web_ports, report=report))
@@ -520,19 +657,31 @@ async def _run_scans(args: argparse.Namespace) -> int:
     if args.scan_dns:
         phase2_tasks.append(DnsScanner().run(target, report=report))
 
-    if args.scan_whois:
+    # WHOIS: skip for private IPs — only returns RFC1918 IANA boilerplate
+    if args.scan_whois and not is_private:
         phase2_tasks.append(WhoisScanner().run(target, report=report))
+    elif args.scan_whois and is_private:
+        log.info("WHOIS skipped — private/RFC1918 address (no useful data).")
 
-    if args.scan_subdomains:
+    # Subdomain enumeration: only meaningful for hostnames, not bare IPs
+    if args.scan_subdomains and not _looks_like_ip(target):
         phase2_tasks.append(
             SubdomainScanner(wordlist_path=args.wordlist).run(target, report=report)
         )
+    elif args.scan_subdomains:
+        log.info("Subdomain scan skipped — target is an IP address, not a hostname.")
 
-    if args.scan_intel:
+    # Threat intel / VirusTotal: always 0 detections for private IPs
+    if args.scan_intel and not is_private:
         phase2_tasks.append(ThreatIntelScanner().run(target, report=report))
+    elif args.scan_intel and is_private:
+        log.info("Threat intelligence skipped — private IP (VirusTotal/OTX not useful).")
 
-    if args.scan_osint:
+    # OSINT: no public records for private IPs
+    if args.scan_osint and not is_private:
         phase2_tasks.append(OsintScanner().run(target, report=report))
+    elif args.scan_osint and is_private:
+        log.info("OSINT scan skipped — private IP (no public records).")
 
     if phase2_tasks:
         await asyncio.gather(*phase2_tasks, return_exceptions=True)
@@ -543,6 +692,8 @@ async def _run_scans(args: argparse.Namespace) -> int:
         await DirBruteForcer(wordlist_path=args.wordlist).run(
             target, found_web_ports, report=report
         )
+    elif args.scan_dirs:
+        log.info("Directory brute-force skipped — no web ports open.")
 
     # ── Phase 4: Exploit search ───────────────────────────────────────────────
     if args.scan_exploits:
@@ -562,13 +713,16 @@ async def _run_scans(args: argparse.Namespace) -> int:
     phase5_tasks = []
 
     if args.scan_iot:
-        phase5_tasks.append(
-            IotScanner().run(
-                target, open_ports,
-                ble_duration=args.ble_duration,
-                report=report,
+        if open_ports:
+            phase5_tasks.append(
+                IotScanner().run(
+                    target, open_ports,
+                    ble_duration=args.ble_duration,
+                    report=report,
+                )
             )
-        )
+        else:
+            log.info("IoT scan skipped — no open ports found.")
 
     if args.scan_rf:
         phase5_tasks.append(
@@ -606,7 +760,19 @@ async def _run_scans(args: argparse.Namespace) -> int:
 
     # OT scan (long blocking sniff)
     if args.scan_ot:
-        log.info(f"[Phase 5] OT/ICS scan ({args.ot_mode}, {args.ot_duration}s)")
+        ot_relevant_ports = {p for p in open_ports if p in (
+            502, 102, 44818, 20000, 47808, 4840, 1089, 1090, 1091,
+            2222, 4000, 9600, 19999, 20547, 34962, 34963, 34964,
+        )}
+        if ot_relevant_ports:
+            log.info(
+                f"[Phase 5] OT/ICS scan — OT-relevant ports found: {ot_relevant_ports}"
+            )
+        else:
+            log.info(
+                f"[Phase 5] OT/ICS scan ({args.ot_mode}, {args.ot_duration}s) — "
+                "no OT-specific ports in scan results; running passive detection anyway."
+            )
         await OtScanner().run(
             target_ip=target,
             duration=args.ot_duration,

@@ -338,6 +338,11 @@ class TechDetector:
                     })
                 return results
 
+            except NameError as exc:
+                # webtech has an internal bug ("name 'x' is not defined") in
+                # some installed versions — treat as unavailable, not a crash.
+                log.debug(f"webtech internal error for {url} (library bug: {exc}) — using fallback")
+                return None
             except Exception as exc:
                 log.debug(f"webtech failed for {url}: {exc}")
                 return None
@@ -607,7 +612,7 @@ def _extract_version_from_headers(tech_name: str, headers: httpx.Headers) -> str
             continue
         # Look for the tech name followed by a version number
         # e.g. "Apache/2.4.51" or "PHP/8.1.2"
-        pattern = re.compile(x,
+        pattern = re.compile(
             re.escape(tech_name) + r"[/\s]*([\d]+\.[\d]+[\d.]*)",
             re.IGNORECASE,
         )

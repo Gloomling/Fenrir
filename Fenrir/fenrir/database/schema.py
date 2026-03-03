@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS cves (
     kev_date_added      TEXT,
     kev_required_action TEXT,
     cpe_matches         TEXT,
-    references          TEXT,
+    ref_urls            TEXT,
     cwe_ids             TEXT,
     assigner            TEXT
 );
@@ -697,7 +697,7 @@ CREATE TABLE IF NOT EXISTS owasp_findings (
     likelihood  TEXT,
     impact      TEXT,
     remediation TEXT,
-    references  TEXT,
+    ref_urls    TEXT,
     cwe_ids     TEXT
 );
 """
