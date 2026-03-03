@@ -1,0 +1,94 @@
+." Man page for fenrir
+.TH fenrir 1 "August 2025" "2.0.0" "Fenrir User Manual"
+
+.SH NAME
+fenrir - A modular, command-line security scanner.
+
+.SH SYNOPSIS
+.B fenrir
+[\fItarget\fR] [\fIOPTIONS\fR]...
+
+.SH DESCRIPTION
+.B Fenrir
+is a multi-module security scanner designed for penetration testing, vulnerability identification, and reconnaissance. It combines multiple scanning techniques into a single, extensible command-line tool.
+
+Scans are organized into modules, which can be run individually or in combination against a specified target IP address, hostname, or domain.
+
+.SH OPTIONS
+.SS Reconnaissance Modules
+.TP
+.B \-sS, --scan-subdomains
+Run subdomain enumeration using a common wordlist.
+.TP
+.B \-sN, --scan-dns
+Run DNS record enumeration for A, MX, TXT, and other common record types.
+.TP
+.B \-sH, --scan-whois
+Run a WHOIS lookup to retrieve domain registration details.
+.TP
+.B \-sO, --scan-osint
+Run an OSINT scan to find publicly exposed documents and email addresses.
+.TP
+.B \-sI, --scan-intel
+Run a threat intelligence scan against sources like VirusTotal.
+
+.SS Port Scanning & Vulnerability Analysis
+.TP
+.B \-p, --ports \fIPORTS\fR
+Specify a comma-separated list of ports to scan (e.g., 80,443,1024-2048).
+.TP
+.B \-sV, --scan-vulns
+Run service and version detection on open ports, followed by a CVE lookup in the National Vulnerability Database.
+.TP
+.B \-sE, --scan-exploits \fIQUERY\fR
+Search the local Exploit-DB database (SearchSploit) for a given query. This option does not require a target.
+
+.SS Web Application Modules
+.TP
+.B \-sW, --scan-web
+Run web reconnaissance to retrieve server headers from open HTTP/S ports.
+.TP
+.B \-sD, --scan-dirs
+Run a directory and file brute-force scan using a built-in wordlist.
+.TP
+.B \-sT, --scan-tech
+Run web technology detection to identify server software, frameworks, and libraries.
+
+.SS Offensive Modules
+.TP
+.B \-U, --user-list \fIUSERNAMES\fR
+A comma-separated list of usernames for password spraying.
+.TP
+.B \-sP, --spray-pass \fIPASSWORD\fR
+A single password to spray across all specified usernames against an SSH service. Requires -U.
+
+.SS Specialized Modules
+.TP
+.B \-sIoT, --scan-iot
+Scan for IoT devices, checking for anonymous MQTT login and discovering local BLE devices.
+.TP
+.B \-sOT, --scan-ot
+Passively listen on the network for common OT protocol traffic (e.g., Modbus, S7). Requires root privileges.
+.TP
+.B \-sM, --scan-mobile \fIFILE_PATH\fR
+Perform static analysis on a mobile application file (currently supports .apk).
+.TP
+.B \-sRF, --scan-rf
+Simulate a scan for common RF signals. Does not require a target.
+
+.SH EXAMPLES
+.TP
+.B Run a full vulnerability scan on a target:
+fenrir 192.168.1.10 -sV
+.TP
+.B Scan a domain for subdomains and DNS records:
+fenrir example.com -sS -sN
+.TP
+.B Search for exploits related to Apache 2.4.52:
+fenrir -sE "Apache 2.4.52"
+.TP
+.B Spray a password against multiple users on an SSH server:
+fenrir 192.168.1.10 -U root,admin,user -sP 'password123'
+
+.SH AUTHOR
+Written by Your Name.
