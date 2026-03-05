@@ -11,7 +11,8 @@ readme = "README.md"
 packages = [{include = "fenrir"}]
 
 [tool.poetry.scripts]
-fenrir = "fenrir.cli:main"
+fenrir     = "fenrir.cli:main"
+fenrir-gui = "fenrir.fenrir_gui:launch_gui"
 
 # ---------------------------------------------------------------------------
 # Core dependencies

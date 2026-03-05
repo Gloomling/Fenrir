@@ -11,19 +11,25 @@
 #   - Scan populated directly into results tabs on completion
 
 import asyncio
+import json
 import logging
 import os
 import queue
+import re
 import threading
 import time
 import tkinter as tk
+from datetime import datetime, timedelta
 from pathlib import Path
 from tkinter import filedialog, messagebox, scrolledtext, ttk
 from typing import Optional
 
-from PIL import Image, ImageTk
+from PIL import Image, ImageDraw, ImageTk
 
+from .branding_config import branding
 from .config import config
+from .epss_client import enrich_cves_with_epss, get_epss
+from .fenrir_paths import make_result_dir, ASSETS_DIR, RESULTS_DIR, FENRIR_ROOT
 from .logging_config import get_logger, setup_logging
 from .modules import (
     MODULE_REGISTRY,
@@ -51,25 +57,33 @@ from .modules import (
     RfScanner,
 )
 from .report_manager import ReportManager
+from .scan_history import get_scan_history
 
 log = get_logger()
 
-# ── Colour palette ─────────────────────────────────────────────────────────────
-DARK_BG    = "#1e1e2e"
-PANEL_BG   = "#2a2a3e"
-ACCENT     = "#89b4fa"
-TEXT_FG    = "#cdd6f4"
-WARN_FG    = "#f9e2af"
-ERR_FG     = "#f38ba8"
-SUCCESS_FG = "#a6e3a1"
-ENTRY_BG   = "#313244"
-SEP_FG     = "#45475a"
-BTN_ACTIVE = "#585b70"
-CRIT_FG    = "#ff5555"
-DEBUG_FG   = "#6272a4"
-TIMING_OK  = "#a6e3a1"
-TIMING_SLOW= "#f9e2af"
-TIMING_BAD = "#f38ba8"
+# ── Colour palette — driven by branding.json, editable at runtime ──────────────
+def _reload_palette() -> None:
+    """Pull live colours from branding config into module globals."""
+    global DARK_BG, PANEL_BG, ACCENT, TEXT_FG, WARN_FG, ERR_FG
+    global SUCCESS_FG, ENTRY_BG, SEP_FG, BTN_ACTIVE, CRIT_FG, DEBUG_FG
+    global TIMING_OK, TIMING_SLOW, TIMING_BAD
+    DARK_BG    = branding.dark_bg
+    PANEL_BG   = branding.panel_bg
+    ACCENT     = branding.accent_colour
+    TEXT_FG    = branding.text_fg
+    WARN_FG    = branding.get("warn_fg",    "#f9e2af")
+    ERR_FG     = branding.get("err_fg",     "#f38ba8")
+    SUCCESS_FG = branding.get("success_fg", "#a6e3a1")
+    ENTRY_BG   = branding.entry_bg
+    SEP_FG     = branding.get("sep_fg",     "#45475a")
+    BTN_ACTIVE = branding.get("btn_active", "#585b70")
+    CRIT_FG    = branding.get("crit_fg",    "#ff5555")
+    DEBUG_FG   = branding.get("debug_fg",   "#6272a4")
+    TIMING_OK  = SUCCESS_FG
+    TIMING_SLOW= WARN_FG
+    TIMING_BAD = ERR_FG
+
+_reload_palette()   # initialise on import
 
 # Per-module soft timeout (seconds).  Heavy modules get more time.
 MODULE_TIMEOUTS = {
@@ -102,15 +116,19 @@ class FenrirGUI(tk.Tk):
 
     def __init__(self) -> None:
         super().__init__()
-        self.title("Fenrir Security Scanner")
-        self.geometry("1280x820")
+        self.title(branding.window_title)
+        self.geometry("1300x860")
         self.minsize(1024, 700)
         self.configure(bg=DARK_BG)
 
+        # Background opacity slider var (before _build_ui)
+        self._bg_opacity_var = tk.DoubleVar(value=branding.bg_opacity)
+
+        # Asset paths from branding config
         self._asset = {
-            "icon":       "assets/logo.png",
-            "logo":       "assets/logo.png",
-            "background": "assets/background.png",
+            "icon":       str(branding.logo_path or ""),
+            "logo":       str(branding.logo_path or ""),
+            "background": str(branding.background_path or ""),
         }
 
         # Log queue — scanner thread → GUI
@@ -123,17 +141,22 @@ class FenrirGUI(tk.Tk):
         self._scan_start:   Optional[float] = None
 
         # Debug/timing data
-        self._module_timings: dict[str, dict] = {}   # key -> {start, end, status}
+        self._module_timings: dict[str, dict] = {}
         self._timing_queue:   queue.Queue = queue.Queue()
 
-        # Report reference (populated after scan)
-        self._last_report: Optional[ReportManager] = None
-        self._exploit_findings: dict[str, dict] = {}  # treeview iid → full exploit dict
+        # Report/history
+        self._last_report:    Optional[ReportManager] = None
+        self._exploit_findings: dict[str, dict] = {}
+        self._history = get_scan_history()
+        self._current_scan_id: int = -1
 
         # Network scan state
         self._net_scan_thread:  Optional[threading.Thread] = None
         self._net_cancel_event: threading.Event = threading.Event()
-        self._net_host_rows:    dict[str, str] = {}  # ip -> treeview iid
+        self._net_host_rows:    dict[str, str] = {}
+
+        # Scheduled scan checker
+        self._schedule_job: Optional[str] = None
 
         self._apply_styles()
         self._set_icon()
@@ -142,6 +165,7 @@ class FenrirGUI(tk.Tk):
         self._poll_log_queue()
         self._poll_timing_queue()
         self._tick_status()
+        self._check_schedules()        # start schedule polling
         self.protocol("WM_DELETE_WINDOW", self._on_closing)
 
     # =========================================================================
@@ -202,20 +226,23 @@ class FenrirGUI(tk.Tk):
     # =========================================================================
 
     def _set_icon(self) -> None:
-        icon_path = self._asset["icon"]
-        if os.path.exists(icon_path):
-            try:
-                icon = Image.open(icon_path).resize((32, 32), Image.Resampling.LANCZOS)
-                self._icon_img = ImageTk.PhotoImage(icon)
-                self.iconphoto(True, self._icon_img)
-            except Exception:
-                pass
+        logo_path = branding.logo_path
+        try:
+            if logo_path and logo_path.exists():
+                icon = Image.open(logo_path).resize((32, 32), Image.Resampling.LANCZOS)
+            else:
+                icon = _make_wolf_icon(32)
+            self._icon_img = ImageTk.PhotoImage(icon)
+            self.iconphoto(True, self._icon_img)
+        except Exception:
+            pass
 
     # =========================================================================
     # UI construction
     # =========================================================================
 
     def _build_ui(self) -> None:
+        # Background canvas (sits behind everything)
         self._bg_label = tk.Label(self, bg=DARK_BG)
         self._bg_label.place(x=0, y=0, relwidth=1, relheight=1)
         self._update_background()
@@ -224,27 +251,37 @@ class FenrirGUI(tk.Tk):
         notebook = ttk.Notebook(self)
         notebook.pack(fill=tk.BOTH, expand=True, padx=6, pady=(6, 0))
 
-        # Tab 1: Scan (control + live log)
+        # ── Scan ──────────────────────────────────────────────────────────────
         scan_tab = ttk.Frame(notebook)
         notebook.add(scan_tab, text="  Scan  ")
         self._build_scan_tab(scan_tab)
 
-        # Tab 2: Network Scan (multi-host discovery + deep assessment)
+        # ── Network Scan ───────────────────────────────────────────────────────
         net_tab = ttk.Frame(notebook)
         notebook.add(net_tab, text="  Network Scan  ")
         self._build_network_tab(net_tab)
 
-        # Tab 3: Results (sub-notebook with sections)
+        # ── Results ────────────────────────────────────────────────────────────
         self._results_tab = ttk.Frame(notebook)
         notebook.add(self._results_tab, text="  Results  ")
         self._build_results_tab(self._results_tab)
 
-        # Tab 3: Debug
+        # ── History ────────────────────────────────────────────────────────────
+        hist_tab = ttk.Frame(notebook)
+        notebook.add(hist_tab, text="  History  ")
+        self._build_history_tab(hist_tab)
+
+        # ── Schedules ──────────────────────────────────────────────────────────
+        sched_tab = ttk.Frame(notebook)
+        notebook.add(sched_tab, text="  Schedules  ")
+        self._build_schedules_tab(sched_tab)
+
+        # ── Debug ──────────────────────────────────────────────────────────────
         debug_tab = ttk.Frame(notebook)
         notebook.add(debug_tab, text="  Debug  ")
         self._build_debug_tab(debug_tab)
 
-        # Tab 4: Database
+        # ── Database ───────────────────────────────────────────────────────────
         db_tab = ttk.Frame(notebook)
         notebook.add(db_tab, text="  Database  ")
         self._build_db_tab(db_tab)
@@ -417,7 +454,7 @@ class FenrirGUI(tk.Tk):
                     textvariable=self._net_port_timeout_var).pack(
                     side=tk.LEFT, padx=(4, 8))
         ttk.Label(opt_row, text="Output dir:").pack(side=tk.LEFT)
-        self._net_output_var = tk.StringVar(value=".")
+        self._net_output_var = tk.StringVar(value=str(RESULTS_DIR))
         ttk.Entry(opt_row, textvariable=self._net_output_var, width=14).pack(
             side=tk.LEFT, padx=(4, 2))
         ttk.Button(opt_row, text="…",
@@ -711,9 +748,16 @@ class FenrirGUI(tk.Tk):
         self._net_stop_btn.configure(state="normal")
         self._net_status_label.configure(text="Starting…", fg=ACCENT)
 
-        targets      = ",".join(sorted(self._disc_selected))
-        output_dir   = self._net_output_var.get().strip() or "."
-        modules      = {k for k, v in self._net_mod_vars.items() if v.get()}
+        targets    = ",".join(sorted(self._disc_selected))
+        # Auto-name the output directory: Results/YYYY-MM-DD_HH-MM_targets_network/
+        try:
+            label      = targets.replace(",", "_")[:40]
+            output_dir = str(make_result_dir(label, "network"))
+            self._net_output_var.set(output_dir)
+            log.info(f"Network scan output: {output_dir}")
+        except Exception:
+            output_dir = self._net_output_var.get().strip() or str(RESULTS_DIR)
+        modules    = {k for k, v in self._net_mod_vars.items() if v.get()}
 
         self._net_scan_thread = threading.Thread(
             target=self._run_net_in_thread,
@@ -1130,13 +1174,15 @@ class FenrirGUI(tk.Tk):
         of = ttk.LabelFrame(inner, text="Output", padding=8)
         of.pack(**PAD)
         of.columnconfigure(0, weight=1)
-        self._output_dir_var = tk.StringVar(value=str(Path.cwd()))
+        self._output_dir_var = tk.StringVar(value=str(RESULTS_DIR))
         out_row = ttk.Frame(of)
         out_row.pack(fill=tk.X)
         out_row.columnconfigure(0, weight=1)
         ttk.Entry(out_row, textvariable=self._output_dir_var).grid(row=0, column=0, sticky="ew")
         ttk.Button(out_row, text="…",
                    command=self._browse_output).grid(row=0, column=1, padx=(2, 0))
+        ttk.Label(of, text="Auto-named: Results/YYYY-MM-DD_HH-MM_target/",
+                  font=("Helvetica", 8), foreground=DEBUG_FG).pack(anchor="w", pady=(2, 0))
 
         # Start / Stop
         btn_frame = ttk.Frame(inner)
@@ -1503,35 +1549,35 @@ class FenrirGUI(tk.Tk):
         self._status_mem_label.pack(side=tk.RIGHT, padx=4)
 
     def _update_background(self) -> None:
-        bg_path = self._asset["background"]
-        if not os.path.exists(bg_path):
+        """Redraw the background image blended at current opacity."""
+        bg_path = branding.background_path
+        opacity = float(self._bg_opacity_var.get())
+
+        if not bg_path or not bg_path.exists() or opacity < 0.01:
+            self._bg_label.configure(image="", bg=DARK_BG)
             return
         try:
             w, h = self.winfo_width(), self.winfo_height()
             if w < 10 or h < 10:
                 return
-            img = Image.open(bg_path).resize((w, h), Image.Resampling.LANCZOS)
-            img = img.convert("RGBA")
-            overlay = Image.new("RGBA", img.size, (30, 30, 46, 200))
-            img.paste(overlay, mask=overlay)
-            self._bg_photo = ImageTk.PhotoImage(img)
-            self._bg_label.configure(image=self._bg_photo)
+            img = Image.open(bg_path).resize((w, h), Image.Resampling.LANCZOS).convert("RGBA")
+            # Dark overlay: alpha = (1 - opacity) → full opacity means full image
+            overlay_alpha = int((1.0 - opacity) * 255)
+            overlay = Image.new("RGBA", img.size, (*_hex_to_rgb(DARK_BG), overlay_alpha))
+            merged  = Image.alpha_composite(img, overlay)
+            self._bg_photo = ImageTk.PhotoImage(merged)
+            self._bg_label.configure(image=self._bg_photo, bg=DARK_BG)
         except Exception:
-            pass
+            self._bg_label.configure(image="", bg=DARK_BG)
 
     # =========================================================================
     # Scan control
     # =========================================================================
 
     def _start_scan(self) -> None:
-        target     = self._target_var.get().strip()
-        output_dir = self._output_dir_var.get().strip()
-
+        target = self._target_var.get().strip()
         if not target:
             messagebox.showerror("Validation", "Target cannot be empty.")
-            return
-        if not os.path.isdir(output_dir):
-            messagebox.showerror("Validation", "Output directory is not valid.")
             return
         if self._scan_thread and self._scan_thread.is_alive():
             messagebox.showwarning("Busy", "A scan is already running.")
@@ -1555,24 +1601,34 @@ class FenrirGUI(tk.Tk):
             if not messagebox.askyesno("API Keys", msg):
                 return
 
-        # Reset debug timings
+        # Build timestamped output dir:  Results/YYYY-MM-DD_HH-MM_target/
+        try:
+            output_dir = str(make_result_dir(target, "scan"))
+        except Exception:
+            output_dir = self._output_dir_var.get().strip() or str(RESULTS_DIR)
+
+        log.info(f"Output directory: {output_dir}")
+        self._output_dir_var.set(output_dir)
+
+        # Record scan start in history
+        modules_on = [k for k, v in self._module_vars.items() if v.get()]
+        self._current_scan_id = self._history.begin_scan(target, "single", modules_on)
+
+        # Reset UI
         self._module_timings.clear()
         self._clear_timing_tree()
         self._clear_debug_log()
-
-        # Clear previous results
         for tree in [self._ports_tree, self._vulns_tree, self._exploits_tree,
                      self._recon_tree, self._threats_tree]:
             tree.delete(*tree.get_children())
-
+        self._exploit_findings.clear()
         self._clear_output()
         self._cancel_event.clear()
         self._scan_start = time.monotonic()
-
         self._start_btn.configure(state="disabled")
         self._stop_btn.configure(state="normal")
         self._status_target_label.configure(text=f"Scanning: {target}")
-        self._results_status.configure(text="Scan in progress...")
+        self._results_status.configure(text="Scan in progress…")
 
         self._scan_thread = threading.Thread(
             target=self._run_in_thread,
@@ -1606,9 +1662,25 @@ class FenrirGUI(tk.Tk):
         self._status_target_label.configure(
             text=f"Scan complete — {_fmt_elapsed(elapsed)}"
         )
-        # Populate results tabs
+        # Save to history
+        if self._last_report and self._current_scan_id >= 0:
+            try:
+                output_dir = self._output_dir_var.get()
+                summary    = {"duration_s": round(elapsed, 1)}
+                report_json = {}
+                if hasattr(self._last_report, "get_sections"):
+                    report_json = {"sections": self._last_report.get_sections()}
+                self._history.finish_scan(
+                    self._current_scan_id, output_dir, summary, report_json
+                )
+                self.after(500, self._refresh_history_tab)
+            except Exception as exc:
+                log.debug(f"[history] finish error: {exc}")
+        # Populate results
         if self._last_report:
             self.after(0, self._populate_results)
+        # Enrich CVEs with EPSS scores in background
+        self.after(200, self._enrich_epss_async)
 
     # =========================================================================
     # Scan orchestrator
@@ -2855,12 +2927,349 @@ class FenrirGUI(tk.Tk):
                                         "A scan is running.\nClose and terminate it?"):
                 return
             self._cancel_event.set()
+        if self._schedule_job:
+            self.after_cancel(self._schedule_job)
         self.destroy()
 
+    # =========================================================================
+    # Scan History tab
+    # =========================================================================
 
-# =============================================================================
-# Helpers
-# =============================================================================
+    def _build_history_tab(self, parent: ttk.Frame) -> None:
+        """Show past scans with diff, re-open results, and delete options."""
+        top = ttk.Frame(parent); top.pack(fill=tk.X, padx=8, pady=6)
+        ttk.Label(top, text="Scan History", font=("Helvetica", 11, "bold")).pack(side=tk.LEFT)
+        ttk.Button(top, text="⟳ Refresh",
+                   command=self._refresh_history_tab).pack(side=tk.RIGHT, padx=(4, 0))
+        ttk.Button(top, text="🗑 Delete selected",
+                   command=self._delete_history_entry).pack(side=tk.RIGHT, padx=(4, 0))
+        ttk.Button(top, text="⬛ Diff two selected",
+                   command=self._diff_history).pack(side=tk.RIGHT, padx=(4, 0))
+        ttk.Button(top, text="📂 Open results folder",
+                   command=self._open_history_results).pack(side=tk.RIGHT, padx=(4, 0))
+
+        cols = ["ID", "Started", "Target", "Type", "Duration", "CVEs", "Exploits", "Folder"]
+        self._hist_tree = ttk.Treeview(parent, columns=cols, show="headings",
+                                        selectmode="extended", height=18)
+        widths = [45, 155, 180, 75, 80, 60, 65, 280]
+        for col, w in zip(cols, widths):
+            self._hist_tree.heading(col, text=col)
+            self._hist_tree.column(col, width=w, minwidth=40)
+
+        vsb = ttk.Scrollbar(parent, orient="vertical",   command=self._hist_tree.yview)
+        hsb = ttk.Scrollbar(parent, orient="horizontal", command=self._hist_tree.xview)
+        self._hist_tree.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
+        vsb.pack(side=tk.RIGHT, fill=tk.Y)
+        hsb.pack(side=tk.BOTTOM, fill=tk.X)
+        self._hist_tree.pack(fill=tk.BOTH, expand=True, padx=8, pady=(0, 4))
+        self._hist_tree.bind("<Double-1>", lambda e: self._open_history_results())
+        self._refresh_history_tab()
+
+    def _refresh_history_tab(self) -> None:
+        if not hasattr(self, "_hist_tree"):
+            return
+        self._hist_tree.delete(*self._hist_tree.get_children())
+        scans = self._history.list_scans(limit=300)
+        for scan in scans:
+            summary  = scan.get("summary") or {}
+            dur_s    = summary.get("duration_s", "")
+            dur_str  = f"{dur_s}s" if dur_s else "—"
+            cves     = summary.get("total_cves", "")
+            exploits = summary.get("total_exploits", "")
+            folder   = scan.get("result_dir", "")
+            started  = (scan.get("started_at", "") or "")[:16].replace("T", " ")
+            iid = self._hist_tree.insert("", tk.END, values=(
+                scan["id"], started, scan.get("target", ""), scan.get("scan_type", ""),
+                dur_str, cves, exploits, folder
+            ))
+            # Tag by type
+            tag = "network" if scan.get("scan_type") == "network" else "single"
+            self._hist_tree.item(iid, tags=(tag,))
+        self._hist_tree.tag_configure("network", foreground=ACCENT)
+        self._hist_tree.tag_configure("single",  foreground=TEXT_FG)
+
+    def _open_history_results(self) -> None:
+        sel = self._hist_tree.selection()
+        if not sel:
+            return
+        vals   = self._hist_tree.item(sel[0], "values")
+        folder = vals[7] if len(vals) > 7 else ""
+        if folder and os.path.isdir(folder):
+            self._open_file_manager(folder)
+        else:
+            messagebox.showinfo("Not found", f"Results folder not found:\n{folder}")
+
+    def _delete_history_entry(self) -> None:
+        sel = self._hist_tree.selection()
+        if not sel:
+            return
+        ids = [int(self._hist_tree.item(s, "values")[0]) for s in sel]
+        if not messagebox.askyesno("Delete",
+                                    f"Delete {len(ids)} history record(s)?\n"
+                                    "(Result files on disk are not removed.)"):
+            return
+        for sid in ids:
+            self._history.delete_scan(sid)
+        self._refresh_history_tab()
+
+    def _diff_history(self) -> None:
+        sel = self._hist_tree.selection()
+        if len(sel) != 2:
+            messagebox.showinfo("Select two", "Select exactly 2 scans to diff.")
+            return
+        id_a = int(self._hist_tree.item(sel[0], "values")[0])
+        id_b = int(self._hist_tree.item(sel[1], "values")[0])
+        diff = self._history.diff_scans(id_a, id_b)
+
+        win = tk.Toplevel(self)
+        win.title(f"Diff: scan #{id_a} vs #{id_b}")
+        win.configure(bg=DARK_BG)
+        win.geometry("700x500")
+        txt = scrolledtext.ScrolledText(win, wrap=tk.WORD, bg="#1a1b26",
+                                         fg="#c0caf5", font=("Courier", 10))
+        txt.pack(fill=tk.BOTH, expand=True, padx=8, pady=8)
+
+        txt.tag_configure("add",  foreground=SUCCESS_FG)
+        txt.tag_configure("rem",  foreground=ERR_FG)
+        txt.tag_configure("head", foreground=ACCENT, font=("Courier", 10, "bold"))
+
+        def line(text, tag=""):
+            txt.insert(tk.END, text + "\n", tag)
+
+        line(f"{'─'*60}", "head")
+        line(f"  Scan #{id_a}:  {diff.get('scan_a', {}).get('started', '')}  "
+             f"target: {diff.get('scan_a', {}).get('target', '')}", "head")
+        line(f"  Scan #{id_b}:  {diff.get('scan_b', {}).get('started', '')}  "
+             f"target: {diff.get('scan_b', {}).get('target', '')}", "head")
+        line(f"{'─'*60}", "head")
+        line("")
+        if diff.get("os_changed"):
+            line(f"OS changed:  {diff['os_before'] or '—'} → {diff['os_after'] or '—'}", "rem")
+            line("")
+        for p in diff.get("new_ports", []):
+            line(f"  + Port opened:     {p}", "add")
+        for p in diff.get("closed_ports", []):
+            line(f"  - Port closed:     {p}", "rem")
+        line("")
+        for c in diff.get("new_cves", []):
+            line(f"  + New CVE:         {c}", "add")
+        for c in diff.get("resolved_cves", []):
+            line(f"  ✓ Resolved CVE:    {c}", "rem")
+        line("")
+        for e in diff.get("new_exploits", []):
+            line(f"  + New exploit:     {e}", "add")
+        if not any([diff.get("new_ports"), diff.get("closed_ports"),
+                    diff.get("new_cves"), diff.get("new_exploits")]):
+            line("  No differences found.", "head")
+        txt.configure(state="disabled")
+
+    # =========================================================================
+    # Scheduled Scans tab
+    # =========================================================================
+
+    def _build_schedules_tab(self, parent: ttk.Frame) -> None:
+        """UI to add, list, enable/disable and delete scheduled scans."""
+        # ── New schedule form ────────────────────────────────────────────────────
+        form = ttk.LabelFrame(parent, text="Add Scheduled Scan", padding=10)
+        form.pack(fill=tk.X, padx=8, pady=6)
+        form.columnconfigure(1, weight=1)
+
+        def _lbl(text, row):
+            ttk.Label(form, text=text).grid(row=row, column=0, sticky="w", pady=2)
+
+        _lbl("Name:", 0)
+        self._sched_name_var = tk.StringVar(value="Nightly scan")
+        ttk.Entry(form, textvariable=self._sched_name_var).grid(
+            row=0, column=1, sticky="ew", padx=(6, 0))
+
+        _lbl("Target:", 1)
+        self._sched_target_var = tk.StringVar(value="")
+        ttk.Entry(form, textvariable=self._sched_target_var).grid(
+            row=1, column=1, sticky="ew", padx=(6, 0))
+
+        _lbl("Scan type:", 2)
+        self._sched_type_var = tk.StringVar(value="single")
+        ttk.Combobox(form, textvariable=self._sched_type_var,
+                     values=["single", "network"], state="readonly", width=12
+                     ).grid(row=2, column=1, sticky="w", padx=(6, 0))
+
+        _lbl("Interval (hours):", 3)
+        self._sched_interval_var = tk.DoubleVar(value=24.0)
+        ttk.Spinbox(form, from_=0.5, to=168.0, increment=0.5, width=7,
+                    textvariable=self._sched_interval_var).grid(
+                    row=3, column=1, sticky="w", padx=(6, 0))
+
+        ttk.Button(form, text="+ Add Schedule", style="Accent.TButton",
+                   command=self._add_schedule).grid(row=4, column=0, columnspan=2,
+                   sticky="w", pady=(8, 0))
+
+        # ── Schedule list ────────────────────────────────────────────────────────
+        top = ttk.Frame(parent); top.pack(fill=tk.X, padx=8, pady=(4, 0))
+        ttk.Label(top, text="Scheduled Scans", font=("Helvetica", 10, "bold")).pack(side=tk.LEFT)
+        ttk.Button(top, text="⟳ Refresh", command=self._refresh_schedules_tab).pack(side=tk.RIGHT)
+        ttk.Button(top, text="🗑 Delete", command=self._delete_schedule).pack(side=tk.RIGHT, padx=(0, 4))
+
+        cols = ["ID", "Name", "Target", "Type", "Interval (h)", "Next Run", "Last Run", "Enabled"]
+        self._sched_tree = ttk.Treeview(parent, columns=cols, show="headings",
+                                         selectmode="browse", height=12)
+        widths = [40, 140, 160, 75, 90, 155, 155, 65]
+        for col, w in zip(cols, widths):
+            self._sched_tree.heading(col, text=col)
+            self._sched_tree.column(col, width=w, minwidth=40)
+        vsb = ttk.Scrollbar(parent, orient="vertical", command=self._sched_tree.yview)
+        self._sched_tree.configure(yscrollcommand=vsb.set)
+        vsb.pack(side=tk.RIGHT, fill=tk.Y)
+        self._sched_tree.pack(fill=tk.BOTH, expand=True, padx=8, pady=4)
+
+        ttk.Label(parent, text="Schedules run automatically when Fenrir is open.",
+                  font=("Helvetica", 8), foreground=DEBUG_FG).pack(anchor="w", padx=8)
+        self._refresh_schedules_tab()
+
+    def _add_schedule(self) -> None:
+        name     = self._sched_name_var.get().strip()
+        target   = self._sched_target_var.get().strip()
+        interval = self._sched_interval_var.get()
+        stype    = self._sched_type_var.get()
+        if not name or not target:
+            messagebox.showerror("Missing", "Name and target are required.")
+            return
+        sid = self._history.add_schedule(name, target, stype, interval_h=interval)
+        if sid >= 0:
+            log.info(f"[schedule] Added: {name} → {target} every {interval}h")
+            self._refresh_schedules_tab()
+        else:
+            messagebox.showerror("Error", "Failed to add schedule — check log.")
+
+    def _refresh_schedules_tab(self) -> None:
+        if not hasattr(self, "_sched_tree"):
+            return
+        self._sched_tree.delete(*self._sched_tree.get_children())
+        for s in self._history.list_schedules():
+            next_r = (s.get("next_run_at", "") or "")[:16].replace("T", " ")
+            last_r = (s.get("last_run_at", "") or "—")[:16].replace("T", " ")
+            self._sched_tree.insert("", tk.END, values=(
+                s["id"], s.get("name",""), s.get("target",""),
+                s.get("scan_type",""), s.get("interval_h",""),
+                next_r, last_r, "Yes" if s.get("enabled") else "No"
+            ))
+
+    def _delete_schedule(self) -> None:
+        sel = self._sched_tree.selection()
+        if not sel:
+            return
+        sid = int(self._sched_tree.item(sel[0], "values")[0])
+        if messagebox.askyesno("Delete", "Delete this scheduled scan?"):
+            self._history.delete_schedule(sid)
+            self._refresh_schedules_tab()
+
+    def _check_schedules(self) -> None:
+        """Poll every 60s; fire any overdue schedules."""
+        try:
+            due = self._history.get_due_schedules()
+            for s in due:
+                log.info(f"[schedule] Firing: {s['name']} → {s['target']}")
+                self._history.update_schedule_run(s["id"], s.get("interval_h", 24))
+                # Launch in background thread — don't block GUI
+                target = s.get("target", "")
+                stype  = s.get("scan_type", "single")
+                if target:
+                    try:
+                        out = str(make_result_dir(target, f"scheduled_{stype}"))
+                        t = threading.Thread(
+                            target=self._run_scheduled_scan,
+                            args=(target, out, stype, s),
+                            daemon=True,
+                        )
+                        t.start()
+                    except Exception as exc:
+                        log.error(f"[schedule] Launch error: {exc}")
+            if due:
+                self.after(1000, self._refresh_schedules_tab)
+                self.after(1000, self._refresh_history_tab)
+        except Exception as exc:
+            log.debug(f"[schedule] Check error: {exc}")
+        self._schedule_job = self.after(60_000, self._check_schedules)
+
+    def _run_scheduled_scan(self, target: str, output_dir: str,
+                             scan_type: str, schedule: dict) -> None:
+        """Background worker for scheduled scans — runs without touching GUI."""
+        scan_id = self._history.begin_scan(target, f"scheduled_{scan_type}",
+                                            schedule.get("modules") or [])
+        try:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            # Use a stripped-down async scan that only writes reports
+            from .network_scanner import NetworkScanner
+            ns = NetworkScanner()
+            if scan_type == "network":
+                report = loop.run_until_complete(
+                    ns.run(target, output_dir=output_dir))
+            else:
+                from .report_manager import ReportManager
+                rpt = ReportManager(output_dir, target)
+                from .port_scanner import PortScanner as PS
+                from .vulnerability_scanner import VulnerabilityScanner as VS
+                open_ports = loop.run_until_complete(PS().run(target))
+                if open_ports:
+                    cves = loop.run_until_complete(VS().run(target, open_ports))
+                    rpt.add_section("Port Scan", [{"port": p} for p in open_ports])
+                    for port, cv in (cves or {}).items():
+                        rpt.add_section(f"CVEs port {port}", cv)
+                rpt.finalize()
+                report = rpt
+            summary = {"scheduled": True, "target": target}
+            self._history.finish_scan(scan_id, output_dir, summary, {})
+            log.info(f"[schedule] Completed: {target}")
+        except Exception as exc:
+            log.error(f"[schedule] Scan error for {target}: {exc}")
+
+    # =========================================================================
+    # EPSS enrichment
+    # =========================================================================
+
+    def _enrich_epss_async(self) -> None:
+        """Fetch EPSS scores for all CVEs in the vulns tree and annotate rows."""
+        if not hasattr(self, "_vulns_tree"):
+            return
+        cve_ids = []
+        iid_map: dict[str, list[str]] = {}  # cve_id → list of tree iids
+        for iid in self._vulns_tree.get_children():
+            vals = self._vulns_tree.item(iid, "values")
+            if vals:
+                cve_id = str(vals[0])
+                if cve_id.startswith("CVE-"):
+                    cve_ids.append(cve_id)
+                    iid_map.setdefault(cve_id, []).append(iid)
+        if not cve_ids:
+            return
+
+        def _fetch():
+            try:
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+                return loop.run_until_complete(get_epss(list(set(cve_ids)), timeout=10))
+            except Exception as exc:
+                log.debug(f"[epss] fetch failed: {exc}")
+                return {}
+
+        def _apply(epss_data: dict):
+            for cve_id, entry in epss_data.items():
+                score_pct = f"{entry['score']*100:.1f}%"
+                for iid in iid_map.get(cve_id, []):
+                    vals = list(self._vulns_tree.item(iid, "values"))
+                    # Append EPSS to description column if it fits
+                    if len(vals) >= 6:
+                        desc = str(vals[5])
+                        if "[EPSS" not in desc:
+                            vals[5] = f"{desc}  [EPSS {score_pct}]"
+                    self._vulns_tree.item(iid, values=vals)
+            log.debug(f"[epss] Enriched {len(epss_data)} CVEs")
+
+        t = threading.Thread(target=lambda: self.after(0, lambda: _apply(_fetch())),
+                              daemon=True)
+        t.start()
+
+
 
 def _is_private_ip(target: str) -> bool:
     """Return True if target looks like an RFC1918/loopback/link-local address."""
@@ -2944,6 +3353,32 @@ def _module_key_to_class(key: str) -> str:
 # =============================================================================
 # Entry point
 # =============================================================================
+
+def _hex_to_rgb(hex_colour: str) -> tuple[int, int, int]:
+    """Convert '#rrggbb' to (r, g, b) tuple."""
+    h = hex_colour.lstrip("#")
+    return tuple(int(h[i:i+2], 16) for i in (0, 2, 4))  # type: ignore[return-value]
+
+
+def _make_wolf_icon(size: int = 32) -> Image.Image:
+    """Generate a simple procedural wolf-head icon when no logo file is present."""
+    img  = Image.new("RGBA", (size, size), (30, 30, 46, 255))
+    draw = ImageDraw.Draw(img)
+    s    = size / 32          # scale factor
+    # Body / head oval
+    draw.ellipse([4*s, 6*s, 28*s, 26*s], fill=(137, 180, 250, 255))
+    # Ears
+    draw.polygon([(6*s, 8*s), (2*s, 2*s), (12*s, 6*s)], fill=(137, 180, 250, 255))
+    draw.polygon([(26*s, 8*s), (30*s, 2*s), (20*s, 6*s)], fill=(137, 180, 250, 255))
+    # Eyes
+    draw.ellipse([9*s, 13*s, 13*s, 17*s], fill=(30, 30, 46, 255))
+    draw.ellipse([19*s, 13*s, 23*s, 17*s], fill=(30, 30, 46, 255))
+    # Snout
+    draw.ellipse([11*s, 18*s, 21*s, 24*s], fill=(100, 120, 180, 255))
+    # Nose
+    draw.ellipse([14*s, 18*s, 18*s, 21*s], fill=(30, 30, 46, 255))
+    return img
+
 
 def launch_gui() -> None:
     app = FenrirGUI()
