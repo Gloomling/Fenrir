@@ -888,7 +888,8 @@ class FenrirGUI(tk.Tk):
         self._db_progress.start(12)
 
         def _run():
-            from .database.db_builder import DatabaseBuilder
+            from .database import get_db_builder
+            DatabaseBuilder = get_db_builder()
             builder = DatabaseBuilder(progress_callback=self._db_progress_cb)
             ok = builder.build_all(tier=tier)
             self.after(0, lambda: self._db_done(ok))
@@ -900,7 +901,8 @@ class FenrirGUI(tk.Tk):
         self._db_progress.start(12)
 
         def _run():
-            from .database.db_builder import DatabaseBuilder
+            from .database import get_db_builder
+            DatabaseBuilder = get_db_builder()
             builder = DatabaseBuilder(progress_callback=self._db_progress_cb)
             ok = builder.update_all()
             self.after(0, lambda: self._db_done(ok))

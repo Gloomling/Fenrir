@@ -1,0 +1,21 @@
+{
+  "window_title": "Fenrir Discovery Tool",
+  "logo_path": "/home/kali/Desktop/Fenrir/Fenrir/assets/logo.png",
+  "background_path": "/home/kali/Desktop/Fenrir/Fenrir/assets/wolf.jpeg",
+  "bg_opacity": 0.157,
+  "accent_colour": "#89b4fa",
+  "dark_bg": "#1e1e2e",
+  "panel_bg": "#2a2a3e",
+  "text_fg": "#cdd6f4",
+  "entry_bg": "#313244",
+  "success_fg": "#a6e3a1",
+  "warn_fg": "#f9e2af",
+  "err_fg": "#f38ba8",
+  "sep_fg": "#45475a",
+  "btn_active": "#585b70",
+  "crit_fg": "#ff5555",
+  "debug_fg": "#6272a4",
+  "font_family": "Helvetica",
+  "font_size": 9,
+  "show_logo_in_header": true
+}
