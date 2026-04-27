@@ -57,7 +57,7 @@ class DatabaseManager:
         db = get_db_manager()
 
         # Wrap in asyncio.to_thread for async contexts:
-        results = await asyncio.to_thread(db.search_cves, "Apache 2.4.51")
+        results, has_more = await asyncio.to_thread(db.search_cves, "Apache 2.4.51")
     """
 
     def __init__(self, db_path: Optional[Path | str] = None) -> None:
@@ -170,6 +170,7 @@ class DatabaseManager:
             results, has_more = await asyncio.to_thread(
                 db.search_cves, keyword="Apache 2.4.51", limit=5
             )
+            # results is list[dict], has_more is bool
         """
         if not self._available:
             log.warning("CVE search skipped — offline database not available.")

@@ -70,8 +70,14 @@ from pathlib import Path
 from typing import Callable, Optional
 
 import requests
-import yaml  # PyYAML — for parsing Nuclei template headers
+try:
+    import yaml  # PyYAML — for parsing Nuclei template headers
+    _YAML_AVAILABLE = True
+except ImportError:
+    yaml = None  # type: ignore[assignment]
+    _YAML_AVAILABLE = False
 
+from ..config import config
 from ..logging_config import get_logger
 from .schema import (
     ALL_CREATE_STATEMENTS, BUILD_TIERS, SCHEMA_VERSION,
@@ -121,9 +127,11 @@ PAPERS_DIR       = DB_DIR / "exploitdb-papers"
 # ---------------------------------------------------------------------------
 # Source URLs
 # ---------------------------------------------------------------------------
-NVD_FEED_BASE    = "https://nvd.nist.gov/feeds/json/cve/1.1/"
-NVD_MODIFIED     = NVD_FEED_BASE + "nvdcve-1.1-modified.json.gz"
-NVD_RECENT       = NVD_FEED_BASE + "nvdcve-1.1-recent.json.gz"
+# NVD 2.0 REST API (legacy JSON feed URLs were retired December 2023)
+NVD_API_BASE     = "https://services.nvd.nist.gov/rest/json/cves/2.0"
+NVD_API_PAGE     = 2000   # max results per page (API limit)
+NVD_API_DELAY    = 6.0    # seconds between pages without API key
+NVD_API_DELAY_KEY = 0.6   # seconds between pages with API key
 
 KEV_URL          = "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
 EPSS_URL         = "https://epss.cyentia.com/epss_scores-current.csv.gz"
@@ -143,14 +151,20 @@ SECLISTS_REPO         = "https://github.com/danielmiessler/SecLists.git"
 PAYLOADS_REPO         = "https://github.com/swisskyrepo/PayloadsAllTheThings.git"
 FUZZDB_REPO           = "https://github.com/fuzzdb-project/fuzzdb.git"
 DEFAULT_CREDS_URL     = "https://raw.githubusercontent.com/ihebski/DefaultCreds-cheat-sheet/main/DefaultCreds-Cheat-Sheet.csv"
-IOT_CREDS_URL         = "https://raw.githubusercontent.com/shodanhq/default-passwords/master/default-passwords.csv"
+# IoT default credentials — multiple sources tried in order
+# Primary: RouterSploit credential list (well-maintained, IoT-focused)
+# Fallback: creds.csv from netexplo/routerdb
+IOT_CREDS_URLS = [
+    "https://raw.githubusercontent.com/threat9/routersploit/master/routersploit/modules/credentials/routers_generic.py",
+    "https://raw.githubusercontent.com/jh0ker/mitmproxy_addon_defaultcreds/master/credentials.csv",
+]
 ROCKYOU_URL           = "https://github.com/brannondorsey/naive-hashcat/releases/download/data/rockyou.txt"
 HIBP_URL              = "https://downloads.pwnedpasswords.com/passwords/pwned-passwords-sha1-ordered-by-hash-v8.7z"
 
 EMERGING_THREATS_URL  = "https://rules.emergingthreats.net/blockrules/compromised-ips.txt"
 SPAMHAUS_DROP_URL     = "https://www.spamhaus.org/drop/drop.txt"
 ABUSEIPDB_URL         = "https://raw.githubusercontent.com/borestad/blocklist-abuseipdb/main/abuseipdb-s100-7d.ipv4"
-MALWAREBAZAAR_URL     = "https://mb-api.abuse.ch/api/v1/"
+MALWAREBAZAAR_URL     = "https://mb-api.abuse.ch/downloads/malwarebazaar.csv.zip"
 URLHAUS_URL           = "https://urlhaus.abuse.ch/downloads/csv_recent/"
 THREATFOX_URL         = "https://threatfox.abuse.ch/export/json/recent/"
 FEODO_URL             = "https://feodotracker.abuse.ch/downloads/ipblocklist_recommended.json"
@@ -367,22 +381,41 @@ class DatabaseBuilder:
     # ===========================================================================
 
     def build_nvd(self, lite: bool = True, db_path: Optional[Path] = None) -> bool:
-        """Download NVD year feeds and import CVE records + CPE matches."""
-        target = db_path or self.db_path
+        """
+        Download CVE records from the NVD 2.0 REST API and import into database.
+
+        The legacy JSON feed URLs (nvdcve-1.1-YYYY.json.gz) were retired by NIST
+        in December 2023 and now return 403. This method uses the current 2.0 API:
+          https://services.nvd.nist.gov/rest/json/cves/2.0
+
+        IMPORTANT: The NVD 2.0 API requires date windows of <=120 days per request.
+        Wider ranges (e.g. 2022-01-01 to 2026-12-31) return HTTP 404 "Not Found".
+        We query one calendar year at a time (Jan 01 – Dec 31), which stays within
+        limits. If a full-year request fails, it falls back to two 6-month windows.
+
+        Pagination: API returns max 2000 results per page; we loop until done.
+        Rate limiting: 6s between requests without API key, 0.6s with key.
+        """
+        target     = db_path or self.db_path
         year_now   = datetime.now(timezone.utc).year
         year_start = (year_now - 4) if lite else 2002
         years      = list(range(year_start, year_now + 1))
 
-        log.info(f"Building NVD ({year_start}–{year_now}, {len(years)} feeds, {'lite' if lite else 'full'})...")
-        self.progress_cb("nvd", 0, len(years), f"Starting NVD download ({len(years)} feed files)...")
+        log.info(f"Building NVD via 2.0 API ({year_start}\u2013{year_now}, {'lite' if lite else 'full'})...")
+        log.info("  Note: NVD legacy JSON feeds were retired Dec 2023. Using REST API.")
+        log.info(f"  Querying {len(years)} year(s) individually to respect the 120-day API window limit.")
 
+        api_key    = getattr(config, "NVD_API_KEY", None)
+        delay      = NVD_API_DELAY_KEY if api_key else NVD_API_DELAY
+        headers    = {"apiKey": api_key} if api_key else {}
         total_cves = 0
-        for i, year in enumerate(years):
-            url   = NVD_FEED_BASE + f"nvdcve-1.1-{year}.json.gz"
-            count = self._download_nvd_feed(url, f"NVD {year}", target)
-            if count >= 0:
-                total_cves += count
-            self.progress_cb("nvd", i + 1, len(years), f"NVD {year}: {count:,} CVEs")
+
+        for year_idx, year in enumerate(years):
+            year_cves = self._fetch_nvd_year(
+                year, headers, delay, target, year_idx, len(years),
+            )
+            total_cves += year_cves
+            log.info(f"  Year {year}: {year_cves:,} CVEs (running total: {total_cves:,})")
 
         self._set_meta(target, META_NVD_LAST_UPDATED, _now())
         self._set_meta(target, META_NVD_BUILD_TYPE, "lite" if lite else "full")
@@ -392,99 +425,220 @@ class DatabaseBuilder:
         log.info(f"NVD complete: {total_cves:,} CVEs")
         return total_cves > 0
 
-    def _update_nvd(self, db_path: Path) -> bool:
-        """Download NVD modified + recent delta feeds."""
-        log.info("Updating NVD (modified + recent feeds)...")
+    def _fetch_nvd_year(
+        self,
+        year: int,
+        headers: dict,
+        delay: float,
+        target: "Path",
+        year_idx: int,
+        total_years: int,
+    ) -> int:
+        """
+        Fetch all CVEs published in a single calendar year from NVD 2.0 API.
+
+        The NVD 2.0 API enforces a strict 120-day maximum window per request.
+        A full year (365 days) always exceeds this limit and returns 404.
+        We therefore always use four quarterly windows (Q1–Q4), each ~90 days.
+
+        Date format: plain ISO 8601 without timezone suffix.
+        NVD treats all times as UTC and does NOT accept timezone notation in
+        pubStartDate/pubEndDate params — including neither " +0000" nor "+00:00".
+        Using requests params={} is correct; no manual URL construction needed.
+
+        Returns the number of CVEs successfully imported.
+        """
+        import time as _time
+
+        def _fetch_window(start_date: str, end_date: str) -> int:
+            """Fetch one date window, paging through all results."""
+            count     = 0
+            start_idx = 0
+            while True:
+                params = {
+                    "pubStartDate":   start_date,
+                    "pubEndDate":     end_date,
+                    "startIndex":     start_idx,
+                    "resultsPerPage": NVD_API_PAGE,
+                }
+                try:
+                    resp = self.session.get(
+                        NVD_API_BASE, params=params,
+                        headers=headers, timeout=REQUEST_TIMEOUT,
+                    )
+                    resp.raise_for_status()
+                    data = resp.json()
+                except Exception as exc:
+                    log.warning(
+                        f"NVD request failed ({start_date[:10]}..{end_date[:10]}, "
+                        f"idx={start_idx}): {exc}"
+                    )
+                    return count   # partial result is better than nothing
+
+                total_results   = data.get("totalResults", 0)
+                vulnerabilities = data.get("vulnerabilities", [])
+                if not vulnerabilities:
+                    break
+
+                imported   = self._import_nvd_v2_items(vulnerabilities, target)
+                count     += imported
+                start_idx += len(vulnerabilities)
+
+                self.progress_cb(
+                    "nvd",
+                    year_idx * NVD_API_PAGE + start_idx,
+                    total_years * NVD_API_PAGE,
+                    f"NVD {year} [{start_date[:10]}..{end_date[:10]}]: {count:,}/{total_results:,}",
+                )
+
+                if start_idx >= total_results:
+                    break
+                _time.sleep(delay)
+            return count
+
+        # NVD maximum window = 120 days — always use quarterly windows (≤92 days each).
+        # Full-year probe is removed: it always returns 404 for a 365-day range.
+        quarters = [
+            (f"{year}-01-01T00:00:00.000", f"{year}-03-31T23:59:59.999"),  # Q1
+            (f"{year}-04-01T00:00:00.000", f"{year}-06-30T23:59:59.999"),  # Q2
+            (f"{year}-07-01T00:00:00.000", f"{year}-09-30T23:59:59.999"),  # Q3
+            (f"{year}-10-01T00:00:00.000", f"{year}-12-31T23:59:59.999"),  # Q4
+        ]
         total = 0
-        for name, url in [("Modified", NVD_MODIFIED), ("Recent", NVD_RECENT)]:
-            count = self._download_nvd_feed(url, f"NVD {name}", db_path)
-            if count >= 0:
-                total += count
-                log.info(f"  NVD {name}: {count:,} CVEs updated")
+        for q_start, q_end in quarters:
+            total += _fetch_window(q_start, q_end)
+            _time.sleep(delay)
+        return total
+
+
+    def _update_nvd(self, db_path: Path) -> bool:
+        """Update NVD using lastModStartDate filter covering the past 8 days."""
+        import time as _time
+        from datetime import timedelta
+        log.info("Updating NVD via 2.0 API (last 8 days of modifications)...")
+
+        api_key = getattr(config, "NVD_API_KEY", None)
+        delay   = NVD_API_DELAY_KEY if api_key else NVD_API_DELAY
+        headers = {"apiKey": api_key} if api_key else {}
+
+        week_ago = (datetime.now(timezone.utc) - timedelta(days=8)).strftime("%Y-%m-%dT%H:%M:%S.000")
+        now_str  = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.999")
+
+        total     = 0
+        start_idx = 0
+        while True:
+            params = {
+                "lastModStartDate": week_ago,
+                "lastModEndDate":   now_str,
+                "startIndex":       start_idx,
+                "resultsPerPage":   NVD_API_PAGE,
+            }
+            try:
+                resp = self.session.get(
+                    NVD_API_BASE, params=params,
+                    headers=headers, timeout=REQUEST_TIMEOUT,
+                )
+                resp.raise_for_status()
+                data = resp.json()
+            except Exception as exc:
+                log.warning(f"NVD update request failed: {exc}")
+                break
+
+            vulns = data.get("vulnerabilities", [])
+            if not vulns:
+                break
+            total    += self._import_nvd_v2_items(vulns, db_path)
+            start_idx += len(vulns)
+            if start_idx >= data.get("totalResults", 0):
+                break
+            _time.sleep(delay)
+
+        log.info(f"NVD update complete: {total:,} CVEs refreshed")
         self._set_meta(db_path, META_NVD_LAST_UPDATED, _now())
         return True
+    def _import_nvd_v2_items(self, vulnerabilities: list, db_path: Path) -> int:
+        """
+        Parse NVD 2.0 API vulnerability entries and bulk-insert CVEs + CPE matches.
 
-    def _download_nvd_feed(self, url: str, name: str, db_path: Path) -> int:
-        """Download one NVD .json.gz feed and bulk-insert into database."""
-        try:
-            resp = self.session.get(url, stream=True, timeout=REQUEST_TIMEOUT)
-            resp.raise_for_status()
-            buf = io.BytesIO()
-            for chunk in resp.iter_content(CHUNK_SIZE):
-                buf.write(chunk)
-            buf.seek(0)
-            with gzip.GzipFile(fileobj=buf) as gz:
-                data = json.loads(gz.read().decode("utf-8"))
-            items = data.get("CVE_Items", [])
-            return self._import_nvd_items(items, db_path)
-        except Exception as exc:
-            log.warning(f"{name}: download/parse failed — {exc}")
-            return -1
-
-    def _import_nvd_items(self, items: list, db_path: Path) -> int:
-        """Parse NVD CVE_Items and bulk-insert CVEs + CPE matches."""
+        NVD 2.0 format (differs from retired 1.1 feed format):
+          - Each entry: {"cve": {"id": "CVE-...", "metrics": {...}, ...}}
+          - CVSS: cve.metrics.cvssMetricV31[0].cvssData  (or V30, V2)
+          - Descriptions: cve.descriptions[{"lang": "en", "value": "..."}]
+          - CPE matches: cve.configurations[].nodes[].cpeMatch[]
+        """
         cve_rows = []
         cpe_rows = []
 
-        for item in items:
+        for entry in vulnerabilities:
             try:
-                cve_meta = item.get("cve", {})
-                cve_id   = cve_meta.get("CVE_data_meta", {}).get("ID", "")
+                cve    = entry.get("cve", {})
+                cve_id = cve.get("id", "")
                 if not cve_id:
                     continue
 
+                # English description
                 desc = ""
-                for d in cve_meta.get("description", {}).get("description_data", []):
+                for d in cve.get("descriptions", []):
                     if d.get("lang") == "en":
                         desc = d.get("value", "")
                         break
 
-                impact    = item.get("impact", {})
-                v3s, v3sv, v3v = _parse_cvss_v3(impact)
-                v2s, v2sv, v2v = _parse_cvss_v2(impact)
+                # CVSS scores: v3.1 preferred, fallback v3.0, then v2
+                metrics = cve.get("metrics", {})
+                v3s = v3sv = v3v = None
+                for key in ("cvssMetricV31", "cvssMetricV30"):
+                    bucket = metrics.get(key, [])
+                    if bucket:
+                        m    = bucket[0].get("cvssData", {})
+                        v3s  = m.get("baseScore")
+                        v3sv = m.get("baseSeverity")
+                        v3v  = m.get("vectorString")
+                        break
 
-                refs = [r.get("url", "") for r in
-                        cve_meta.get("references", {}).get("reference_data", [])]
+                v2s = v2sv = v2v = None
+                bucket2 = metrics.get("cvssMetricV2", [])
+                if bucket2:
+                    m    = bucket2[0].get("cvssData", {})
+                    v2s  = m.get("baseScore")
+                    v2sv = bucket2[0].get("baseSeverity")
+                    v2v  = m.get("vectorString")
 
+                # References
+                refs = [r.get("url", "") for r in cve.get("references", [])]
+
+                # CWE IDs
+                cwe_ids = []
+                for w in cve.get("weaknesses", []):
+                    for d in w.get("description", []):
+                        val = d.get("value", "")
+                        if val.startswith("CWE-"):
+                            cwe_ids.append(val)
+
+                # CPE matches
                 cpe_list = []
-                for node in item.get("configurations", {}).get("nodes", []):
-                    for cm in node.get("cpe_match", []):
-                        cs = cm.get("cpe23Uri", "")
-                        if cs:
-                            cpe_list.append(cs)
-                            cpe_rows.append((cs, cve_id, int(cm.get("vulnerable", True))))
-                    # Nested nodes
-                    for child in node.get("children", []):
-                        for cm in child.get("cpe_match", []):
-                            cs = cm.get("cpe23Uri", "")
+                for cfg in cve.get("configurations", []):
+                    for node in cfg.get("nodes", []):
+                        for cm in node.get("cpeMatch", []):
+                            cs = cm.get("criteria", "")
                             if cs:
                                 cpe_list.append(cs)
                                 cpe_rows.append((cs, cve_id, int(cm.get("vulnerable", True))))
 
-                # CWE IDs
-                cwe_ids = [
-                    pd.get("value", "")
-                    for pd in cve_meta.get("problemtype", {})
-                                      .get("problemtype_data", [{}])[0]
-                                      .get("description", [])
-                    if pd.get("value", "").startswith("CWE-")
-                ]
-
                 cve_rows.append((
                     cve_id,
-                    item.get("publishedDate", ""),
-                    item.get("lastModifiedDate", ""),
+                    cve.get("published", ""),
+                    cve.get("lastModified", ""),
                     desc,
                     v3s, v3sv, v3v,
                     v2s, v2sv, v2v,
-                    None, None, None, None,  # epss, kev placeholders
+                    None, None, None, None,   # epss_score, epss_percentile, kev_date_added, kev_required_action
                     json.dumps(cpe_list),
                     json.dumps(refs),
                     json.dumps(cwe_ids),
-                    cve_meta.get("CVE_data_meta", {}).get("ASSIGNER", ""),
+                    cve.get("sourceIdentifier", ""),
                 ))
             except Exception as exc:
-                log.debug(f"Skipping malformed CVE item: {exc}")
+                log.debug(f"Skipping malformed NVD 2.0 entry: {exc}")
 
         if not cve_rows:
             return 0
@@ -498,7 +652,7 @@ class DatabaseBuilder:
                      cvss_v3_score, cvss_v3_severity, cvss_v3_vector,
                      cvss_v2_score, cvss_v2_severity, cvss_v2_vector,
                      epss_score, epss_percentile, kev_date_added, kev_required_action,
-                     cpe_matches, references, cwe_ids, assigner)
+                     cpe_matches, ref_urls, cwe_ids, assigner)
                     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
                     cve_rows,
                 )
@@ -512,6 +666,7 @@ class DatabaseBuilder:
         except sqlite3.Error as exc:
             log.error(f"NVD DB insert error: {exc}")
             return -1
+
 
     # ===========================================================================
     # CISA KEV
@@ -1073,8 +1228,23 @@ class DatabaseBuilder:
         )
 
         self.progress_cb("exploitdb", 3, 4, "Importing GHDB dorks...")
-        # GHDB is inside the Exploit-DB repo
-        ghdb_count = self._import_ghdb(EXPLOITDB_DIR / "ghdb.csv", target)
+        # GHDB is inside the Exploit-DB repo.
+        # File name varies by repo version — check multiple candidate paths.
+        _ghdb_candidates = [
+            EXPLOITDB_DIR / "files_ghdb.csv",
+            EXPLOITDB_DIR / "ghdb" / "files_ghdb.csv",
+            EXPLOITDB_DIR / "ghdb.csv",
+            EXPLOITDB_DIR / "ghdb" / "ghdb.csv",
+        ]
+        _ghdb_path = next((p for p in _ghdb_candidates if p.exists()), None)
+        if _ghdb_path is None:
+            log.info(
+                "GHDB file not found in Exploit-DB clone — "
+                "dorks skipped (not all repo versions include this file)."
+            )
+            ghdb_count = 0
+        else:
+            ghdb_count = self._import_ghdb(_ghdb_path, target)
 
         self._set_meta(target, META_EDB_LAST_UPDATED, _now())
         self._set_meta(target, META_EDB_COMMIT, commit)
@@ -1090,6 +1260,48 @@ class DatabaseBuilder:
             f"{shellcode_count:,} shellcodes | {ghdb_count:,} GHDB dorks"
         )
         return exploit_count > 0
+
+    def build_ghdb(self, db_path: Optional[Path] = None) -> bool:
+        """
+        Build/refresh GHDB dork database from the Exploit-DB repo.
+
+        Called as a standalone source (e.g. when 'ghdb' appears in BUILD_TIERS
+        or via --db-build-source ghdb). Requires the Exploit-DB repo to be
+        cloned first (build_exploitdb() handles that). If the repo is not
+        present, clones it first.
+        """
+        target = db_path or self.db_path
+        log.info("Building GHDB dork database...")
+        self.progress_cb("ghdb", 0, 1, "Setting up GHDB...")
+
+        # Ensure the Exploit-DB repo is present
+        if not EXPLOITDB_DIR.exists() or not (EXPLOITDB_DIR / ".git").exists():
+            log.info("Exploit-DB repo not found — cloning for GHDB...")
+            if not self._clone_or_pull(EXPLOITDB_REPO, EXPLOITDB_DIR, "exploitdb"):
+                log.error("Cannot clone Exploit-DB repo for GHDB build.")
+                return False
+        else:
+            self._clone_or_pull(EXPLOITDB_REPO, EXPLOITDB_DIR, "exploitdb")
+
+        _ghdb_candidates = [
+            EXPLOITDB_DIR / "files_ghdb.csv",
+            EXPLOITDB_DIR / "ghdb" / "files_ghdb.csv",
+            EXPLOITDB_DIR / "ghdb.csv",
+            EXPLOITDB_DIR / "ghdb" / "ghdb.csv",
+        ]
+        ghdb_path = next((p for p in _ghdb_candidates if p.exists()), None)
+        if ghdb_path is None:
+            log.info(
+                "GHDB file not found in Exploit-DB repo — "
+                "this repo clone does not include the GHDB dataset."
+            )
+            return True   # not a fatal error
+
+        count = self._import_ghdb(ghdb_path, target)
+        self._set_meta(target, META_GHDB_COUNT, str(count))
+        self.progress_cb("ghdb", 1, 1, f"GHDB complete: {count:,} dorks")
+        log.info(f"GHDB complete: {count:,} dorks imported")
+        return True
 
     def _import_exploitdb_csv(
         self,
@@ -1241,7 +1453,7 @@ class DatabaseBuilder:
     def _import_ghdb(self, csv_path: Path, db_path: Path) -> int:
         """Parse ghdb.csv from the Exploit-DB repo and import GHDB dorks."""
         if not csv_path.exists():
-            log.warning(f"GHDB CSV not found at {csv_path}")
+            log.debug(f"GHDB CSV not found at {csv_path}")
             return 0
 
         rows = []
@@ -1336,36 +1548,60 @@ class DatabaseBuilder:
             return -1
 
     def build_hash_feeds(self, db_path: Optional[Path] = None) -> bool:
-        """Download MalwareBazaar hash feed."""
-        target = db_path or self.db_path
-        log.info("Downloading MalwareBazaar hash feed...")
-        self.progress_cb("hashes", 0, 1, "Downloading MalwareBazaar...")
-        try:
-            resp = self.session.post(
-                MALWAREBAZAAR_URL,
-                data={"query": "get_recent", "selector": "time", "limit": "1000"},
-                timeout=REQUEST_TIMEOUT,
-            )
-            resp.raise_for_status()
-            data = resp.json()
-            if data.get("query_status") != "OK":
-                log.warning(f"MalwareBazaar status: {data.get('query_status')}")
-                return False
+        """
+        Download MalwareBazaar hash feed and import into hash_reputation table.
 
-            today = _now()[:10]
-            rows  = []
-            for entry in data.get("data", []):
-                sha256 = (entry.get("sha256_hash") or "").lower()
-                if sha256:
-                    rows.append((
-                        sha256,
-                        (entry.get("md5_hash") or "").lower(),
-                        (entry.get("sha1_hash") or "").lower(),
-                        entry.get("signature") or entry.get("tags", [""])[0] if entry.get("tags") else "",
-                        entry.get("file_type", ""),
-                        "malwarebazaar", today,
-                        entry.get("signature", ""),
-                    ))
+        Uses the free daily CSV dump (no API key required):
+          https://mb-api.abuse.ch/downloads/malwarebazaar.csv.zip
+
+        The ZIP contains malwarebazaar.csv with ~1M+ records.
+        We import the most recent 50,000 to keep build time reasonable.
+        """
+        import zipfile as _zipfile
+        target = db_path or self.db_path
+        log.info("Downloading MalwareBazaar hash feed (daily CSV dump)...")
+        self.progress_cb("hashes", 0, 1, "Downloading MalwareBazaar CSV...")
+        try:
+            resp = self.session.get(MALWAREBAZAAR_URL, stream=True, timeout=REQUEST_TIMEOUT)
+            resp.raise_for_status()
+
+            # Download to memory
+            buf = io.BytesIO()
+            for chunk in resp.iter_content(CHUNK_SIZE):
+                buf.write(chunk)
+            buf.seek(0)
+
+            today  = _now()[:10]
+            rows   = []
+            limit  = 50000  # cap to avoid extremely long build time
+
+            with _zipfile.ZipFile(buf) as zf:
+                csv_name = next((n for n in zf.namelist() if n.endswith(".csv")), None)
+                if not csv_name:
+                    log.warning("MalwareBazaar ZIP contains no CSV file.")
+                    return False
+
+                with zf.open(csv_name) as csv_fh:
+                    text_wrapper = io.TextIOWrapper(csv_fh, encoding="utf-8", errors="replace")
+                    # Skip comment lines starting with #
+                    lines = (l for l in text_wrapper if not l.startswith("#"))
+                    reader = csv.DictReader(lines)
+                    for rec in reader:
+                        if len(rows) >= limit:
+                            break
+                        sha256 = (rec.get("sha256_hash") or "").strip().lower()
+                        if not sha256:
+                            continue
+                        rows.append((
+                            sha256,
+                            (rec.get("md5_hash") or "").strip().lower(),
+                            (rec.get("sha1_hash") or "").strip().lower(),
+                            (rec.get("signature") or "").strip(),
+                            (rec.get("file_type") or "").strip(),
+                            "malwarebazaar",
+                            today,
+                            (rec.get("tags") or "").strip(),
+                        ))
 
             if rows:
                 conn = _fast_conn(target)
@@ -1381,7 +1617,7 @@ class DatabaseBuilder:
 
             self._set_meta(target, META_HASH_REP_COUNT, str(len(rows)))
             self.progress_cb("hashes", 1, 1, f"Hash feeds complete: {len(rows):,} hashes")
-            log.info(f"Hash feeds complete: {len(rows):,} hashes")
+            log.info(f"Hash feeds complete: {len(rows):,} hashes from MalwareBazaar")
             return True
 
         except Exception as exc:
@@ -1557,6 +1793,9 @@ class DatabaseBuilder:
 
     def _index_nuclei_templates(self, templates_dir: Path, db_path: Path) -> int:
         """Walk Nuclei template directory and parse YAML headers for metadata."""
+        if not _YAML_AVAILABLE:
+            log.warning("PyYAML not installed — Nuclei template indexing skipped. Install with: pip install PyYAML")
+            return 0
         rows = []
         for yaml_file in templates_dir.rglob("*.yaml"):
             try:
@@ -1689,38 +1928,127 @@ class DatabaseBuilder:
             return False
 
     def build_iot_creds(self, db_path: Optional[Path] = None) -> bool:
-        """Download IoT/ICS device default credentials."""
+        """
+        Build IoT/ICS device default credentials database.
+
+        Sources tried in order:
+          1. creds.csv from jh0ker/mitmproxy_addon_defaultcreds (IoT focused)
+          2. Hardcoded seed list of ~60 most common IoT device default credentials
+             (always imported as a baseline regardless of network availability)
+        """
         target = db_path or self.db_path
         log.info("Downloading IoT default credentials...")
         self.progress_cb("iot_creds", 0, 1, "Downloading IoT default credentials...")
+
+        rows: list[tuple] = []
+
+        # ── Try external sources ─────────────────────────────────────────
+        for url in IOT_CREDS_URLS:
+            try:
+                resp = self.session.get(url, timeout=30)
+                resp.raise_for_status()
+                text = resp.text
+
+                # Detect format
+                if url.endswith(".csv") or "," in text[:200]:
+                    reader = csv.DictReader(io.StringIO(text))
+                    for rec in reader:
+                        try:
+                            vendor   = (rec.get("Manufacturer") or rec.get("vendor") or rec.get("manufacturer") or "").strip()
+                            model    = (rec.get("Model") or rec.get("model") or "").strip()
+                            username = (rec.get("Username") or rec.get("username") or "").strip()
+                            password = (rec.get("Password") or rec.get("password") or "").strip()
+                            service  = (rec.get("Protocol") or rec.get("service") or rec.get("protocol") or "").strip()
+                            port_str = (rec.get("Port") or rec.get("port") or "").strip()
+                            port_val = int(port_str) if port_str.isdigit() else None
+                            if vendor or model:
+                                rows.append((vendor, model, "IoT/ICS", service, port_val, username, password, ""))
+                        except Exception:
+                            continue
+                    log.info(f"IoT creds: {len(rows)} entries from {url}")
+                    break  # success — stop trying further URLs
+            except Exception as exc:
+                log.debug(f"IoT creds URL failed ({url}): {exc}")
+                continue
+
+        if not rows:
+            log.info("External IoT creds sources unavailable — using built-in seed list.")
+
+        # ── Always add built-in seed ────────────────────────────────────
+        # Format: (vendor, model, device_type, service, port, username, password, notes)
+        _SEED = [
+            ("Cisco",       "IOS Router",     "IoT/ICS", "ssh",   22,   "cisco",  "cisco",    ""),
+            ("Cisco",       "IOS Router",     "IoT/ICS", "telnet",23,   "cisco",  "cisco",    ""),
+            ("Cisco",       "IOS Router",     "IoT/ICS", "http",  80,   "admin",  "admin",    ""),
+            ("Cisco",       "ASA Firewall",   "IoT/ICS", "http",  80,   "admin",  "",         "blank password"),
+            ("Netgear",     "Router",         "IoT/ICS", "http",  80,   "admin",  "password", ""),
+            ("Netgear",     "Router",         "IoT/ICS", "telnet",23,   "admin",  "password", ""),
+            ("D-Link",      "Router",         "IoT/ICS", "http",  80,   "admin",  "",         "blank password"),
+            ("D-Link",      "Router",         "IoT/ICS", "telnet",23,   "admin",  "",         "blank password"),
+            ("TP-Link",     "Router",         "IoT/ICS", "http",  80,   "admin",  "admin",    ""),
+            ("TP-Link",     "Router",         "IoT/ICS", "telnet",23,   "admin",  "admin",    ""),
+            ("Linksys",     "Router",         "IoT/ICS", "http",  80,   "admin",  "admin",    ""),
+            ("ASUS",        "Router",         "IoT/ICS", "http",  80,   "admin",  "admin",    ""),
+            ("Ubiquiti",    "UniFi AP",       "IoT/ICS", "ssh",   22,   "ubnt",   "ubnt",     ""),
+            ("Ubiquiti",    "AirOS",          "IoT/ICS", "http",  80,   "ubnt",   "ubnt",     ""),
+            ("MikroTik",    "RouterOS",       "IoT/ICS", "ssh",   22,   "admin",  "",         "blank password"),
+            ("MikroTik",    "RouterOS",       "IoT/ICS", "telnet",23,   "admin",  "",         "blank password"),
+            ("Hikvision",   "IP Camera",      "IoT/ICS", "http",  80,   "admin",  "12345",    ""),
+            ("Hikvision",   "IP Camera",      "IoT/ICS", "http",  80,   "admin",  "admin",    ""),
+            ("Dahua",       "IP Camera",      "IoT/ICS", "http",  80,   "admin",  "admin",    ""),
+            ("Axis",        "IP Camera",      "IoT/ICS", "http",  80,   "root",   "pass",     ""),
+            ("Axis",        "IP Camera",      "IoT/ICS", "http",  80,   "root",   "",         "blank password"),
+            ("Foscam",      "IP Camera",      "IoT/ICS", "http",  88,   "admin",  "",         "blank password"),
+            ("Samsung",     "IP Camera",      "IoT/ICS", "http",  80,   "admin",  "4321",     ""),
+            ("Hanwha",      "IP Camera",      "IoT/ICS", "http",  80,   "admin",  "admin",    ""),
+            ("Bosch",       "IP Camera",      "IoT/ICS", "http",  80,   "service","service",  ""),
+            ("FLIR",        "Camera",         "IoT/ICS", "http",  80,   "admin",  "fliradmin",""),
+            ("Pelco",       "IP Camera",      "IoT/ICS", "http",  80,   "admin",  "admin",    ""),
+            ("Siemens",     "S7-300 PLC",     "IoT/ICS", "s7comm",102,  "",       "",         "no auth by default"),
+            ("Siemens",     "LOGO! PLC",      "IoT/ICS", "http",  80,   "admin",  "admin",    ""),
+            ("Allen-Bradley","MicroLogix",    "IoT/ICS", "http",  80,   "",       "",         "no auth by default"),
+            ("Schneider",   "Modicon M340",   "IoT/ICS", "http",  80,   "USER",   "USER",     ""),
+            ("Schneider",   "Modicon M340",   "IoT/ICS", "http",  80,   "USER",   "",         "blank password"),
+            ("ABB",         "Panel 800",      "IoT/ICS", "http",  80,   "admin",  "admin",    ""),
+            ("GE",          "PACSystems",     "IoT/ICS", "http",  80,   "admin",  "admin",    ""),
+            ("Emerson",     "DeltaV",         "IoT/ICS", "http",  80,   "admin",  "admin",    ""),
+            ("Honeywell",   "Experion",       "IoT/ICS", "http",  80,   "admin",  "admin",    ""),
+            ("Moxa",        "NPort",          "IoT/ICS", "telnet",23,   "admin",  "moxa",     ""),
+            ("Moxa",        "NPort",          "IoT/ICS", "http",  80,   "admin",  "moxa",     ""),
+            ("Advantech",   "ADAM-6000",      "IoT/ICS", "http",  80,   "root",   "00000000", ""),
+            ("Phoenix",     "FL mGuard",      "IoT/ICS", "ssh",   22,   "admin",  "nAdmin",   ""),
+            ("Wago",        "750-881",        "IoT/ICS", "http",  80,   "admin",  "wago",     ""),
+            ("Wago",        "750-881",        "IoT/ICS", "ftp",   21,   "admin",  "wago",     ""),
+            ("BACnet",      "Device",         "IoT/ICS", "bacnet",47808,  "",     "",         "no auth by default"),
+            ("Tridium",     "Niagara AX",     "IoT/ICS", "http",  80,   "admin",  "admin",    ""),
+            ("Johnson",     "Metasys",        "IoT/ICS", "http",  80,   "admin",  "admin",    ""),
+            ("Digi",        "ConnectPort",    "IoT/ICS", "http",  80,   "root",   "dbps",     ""),
+            ("Digi",        "ConnectPort",    "IoT/ICS", "telnet",23,   "root",   "dbps",     ""),
+            ("Lantronix",   "Device Server",  "IoT/ICS", "telnet",9999, "",       "",         "blank password"),
+            ("Peplink",     "Balance Router", "IoT/ICS", "http",  80,   "admin",  "admin",    ""),
+            ("Crestron",    "AirMedia",       "IoT/ICS", "http",  80,   "admin",  "admin",    ""),
+            ("AMX",         "NI Controller",  "IoT/ICS", "http",  80,   "administrator","password",""),
+            ("Extron",      "Control Proc.",  "IoT/ICS", "ssh",   22,   "admin",  "extron",   ""),
+            ("Polycom",     "Phone",          "IoT/ICS", "http",  80,   "admin",  "456",      ""),
+            ("Grandstream", "GXP Phone",      "IoT/ICS", "http",  80,   "admin",  "admin",    ""),
+            ("Yealink",     "SIP Phone",      "IoT/ICS", "http",  80,   "admin",  "admin",    ""),
+            ("Shoretel",    "Phone",          "IoT/ICS", "http",  80,   "admin",  "changeme", ""),
+            ("Eaton",       "Network Card",   "IoT/ICS", "http",  80,   "admin",  "admin",    ""),
+            ("APC",         "UPS NMC",        "IoT/ICS", "http",  80,   "apc",    "apc",      ""),
+            ("Raritan",     "KVM",            "IoT/ICS", "http",  80,   "admin",  "raritan",  ""),
+            ("iDRAC",       "Dell iDRAC",     "IoT/ICS", "http",  80,   "root",   "calvin",   ""),
+            ("iLO",         "HP iLO",         "IoT/ICS", "http",  80,   "Administrator","",    "blank password"),
+        ]
+        rows.extend(_SEED)
+
         try:
-            resp = self.session.get(IOT_CREDS_URL, timeout=REQUEST_TIMEOUT)
-            resp.raise_for_status()
-
-            rows   = []
-            reader = csv.DictReader(io.StringIO(resp.text))
-            for rec in reader:
-                try:
-                    # shodanhq CSV columns vary — try common field names
-                    vendor   = (rec.get("Manufacturer") or rec.get("vendor") or "").strip()
-                    model    = (rec.get("Model") or rec.get("model") or "").strip()
-                    username = (rec.get("Username") or rec.get("username") or "").strip()
-                    password = (rec.get("Password") or rec.get("password") or "").strip()
-                    service  = (rec.get("Protocol") or rec.get("service") or "").strip()
-                    port_str = (rec.get("Port") or "").strip()
-                    port_val = int(port_str) if port_str.isdigit() else None
-                    rows.append((vendor, model, "IoT/ICS", service, port_val, username, password, ""))
-                except Exception:
-                    continue
-
-            if rows:
-                conn = _fast_conn(target)
-                with conn:
-                    conn.executemany(
-                        "INSERT OR IGNORE INTO iot_default_creds (vendor, model, device_type, service, port, username, password, notes) VALUES (?,?,?,?,?,?,?,?)",
-                        rows,
-                    )
-                conn.close()
+            conn = _fast_conn(target)
+            with conn:
+                conn.executemany(
+                    "INSERT OR IGNORE INTO iot_default_creds (vendor, model, device_type, service, port, username, password, notes) VALUES (?,?,?,?,?,?,?,?)",
+                    rows,
+                )
+            conn.close()
 
             self._set_meta(target, META_IOT_CREDS_COUNT, str(len(rows)))
             self.progress_cb("iot_creds", 1, 1, f"IoT creds complete: {len(rows):,} entries")
@@ -2189,7 +2517,7 @@ class DatabaseBuilder:
                     """INSERT OR REPLACE INTO owasp_findings
                     (finding_id, category, owasp_year, title, description,
                      risk_rating, likelihood, impact, remediation,
-                     references, cwe_ids)
+                     ref_urls, cwe_ids)
                     VALUES (?,?,?,?,?,?,?,?,?,?,?)""",
                     rows,
                 )

@@ -18,7 +18,37 @@ import os
 from pathlib import Path
 from typing import Optional
 
-from ..database import get_db_manager
+
+
+def _get_db_manager():
+    """
+    Return the shared DatabaseManager singleton.
+    Tries relative import first (installed package), then path-based fallback
+    for checkouts where the package root is not registered as fenrir.
+    """
+    try:
+        from ..database import get_db_manager as _gdm
+        return _gdm()
+    except (ImportError, ValueError):
+        pass
+    try:
+        import importlib.util, sys
+        from pathlib import Path
+        db_init = Path(__file__).resolve().parent.parent / "database" / "__init__.py"
+        if db_init.exists():
+            spec = importlib.util.spec_from_file_location(
+                "fenrir.database", str(db_init),
+                submodule_search_locations=[str(db_init.parent)],
+            )
+            mod = importlib.util.module_from_spec(spec)
+            sys.modules.setdefault("fenrir.database", mod)
+            spec.loader.exec_module(mod)
+            return mod.get_db_manager()
+    except Exception:
+        pass
+    return None
+
+
 from ..logging_config import get_logger
 from ..report_manager import ReportManager
 
@@ -83,7 +113,7 @@ class MobileScanner:
 
     def __init__(self) -> None:
         log.debug("MobileScanner initialised.")
-        self._db = get_db_manager()
+        self._db = __get_db_manager()
 
     async def run(
         self,

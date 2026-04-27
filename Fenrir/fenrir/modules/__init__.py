@@ -137,6 +137,18 @@ except ImportError as e:
     MobileScanner = None  # type: ignore[assignment,misc]
 
 try:
+    from .android_scanner import AndroidScanner
+except ImportError as e:
+    log.warning(f"AndroidScanner could not be loaded: {e}")
+    AndroidScanner = None  # type: ignore[assignment,misc]
+
+try:
+    from .network_scanner import NetworkScanner
+except ImportError as e:
+    log.warning(f"NetworkScanner could not be loaded: {e}")
+    NetworkScanner = None  # type: ignore[assignment,misc]
+
+try:
     from .rf_scanner import RfScanner
 except ImportError as e:
     log.warning(f"RfScanner could not be loaded: {e}")
@@ -171,6 +183,8 @@ __all__ = [
     "IotScanner",
     "OtScanner",
     "MobileScanner",
+    "AndroidScanner",
+    "NetworkScanner",
     "RfScanner",
 ]
 
@@ -197,6 +211,8 @@ MODULE_REGISTRY: dict[str, object] = {
     "IotScanner":          IotScanner,
     "OtScanner":           OtScanner,
     "MobileScanner":       MobileScanner,
+    "AndroidScanner":      AndroidScanner,
+    "NetworkScanner":      NetworkScanner,
     "RfScanner":           RfScanner,
 }
 

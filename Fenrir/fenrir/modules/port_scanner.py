@@ -259,9 +259,11 @@ class PortScanner:
             except Exception:
                 # Ignore errors on close — the scan result is already known.
                 pass
+            log.debug(f"[port_scan] {target_ip}:{port} OPEN")
             return port, True
 
         except asyncio.TimeoutError:
+            log.debug(f"[port_scan] {target_ip}:{port} filtered/timeout ({self.timeout}s)")
             # Port is filtered (no response within timeout)
             return port, False
         except ConnectionRefusedError:
@@ -332,6 +334,7 @@ class PortScanner:
             for port in open_ports:
                 service_hint = _COMMON_PORT_NAMES.get(port, "unknown")
                 log.warning(f"  {port}/tcp  open  {service_hint}")
+                log.debug(f"[port_scan] {target_ip}:{port}/tcp open ({service_hint})")
         else:
             log.info(f"No open ports found on {target_ip} in the scanned range.")
 

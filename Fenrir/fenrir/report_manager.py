@@ -167,6 +167,11 @@ class ReportManager:
         with self._lock:
             return len(self._sections)
 
+    def get_sections(self) -> list[dict]:
+        """Return a snapshot of all report sections (thread-safe copy)."""
+        with self._lock:
+            return list(self._sections)
+
     def get_total_finding_count(self) -> int:
         """Return the total number of individual findings across all sections."""
         with self._lock:

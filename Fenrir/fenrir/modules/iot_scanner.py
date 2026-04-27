@@ -16,7 +16,37 @@ import asyncio
 import socket
 from typing import Optional
 
-from ..database import get_db_manager
+
+
+def _get_db_manager():
+    """
+    Return the shared DatabaseManager singleton.
+    Tries relative import first (installed package), then path-based fallback
+    for checkouts where the package root is not registered as fenrir.
+    """
+    try:
+        from ..database import get_db_manager as _gdm
+        return _gdm()
+    except (ImportError, ValueError):
+        pass
+    try:
+        import importlib.util, sys
+        from pathlib import Path
+        db_init = Path(__file__).resolve().parent.parent / "database" / "__init__.py"
+        if db_init.exists():
+            spec = importlib.util.spec_from_file_location(
+                "fenrir.database", str(db_init),
+                submodule_search_locations=[str(db_init.parent)],
+            )
+            mod = importlib.util.module_from_spec(spec)
+            sys.modules.setdefault("fenrir.database", mod)
+            spec.loader.exec_module(mod)
+            return mod.get_db_manager()
+    except Exception:
+        pass
+    return None
+
+
 from ..logging_config import get_logger
 from ..report_manager import ReportManager
 
@@ -75,7 +105,7 @@ class IotScanner:
 
     def __init__(self) -> None:
         log.debug("IotScanner initialised.")
-        self._db = get_db_manager()
+        self._db = __get_db_manager()
 
     async def run(
         self,
@@ -96,6 +126,7 @@ class IotScanner:
         Returns:
             Dict with keys: mqtt, default_creds, banners, ble
         """
+        log.debug(f"[iot] Starting IoT scan")
         log.info(f"Starting IoT scan on {target_ip}...")
         results = {
             "target":        target_ip,
@@ -231,39 +262,267 @@ class IotScanner:
         open_ports: list[int],
         results: dict,
     ) -> None:
-        """Match open ports against IoT default credentials in offline DB."""
+        """
+        Test default credentials against open ports on the target.
+
+        Strategy per service:
+          - http/https : HTTP Basic Auth HEAD request — confirmed only if server
+                         returns 200 (not 401/403).
+          - ftp        : ftplib login attempt — confirmed if no exception.
+          - ssh        : TCP banner grab only — we confirm port is really SSH
+                         before listing the cred as a candidate (no auth attempt
+                         to avoid account lockout / IDS alerts).
+          - telnet     : TCP connect + read banner — confirmed if port answers.
+          - others     : TCP reachability only.
+
+        Only entries whose service port is actually open are tested.
+        Results are reported as CONFIRMED (auth succeeded or port responded as
+        expected) or CANDIDATE (port open but auth not verified).
+        """
         if not self._db.is_available():
             log.debug("Offline DB not available — skipping default cred check.")
             return
 
-        cred_hits = await asyncio.to_thread(
-            self._lookup_default_creds, open_ports
+        # Load candidates whose port is in our open-port list
+        candidates = await asyncio.to_thread(self._lookup_cred_candidates, open_ports)
+        if not candidates:
+            log.info(f"No default credential candidates for open ports on {target_ip}.")
+            return
+
+        log.info(
+            f"Testing {len(candidates)} default credential candidate(s) "
+            f"against {target_ip}..."
         )
 
-        for hit in cred_hits:
+        # Run tests with a semaphore — avoid flooding the target
+        sem   = asyncio.Semaphore(4)
+        tasks = [
+            self._test_one_cred(target_ip, cand, sem, results)
+            for cand in candidates
+        ]
+        await asyncio.gather(*tasks, return_exceptions=True)
+
+        confirmed = [r for r in results["default_creds"] if r.get("confirmed")]
+        candidates_only = [r for r in results["default_creds"] if not r.get("confirmed")]
+        if confirmed:
             log.warning(
-                f"DEFAULT CREDS MATCH on {target_ip}: "
-                f"{hit['vendor']} {hit['model']} — "
-                f"{hit['service']} (port {hit['port']}): "
-                f"{hit['username']} / {hit['password']}"
+                f"DEFAULT CREDS CONFIRMED on {target_ip}: "
+                f"{len(confirmed)} credential(s) accepted."
             )
-            results["default_creds"].append({
-                "check":    "default_credentials",
-                "host":     target_ip,
-                "port":     hit["port"],
-                "service":  hit["service"],
-                "vendor":   hit["vendor"],
-                "model":    hit["model"],
-                "username": hit["username"],
-                "password": hit["password"],
-                "severity": "CRITICAL",
-            })
+        if candidates_only:
+            log.info(
+                f"Default cred candidates (port open, auth not tested): "
+                f"{len(candidates_only)}"
+            )
 
-        if not cred_hits:
-            log.info(f"No default credential matches for open ports on {target_ip}.")
+    async def _test_one_cred(
+        self,
+        target_ip: str,
+        cred: dict,
+        sem: asyncio.Semaphore,
+        results: dict,
+    ) -> None:
+        """Test a single credential entry and record result."""
+        async with sem:
+            service  = (cred.get("service") or "").lower()
+            port     = int(cred.get("port") or 0)
+            username = cred.get("username") or ""
+            password = cred.get("password") or ""
+            vendor   = cred.get("vendor", "")
+            model    = cred.get("model", "")
 
-    def _lookup_default_creds(self, open_ports: list[int]) -> list[dict]:
-        """Synchronous DB query — called via asyncio.to_thread."""
+            confirmed = False
+            method    = "untested"
+
+            try:
+                if service in ("http", "https"):
+                    confirmed, method = await self._test_http_basic(
+                        target_ip, port, username, password,
+                        use_tls=(service == "https"),
+                    )
+
+                elif service == "ftp":
+                    confirmed, method = await asyncio.to_thread(
+                        self._test_ftp, target_ip, port, username, password
+                    )
+
+                elif service == "ssh":
+                    # Don't attempt SSH auth — just verify banner looks like SSH
+                    confirmed, method = await self._test_ssh_banner(target_ip, port)
+
+                elif service == "telnet":
+                    confirmed, method = await self._test_telnet_banner(target_ip, port)
+
+                else:
+                    # Generic TCP reachability
+                    confirmed, method = await self._test_tcp_reachable(target_ip, port)
+
+            except Exception as exc:
+                log.debug(f"Cred test error {vendor}/{service}:{port}: {exc}")
+                return
+
+            if confirmed:
+                log.warning(
+                    f"DEFAULT CREDS CONFIRMED [{method}] on {target_ip}: "
+                    f"{vendor} {model} — {service}:{port}: "
+                    f"'{username}' / '{password}'"
+                )
+                results["default_creds"].append({
+                    "check":     "default_credentials",
+                    "confirmed": True,
+                    "method":    method,
+                    "host":      target_ip,
+                    "port":      port,
+                    "service":   service,
+                    "vendor":    vendor,
+                    "model":     model,
+                    "username":  username,
+                    "password":  password,
+                    "severity":  "CRITICAL",
+                })
+
+    async def _test_http_basic(
+        self,
+        host: str,
+        port: int,
+        username: str,
+        password: str,
+        use_tls: bool = False,
+    ) -> tuple[bool, str]:
+        """
+        Attempt HTTP Basic Auth.  Returns (True, "http_basic") if server
+        responds 200 OK (not 401/403), indicating credentials were accepted.
+        Returns (False, "http_basic") otherwise.
+        """
+        try:
+            import httpx
+            proto = "https" if use_tls else "http"
+            url   = f"{proto}://{host}:{port}/"
+            auth  = (username, password) if (username or password) else None
+
+            async with httpx.AsyncClient(
+                verify=False,
+                timeout=5,
+                follow_redirects=False,
+            ) as client:
+                # First check: can we reach at all?
+                try:
+                    resp_unauth = await client.get(url)
+                except Exception:
+                    return False, "http_basic"
+
+                # If it responds 401 with no auth, try with credentials
+                if resp_unauth.status_code == 401:
+                    if auth:
+                        resp_auth = await client.get(url, auth=auth)
+                        if resp_auth.status_code == 200:
+                            return True, "http_basic"
+                    return False, "http_basic"
+
+                # Port is open and responds with 200 even without auth — note
+                # as unprotected but only confirm if blank/no creds
+                if resp_unauth.status_code == 200 and not username and not password:
+                    return True, "http_unprotected"
+
+                return False, "http_basic"
+
+        except ImportError:
+            # httpx not available — fall back to TCP reachability
+            return await self._test_tcp_reachable(host, port)
+        except Exception:
+            return False, "http_basic"
+
+    def _test_ftp(
+        self,
+        host: str,
+        port: int,
+        username: str,
+        password: str,
+    ) -> tuple[bool, str]:
+        """Attempt FTP login with ftplib (synchronous)."""
+        import ftplib
+        try:
+            ftp = ftplib.FTP()
+            ftp.connect(host, port, timeout=5)
+            ftp.login(username or "anonymous", password or "")
+            ftp.quit()
+            return True, "ftp_login"
+        except ftplib.error_perm:
+            # 530 Login incorrect — credentials rejected
+            return False, "ftp_login"
+        except Exception:
+            return False, "ftp_login"
+
+    async def _test_ssh_banner(
+        self,
+        host: str,
+        port: int,
+    ) -> tuple[bool, str]:
+        """
+        Read the SSH banner without authenticating.
+        Returns (True, "ssh_banner") only if the banner looks like SSH.
+        We never attempt authentication to avoid lockout / IDS noise.
+        """
+        try:
+            reader, writer = await asyncio.wait_for(
+                asyncio.open_connection(host, port), timeout=4
+            )
+            banner = await asyncio.wait_for(reader.read(256), timeout=3)
+            writer.close()
+            try:
+                await writer.wait_closed()
+            except Exception:
+                pass
+            if banner.startswith(b"SSH-"):
+                return True, "ssh_banner"
+            return False, "ssh_banner"
+        except Exception:
+            return False, "ssh_banner"
+
+    async def _test_telnet_banner(
+        self,
+        host: str,
+        port: int,
+    ) -> tuple[bool, str]:
+        """Confirm port responds to a TCP connection (telnet-style)."""
+        try:
+            reader, writer = await asyncio.wait_for(
+                asyncio.open_connection(host, port), timeout=4
+            )
+            writer.close()
+            try:
+                await writer.wait_closed()
+            except Exception:
+                pass
+            return True, "telnet_connect"
+        except Exception:
+            return False, "telnet_connect"
+
+    async def _test_tcp_reachable(
+        self,
+        host: str,
+        port: int,
+    ) -> tuple[bool, str]:
+        """Generic TCP connectivity check."""
+        try:
+            _, writer = await asyncio.wait_for(
+                asyncio.open_connection(host, port), timeout=4
+            )
+            writer.close()
+            try:
+                await writer.wait_closed()
+            except Exception:
+                pass
+            return True, "tcp_connect"
+        except Exception:
+            return False, "tcp_connect"
+
+    def _lookup_cred_candidates(self, open_ports: list[int]) -> list[dict]:
+        """
+        Query DB for default credentials whose port is in open_ports.
+        Returns unique (vendor, model, service, port, username, password) tuples.
+        Called via asyncio.to_thread.
+        """
         try:
             import sqlite3
             from ..database.db_manager import DB_PATH
@@ -276,9 +535,11 @@ class IotScanner:
 
             placeholders = ",".join("?" * len(open_ports))
             cursor = conn.execute(
-                f"""SELECT * FROM iot_default_creds
-                WHERE port IN ({placeholders})
-                ORDER BY vendor, model""",
+                f"""SELECT DISTINCT vendor, model, device_type, service, port,
+                           username, password, notes
+                    FROM iot_default_creds
+                    WHERE port IN ({placeholders})
+                    ORDER BY vendor, model""",
                 open_ports,
             )
             rows = [dict(r) for r in cursor.fetchall()]

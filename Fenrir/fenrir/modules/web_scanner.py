@@ -150,6 +150,7 @@ class WebScanner:
             )
             return response
         except httpx.ConnectTimeout:
+            log.debug(f"[web] Probing {url}")
             log.warning(f"  {url}  →  Connection timed out after {self.timeout}s.")
         except httpx.ConnectError as exc:
             log.warning(f"  {url}  →  Could not connect: {exc}")
@@ -181,6 +182,7 @@ class WebScanner:
             List of finding dicts for each disclosure header present.
         """
         findings = []
+        log.debug(f"[web] Header analysis complete for {target_ip}")
         log.info("  Information disclosure headers:")
 
         found_any = False
