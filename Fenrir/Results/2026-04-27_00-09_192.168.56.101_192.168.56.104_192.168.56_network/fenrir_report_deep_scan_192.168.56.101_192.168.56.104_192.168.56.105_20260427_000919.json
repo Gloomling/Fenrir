@@ -1,0 +1,614 @@
+{
+  "meta": {
+    "target": "deep_scan_192.168.56.101_192.168.56.104_192.168.56.105",
+    "started_at": "2026-04-27T00:09:19.692200",
+    "finished_at": "2026-04-27T00:09:47.870010",
+    "duration_seconds": 28,
+    "duration_human": "28s",
+    "fenrir_version": "2.0.0",
+    "total_findings": 7
+  },
+  "sections": [
+    {
+      "title": "Host: 192.168.56.104 \u2014 Identity",
+      "findings": [
+        {
+          "ip": "192.168.56.104",
+          "hostname": "",
+          "mac": "08:00:27:C5:06:6F",
+          "vendor": "Oracle VirtualBox virtual NIC",
+          "os_name": "Ubuntu Linux",
+          "os_version": "",
+          "os_family": "Linux",
+          "os_accuracy": 0,
+          "cpe": "",
+          "device_type": "server",
+          "device_subtype": "linux_server",
+          "device_class": "server",
+          "device_subclass": "linux_server",
+          "open_ports": [
+            22
+          ],
+          "services": [
+            {
+              "port": 22,
+              "name": "ssh",
+              "version": "OpenSSH 8.9p1",
+              "banner": "SSH-2.0-OpenSSH_8.9p1 Ubuntu-3"
+            }
+          ],
+          "cves": [],
+          "exploits": [],
+          "cve_count": 0,
+          "critical_count": 0,
+          "high_count": 0,
+          "exploit_count": 0,
+          "android_findings": [],
+          "device_props": {},
+          "status": "done",
+          "scan_duration_s": 1.0
+        }
+      ],
+      "finding_count": 1
+    },
+    {
+      "title": "Host: 192.168.56.105 \u2014 Identity",
+      "findings": [
+        {
+          "ip": "192.168.56.105",
+          "hostname": "",
+          "mac": "08:00:27:A1:62:D4",
+          "vendor": "Oracle VirtualBox virtual NIC",
+          "os_name": "Windows (TTL\u2264128)",
+          "os_version": "",
+          "os_family": "Windows",
+          "os_accuracy": 0,
+          "cpe": "",
+          "device_type": "unknown",
+          "device_subtype": "",
+          "device_class": "unknown",
+          "device_subclass": "",
+          "open_ports": [
+            135,
+            139,
+            445
+          ],
+          "services": [
+            {
+              "port": 135,
+              "name": "msrpc",
+              "version": "",
+              "banner": ""
+            },
+            {
+              "port": 139,
+              "name": "netbios-ssn",
+              "version": "",
+              "banner": ""
+            },
+            {
+              "port": 445,
+              "name": "microsoft-ds",
+              "version": "",
+              "banner": ""
+            }
+          ],
+          "cves": [],
+          "exploits": [],
+          "cve_count": 0,
+          "critical_count": 0,
+          "high_count": 0,
+          "exploit_count": 0,
+          "android_findings": [],
+          "device_props": {},
+          "status": "done",
+          "scan_duration_s": 9.1
+        }
+      ],
+      "finding_count": 1
+    },
+    {
+      "title": "Host: 192.168.56.101 \u2014 Identity",
+      "findings": [
+        {
+          "ip": "192.168.56.101",
+          "hostname": "",
+          "mac": "08:00:27:35:DC:14",
+          "vendor": "Oracle VirtualBox virtual NIC",
+          "os_name": "Ubuntu Linux",
+          "os_version": "",
+          "os_family": "Linux",
+          "os_accuracy": 0,
+          "cpe": "",
+          "device_type": "server",
+          "device_subtype": "database_server",
+          "device_class": "server",
+          "device_subclass": "database_server",
+          "open_ports": [
+            21,
+            22,
+            23,
+            25,
+            53,
+            80,
+            111,
+            139,
+            445,
+            512,
+            513,
+            514,
+            1099,
+            1524,
+            2049,
+            2121,
+            3306,
+            5432,
+            5900,
+            6000,
+            6667,
+            8009,
+            8180
+          ],
+          "services": [
+            {
+              "port": 21,
+              "name": "ftp",
+              "version": "vsftpd 2.3.4",
+              "banner": "220 (vsFTPd 2.3.4)"
+            },
+            {
+              "port": 22,
+              "name": "ssh",
+              "version": "OpenSSH 4.7p1",
+              "banner": "SSH-2.0-OpenSSH_4.7p1 Debian-8ubuntu1"
+            },
+            {
+              "port": 23,
+              "name": "telnet",
+              "version": "",
+              "banner": "\ufffd\ufffd\u0018\ufffd\ufffd \ufffd\ufffd#\ufffd\ufffd'"
+            },
+            {
+              "port": 25,
+              "name": "smtp",
+              "version": "",
+              "banner": "220 metasploitable.localdomain ESMTP Postfix (Ubuntu)"
+            },
+            {
+              "port": 53,
+              "name": "dns",
+              "version": "",
+              "banner": ""
+            },
+            {
+              "port": 80,
+              "name": "http",
+              "version": "",
+              "banner": ""
+            },
+            {
+              "port": 111,
+              "name": "rpcbind",
+              "version": "",
+              "banner": ""
+            },
+            {
+              "port": 139,
+              "name": "netbios-ssn",
+              "version": "",
+              "banner": ""
+            },
+            {
+              "port": 445,
+              "name": "microsoft-ds",
+              "version": "",
+              "banner": ""
+            },
+            {
+              "port": 512,
+              "name": "exec",
+              "version": "",
+              "banner": "\u0001Where are you?"
+            },
+            {
+              "port": 513,
+              "name": "login",
+              "version": "",
+              "banner": ""
+            },
+            {
+              "port": 514,
+              "name": "shell",
+              "version": "",
+              "banner": "\u0001getnameinfo: Temporary failure in name resolution"
+            },
+            {
+              "port": 1099,
+              "name": "unknown",
+              "version": "",
+              "banner": ""
+            },
+            {
+              "port": 1524,
+              "name": "unknown",
+              "version": "",
+              "banner": "root@metasploitable:/#"
+            },
+            {
+              "port": 2049,
+              "name": "nfs",
+              "version": "",
+              "banner": ""
+            },
+            {
+              "port": 2121,
+              "name": "unknown",
+              "version": "ProFTPD 1.3.1",
+              "banner": "220 ProFTPD 1.3.1 Server (Debian) [::ffff:192.168.56.101]"
+            },
+            {
+              "port": 3306,
+              "name": "mysql",
+              "version": "",
+              "banner": ">\u0000\u0000\u0000\n5.0.51a-3ubuntu5\u0000\f\u0000\u0000\u0000iv9U~>Ut\u0000,\ufffd\b\u0002\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000h.G\\wcjl]o4V\u0000"
+            },
+            {
+              "port": 5432,
+              "name": "postgresql",
+              "version": "",
+              "banner": ""
+            },
+            {
+              "port": 5900,
+              "name": "vnc",
+              "version": "",
+              "banner": "RFB 003.003"
+            },
+            {
+              "port": 6000,
+              "name": "unknown",
+              "version": "",
+              "banner": ""
+            },
+            {
+              "port": 6667,
+              "name": "unknown",
+              "version": "",
+              "banner": ":irc.Metasploitable.LAN NOTICE AUTH :*** Looking up your hostname...\r\n:irc.Metasploitable.LAN NOTICE AUTH :*** Couldn't resolve your hostname; using your IP address instead"
+            },
+            {
+              "port": 8009,
+              "name": "unknown",
+              "version": "",
+              "banner": ""
+            },
+            {
+              "port": 8180,
+              "name": "unknown",
+              "version": "",
+              "banner": ""
+            }
+          ],
+          "cves": [],
+          "exploits": [],
+          "cve_count": 0,
+          "critical_count": 0,
+          "high_count": 0,
+          "exploit_count": 0,
+          "android_findings": [],
+          "device_props": {},
+          "status": "done",
+          "scan_duration_s": 27.9
+        }
+      ],
+      "finding_count": 1
+    },
+    {
+      "title": "Network Scan Summary",
+      "findings": [
+        {
+          "target_spec": "192.168.56.101,192.168.56.104,192.168.56.105",
+          "total_ips": 0,
+          "live_hosts": 3,
+          "duration_s": 28.0,
+          "total_cves": 0,
+          "total_exploits": 0,
+          "critical_hosts": 0,
+          "device_types": {
+            "server/database_server": 1,
+            "server/linux_server": 1,
+            "unknown": 1
+          },
+          "os_breakdown": {
+            "Linux": 2,
+            "Windows": 1
+          },
+          "top_cves": []
+        }
+      ],
+      "finding_count": 1
+    },
+    {
+      "title": "Network Host Inventory",
+      "findings": [
+        {
+          "ip": "192.168.56.101",
+          "hostname": "",
+          "mac": "08:00:27:35:DC:14",
+          "vendor": "Oracle VirtualBox virtual NIC",
+          "os_name": "Ubuntu Linux",
+          "os_version": "",
+          "os_family": "Linux",
+          "os_accuracy": 0,
+          "cpe": "",
+          "device_type": "server",
+          "device_subtype": "database_server",
+          "device_class": "server",
+          "device_subclass": "database_server",
+          "open_ports": [
+            21,
+            22,
+            23,
+            25,
+            53,
+            80,
+            111,
+            139,
+            445,
+            512,
+            513,
+            514,
+            1099,
+            1524,
+            2049,
+            2121,
+            3306,
+            5432,
+            5900,
+            6000,
+            6667,
+            8009,
+            8180
+          ],
+          "services": [
+            {
+              "port": 21,
+              "name": "ftp",
+              "version": "vsftpd 2.3.4",
+              "banner": "220 (vsFTPd 2.3.4)"
+            },
+            {
+              "port": 22,
+              "name": "ssh",
+              "version": "OpenSSH 4.7p1",
+              "banner": "SSH-2.0-OpenSSH_4.7p1 Debian-8ubuntu1"
+            },
+            {
+              "port": 23,
+              "name": "telnet",
+              "version": "",
+              "banner": "\ufffd\ufffd\u0018\ufffd\ufffd \ufffd\ufffd#\ufffd\ufffd'"
+            },
+            {
+              "port": 25,
+              "name": "smtp",
+              "version": "",
+              "banner": "220 metasploitable.localdomain ESMTP Postfix (Ubuntu)"
+            },
+            {
+              "port": 53,
+              "name": "dns",
+              "version": "",
+              "banner": ""
+            },
+            {
+              "port": 80,
+              "name": "http",
+              "version": "",
+              "banner": ""
+            },
+            {
+              "port": 111,
+              "name": "rpcbind",
+              "version": "",
+              "banner": ""
+            },
+            {
+              "port": 139,
+              "name": "netbios-ssn",
+              "version": "",
+              "banner": ""
+            },
+            {
+              "port": 445,
+              "name": "microsoft-ds",
+              "version": "",
+              "banner": ""
+            },
+            {
+              "port": 512,
+              "name": "exec",
+              "version": "",
+              "banner": "\u0001Where are you?"
+            },
+            {
+              "port": 513,
+              "name": "login",
+              "version": "",
+              "banner": ""
+            },
+            {
+              "port": 514,
+              "name": "shell",
+              "version": "",
+              "banner": "\u0001getnameinfo: Temporary failure in name resolution"
+            },
+            {
+              "port": 1099,
+              "name": "unknown",
+              "version": "",
+              "banner": ""
+            },
+            {
+              "port": 1524,
+              "name": "unknown",
+              "version": "",
+              "banner": "root@metasploitable:/#"
+            },
+            {
+              "port": 2049,
+              "name": "nfs",
+              "version": "",
+              "banner": ""
+            },
+            {
+              "port": 2121,
+              "name": "unknown",
+              "version": "ProFTPD 1.3.1",
+              "banner": "220 ProFTPD 1.3.1 Server (Debian) [::ffff:192.168.56.101]"
+            },
+            {
+              "port": 3306,
+              "name": "mysql",
+              "version": "",
+              "banner": ">\u0000\u0000\u0000\n5.0.51a-3ubuntu5\u0000\f\u0000\u0000\u0000iv9U~>Ut\u0000,\ufffd\b\u0002\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000h.G\\wcjl]o4V\u0000"
+            },
+            {
+              "port": 5432,
+              "name": "postgresql",
+              "version": "",
+              "banner": ""
+            },
+            {
+              "port": 5900,
+              "name": "vnc",
+              "version": "",
+              "banner": "RFB 003.003"
+            },
+            {
+              "port": 6000,
+              "name": "unknown",
+              "version": "",
+              "banner": ""
+            },
+            {
+              "port": 6667,
+              "name": "unknown",
+              "version": "",
+              "banner": ":irc.Metasploitable.LAN NOTICE AUTH :*** Looking up your hostname...\r\n:irc.Metasploitable.LAN NOTICE AUTH :*** Couldn't resolve your hostname; using your IP address instead"
+            },
+            {
+              "port": 8009,
+              "name": "unknown",
+              "version": "",
+              "banner": ""
+            },
+            {
+              "port": 8180,
+              "name": "unknown",
+              "version": "",
+              "banner": ""
+            }
+          ],
+          "cves": [],
+          "exploits": [],
+          "cve_count": 0,
+          "critical_count": 0,
+          "high_count": 0,
+          "exploit_count": 0,
+          "android_findings": [],
+          "device_props": {},
+          "status": "done",
+          "scan_duration_s": 27.9
+        },
+        {
+          "ip": "192.168.56.104",
+          "hostname": "",
+          "mac": "08:00:27:C5:06:6F",
+          "vendor": "Oracle VirtualBox virtual NIC",
+          "os_name": "Ubuntu Linux",
+          "os_version": "",
+          "os_family": "Linux",
+          "os_accuracy": 0,
+          "cpe": "",
+          "device_type": "server",
+          "device_subtype": "linux_server",
+          "device_class": "server",
+          "device_subclass": "linux_server",
+          "open_ports": [
+            22
+          ],
+          "services": [
+            {
+              "port": 22,
+              "name": "ssh",
+              "version": "OpenSSH 8.9p1",
+              "banner": "SSH-2.0-OpenSSH_8.9p1 Ubuntu-3"
+            }
+          ],
+          "cves": [],
+          "exploits": [],
+          "cve_count": 0,
+          "critical_count": 0,
+          "high_count": 0,
+          "exploit_count": 0,
+          "android_findings": [],
+          "device_props": {},
+          "status": "done",
+          "scan_duration_s": 1.0
+        },
+        {
+          "ip": "192.168.56.105",
+          "hostname": "",
+          "mac": "08:00:27:A1:62:D4",
+          "vendor": "Oracle VirtualBox virtual NIC",
+          "os_name": "Windows (TTL\u2264128)",
+          "os_version": "",
+          "os_family": "Windows",
+          "os_accuracy": 0,
+          "cpe": "",
+          "device_type": "unknown",
+          "device_subtype": "",
+          "device_class": "unknown",
+          "device_subclass": "",
+          "open_ports": [
+            135,
+            139,
+            445
+          ],
+          "services": [
+            {
+              "port": 135,
+              "name": "msrpc",
+              "version": "",
+              "banner": ""
+            },
+            {
+              "port": 139,
+              "name": "netbios-ssn",
+              "version": "",
+              "banner": ""
+            },
+            {
+              "port": 445,
+              "name": "microsoft-ds",
+              "version": "",
+              "banner": ""
+            }
+          ],
+          "cves": [],
+          "exploits": [],
+          "cve_count": 0,
+          "critical_count": 0,
+          "high_count": 0,
+          "exploit_count": 0,
+          "android_findings": [],
+          "device_props": {},
+          "status": "done",
+          "scan_duration_s": 9.1
+        }
+      ],
+      "finding_count": 3
+    }
+  ]
+}
