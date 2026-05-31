@@ -1,0 +1,94 @@
+# =============================================================================
+# Fenrir Security Scanner — .gitignore
+# =============================================================================
+
+# ── Secrets / credentials ─────────────────────────────────────────────────────
+.env
+*.env
+.env.local
+.env.*.local
+
+# ── Scan output ───────────────────────────────────────────────────────────────
+Results/
+scan_history.db
+scan_history.db-shm
+scan_history.db-wal
+
+# ── Logs ──────────────────────────────────────────────────────────────────────
+*.log
+logs/
+fenrir.log
+
+# ── Offline intelligence database (built at runtime, can be large) ────────────
+fenrir/database/fenrir.db
+fenrir/database/fenrir.db-shm
+fenrir/database/fenrir.db-wal
+fenrir/database/exploits/
+fenrir/database/shellcodes/
+
+# ── Branding (operator-managed, not committed) ────────────────────────────────
+branding.json
+assets/logo.png
+assets/background.png
+assets/icon.ico
+assets/icon.png
+
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+.Python
+
+# ── Virtual environments ──────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+.fenrir/
+~/.fenrir/
+
+# ── Build / packaging ─────────────────────────────────────────────────────────
+dist/
+build/
+*.egg-info/
+*.egg
+MANIFEST
+.eggs/
+wheels/
+
+# ── Testing ───────────────────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+.tox/
+.nox/
+
+# ── IDEs ──────────────────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+
+# ── macOS ─────────────────────────────────────────────────────────────────────
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ── Windows ───────────────────────────────────────────────────────────────────
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ── Misc ──────────────────────────────────────────────────────────────────────
+*.bak
+*.tmp
+*.swp
+.mypy_cache/
+.ruff_cache/
