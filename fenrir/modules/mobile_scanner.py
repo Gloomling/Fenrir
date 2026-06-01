@@ -20,11 +20,7 @@ from typing import Optional
 
 
 
-<<<<<<< HEAD:Fenrir/fenrir/modules/mobile_scanner.py
 def _get_db_manager():
-=======
-def __get_db_manager():
->>>>>>> 4303c7a940759894ccfa34a3b86f43c7db73d781:fenrir/modules/mobile_scanner.py
     """
     Return the shared DatabaseManager singleton.
     Tries relative import first (installed package), then path-based fallback
@@ -47,11 +43,7 @@ def __get_db_manager():
             mod = importlib.util.module_from_spec(spec)
             sys.modules.setdefault("fenrir.database", mod)
             spec.loader.exec_module(mod)
-<<<<<<< HEAD:Fenrir/fenrir/modules/mobile_scanner.py
             return mod.get_db_manager()
-=======
-            return mod._get_db_manager()
->>>>>>> 4303c7a940759894ccfa34a3b86f43c7db73d781:fenrir/modules/mobile_scanner.py
     except Exception:
         pass
     return None
