@@ -1,0 +1,16 @@
+[Desktop Entry]
+Version=1.1
+Type=Application
+Name=Fenrir Security Scanner
+GenericName=Security Scanner
+Comment=Multi-module penetration testing and network security scanner
+Exec=REPLACE_WITH_ABSOLUTE_PATH
+TryExec=REPLACE_WITH_ABSOLUTE_PATH
+Icon=REPLACE_WITH_ICON_PATH
+Terminal=false
+NoDisplay=false
+Categories=Network;Security;System;
+Keywords=security;scanner;pentest;nmap;CVE;exploit;network;penetration;
+StartupNotify=true
+StartupWMClass=fenrir_gui
+MimeType=application/json;

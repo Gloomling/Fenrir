@@ -3383,3 +3383,4 @@ def _make_wolf_icon(size: int = 32) -> Image.Image:
 def launch_gui() -> None:
     app = FenrirGUI()
     app.mainloop()
+
