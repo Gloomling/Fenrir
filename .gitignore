@@ -26,6 +26,12 @@ fenrir/database/fenrir.db-wal
 fenrir/database/exploits/
 fenrir/database/shellcodes/
 
+# ── Runtime databases ─────────────────────────────────────────────────────────
+*.db
+*.db-shm
+*.db-wal
+scan_history.db
+
 # ── Branding (operator-managed, not committed) ────────────────────────────────
 branding.json
 assets/logo.png
