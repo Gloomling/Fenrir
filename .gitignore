@@ -32,8 +32,8 @@ fenrir/database/shellcodes/
 fenrir/database/shellcodes/**
 
 # Any other database folder that might be created at runtime
-fenrir/data/
-fenrir/data/**
+data/
+data/**
 
 # ── Runtime databases (anywhere in the project) ───────────────────────────────
 *.db
@@ -107,3 +107,5 @@ Desktop.ini
 *.swp
 .mypy_cache/
 .ruff_cache/
+data/
+data/
