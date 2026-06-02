@@ -94,11 +94,26 @@ class ScanHistory:
                 conn = self._connect()
                 conn.executescript(_DDL)
                 conn.commit()
-                # Migration: add scheduled_scans if DB existed before it was introduced
+                # Migration: create any tables that existed before being added to _DDL
                 tables = {r[0] for r in conn.execute(
                     "SELECT name FROM sqlite_master WHERE type='table'")}
+                missing_ddl = ""
+                if "scans" not in tables:
+                    missing_ddl += """
+CREATE TABLE IF NOT EXISTS scans (
+    id           INTEGER PRIMARY KEY AUTOINCREMENT,
+    started_at   TEXT NOT NULL,
+    finished_at  TEXT,
+    target       TEXT NOT NULL,
+    scan_type    TEXT NOT NULL DEFAULT 'single',
+    modules      TEXT,
+    result_dir   TEXT,
+    summary      TEXT,
+    report_json  TEXT
+);
+"""
                 if "scheduled_scans" not in tables:
-                    conn.executescript("""
+                    missing_ddl += """
 CREATE TABLE IF NOT EXISTS scheduled_scans (
     id           INTEGER PRIMARY KEY AUTOINCREMENT,
     name         TEXT NOT NULL,
@@ -110,9 +125,11 @@ CREATE TABLE IF NOT EXISTS scheduled_scans (
     last_run_at  TEXT,
     enabled      INTEGER NOT NULL DEFAULT 1
 );
-""")
+"""
+                if missing_ddl:
+                    conn.executescript(missing_ddl)
                     conn.commit()
-                    log.info("[history] Migration: created scheduled_scans table")
+                    log.info("[history] Migration: created missing tables")
                 conn.close()
         except Exception as exc:
             log.error(f"[history] Schema init error: {exc}")

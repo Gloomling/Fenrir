@@ -1736,6 +1736,17 @@ class FenrirGUI(tk.Tk):
 
         async def _run_module(key: str, coro) -> None:
             """Wrap a module coroutine with timing, timeout, and heavy-module gating."""
+            # Guard: if module failed to import, coro may be None or not a coroutine
+            if coro is None:
+                log.warning(f"Module '{key}' unavailable (import failed) — skipping.")
+                self._timing_queue.put(("skip", key, time.monotonic(), "skipped",
+                                        "Module not available"))
+                return
+            import inspect
+            if not inspect.isawaitable(coro):
+                log.error(f"Module '{key}' did not return an awaitable — skipping.")
+                return
+
             module_timeout = min(global_timeout, MODULE_TIMEOUTS.get(key, 300))
             is_heavy = key in HEAVY_MODULES
 
@@ -1783,234 +1794,234 @@ class FenrirGUI(tk.Tk):
                 f"will be skipped (no useful results for private IPs)."
             )
 
-        # ── Host-up pre-check ─────────────────────────────────────────────────
-        if not skip_hostup:
-            log.info(f"Pre-check: testing reachability of {target}...")
-            host_up = await _host_is_up(target, timeout=2.0)
-            if not host_up:
-                log.warning(
-                    f"  {target} did not respond to any probe port. "
-                    f"Host may be offline, heavily firewalled, or sleeping. "
-                    f"Continuing with port scan anyway (tick 'Skip host-up check' "
-                    f"to suppress this warning)."
-                )
-            else:
-                log.info(f"  {target} is reachable.")
-
-        # ── Phase 1: Port scan ────────────────────────────────────────────────
-        open_ports: list[int] = []
-        if mv["port_scan"].get() or mv["vuln_scan"].get():
-            if not cancelled():
-                log.info("Phase 1: Port scan")
-                self._timing_queue.put(("start", "port_scan", time.monotonic()))
-                try:
-                    open_ports = await asyncio.wait_for(
-                        PortScanner(timeout=port_timeout).run(
-                            target, ports=requested_ports, report=report),
-                        timeout=MODULE_TIMEOUTS["port_scan"],
+        try:
+            # ── Host-up pre-check ─────────────────────────────────────────────────
+            if not skip_hostup:
+                log.info(f"Pre-check: testing reachability of {target}...")
+                host_up = await _host_is_up(target, timeout=2.0)
+                if not host_up:
+                    log.warning(
+                        f"  {target} did not respond to any probe port. "
+                        f"Host may be offline, heavily firewalled, or sleeping. "
+                        f"Continuing with port scan anyway (tick 'Skip host-up check' "
+                        f"to suppress this warning)."
                     )
-                    self._timing_queue.put(("done", "port_scan", time.monotonic(), "ok",
-                                            f"{len(open_ports)} open ports"))
-                except asyncio.TimeoutError:
-                    self._timing_queue.put(("done", "port_scan", time.monotonic(), "timeout",
-                                            "Timed out"))
-                    log.error("Port scan timed out.")
-                except Exception as exc:
-                    self._timing_queue.put(("done", "port_scan", time.monotonic(), "error",
-                                            str(exc)))
-                    log.error(f"Port scan error: {exc}")
-                log.info(f"  Open ports: {open_ports or 'none found'}")
+                else:
+                    log.info(f"  {target} is reachable.")
 
-        if cancelled():
-            report.finalize(); return
+            # ── Phase 1: Port scan ────────────────────────────────────────────────
+            open_ports: list[int] = []
+            if mv["port_scan"].get() or mv["vuln_scan"].get():
+                if not cancelled():
+                    log.info("Phase 1: Port scan")
+                    self._timing_queue.put(("start", "port_scan", time.monotonic()))
+                    try:
+                        open_ports = await asyncio.wait_for(
+                            PortScanner(timeout=port_timeout).run(
+                                target, ports=requested_ports, report=report),
+                            timeout=MODULE_TIMEOUTS["port_scan"],
+                        )
+                        self._timing_queue.put(("done", "port_scan", time.monotonic(), "ok",
+                                                f"{len(open_ports)} open ports"))
+                    except asyncio.TimeoutError:
+                        self._timing_queue.put(("done", "port_scan", time.monotonic(), "timeout",
+                                                "Timed out"))
+                        log.error("Port scan timed out.")
+                    except Exception as exc:
+                        self._timing_queue.put(("done", "port_scan", time.monotonic(), "error",
+                                                str(exc)))
+                        log.error(f"Port scan error: {exc}")
+                    log.info(f"  Open ports: {open_ports or 'none found'}")
 
-        found_web_ports = [p for p in open_ports if p in WEB_PORTS]
-        found_ssh_ports = [p for p in open_ports if p == SSH_PORT]
+            if cancelled():
+                report.finalize(); return
 
-        # ── Auto: Android device detection ────────────────────────────────────
-        # Port 5555 = ADB-over-TCP.  Trigger automatically without a checkbox.
-        ADB_PORTS = [p for p in open_ports if p in (5555, 5554, 5556, 5558)]
-        if ADB_PORTS and AndroidScanner is not None:
-            log.info(
-                f"ADB port(s) detected: {ADB_PORTS} — "
-                f"triggering Android Device Scanner automatically."
-            )
-            for adb_port in ADB_PORTS:
-                await _run_module(
-                    "android_scan",
-                    AndroidScanner().run(target, port=adb_port, report=report),
-                )
-        elif not ADB_PORTS and self._profile_var.get() == "Android Device":
-            log.warning(
-                "Android Device profile selected but port 5555 (ADB) was not found open. "
-                "To enable ADB over network on the device:\n"
-                "  1. Connect via USB and run: adb tcpip 5555\n"
-                "  2. Or: Settings → Developer Options → Wireless debugging\n"
-                "  3. Check the device is not sleeping (screen lock disables ADB TCP on some ROMs)\n"
-                "  Try increasing Port timeout in Advanced Options if the device is slow to respond."
-            )
+            found_web_ports = [p for p in open_ports if p in WEB_PORTS]
+            found_ssh_ports = [p for p in open_ports if p == SSH_PORT]
 
-        # ── Phase 2: Parallel recon/analysis ──────────────────────────────────
-        log.info("Phase 2: Analysis & recon")
-        phase2 = []
-
-        if mv["vuln_scan"].get() and open_ports:
-            phase2.append(_run_module("vuln_scan",
-                VulnerabilityScanner(cve_limit=cve_limit).run(target, open_ports, report=report)))
-        elif mv["vuln_scan"].get() and not open_ports:
-            self._timing_queue.put(("skip", "vuln_scan", time.monotonic(), "skipped",
-                                    "No open ports"))
-            log.info("Vulnerability scan skipped — no open ports found.")
-
-        if mv["web_scan"].get() and found_web_ports:
-            phase2.append(_run_module("web_scan",
-                WebScanner().run(target, found_web_ports, report=report)))
-        elif mv["web_scan"].get() and not found_web_ports:
-            self._timing_queue.put(("skip", "web_scan", time.monotonic(), "skipped",
-                                    "No web ports open"))
-
-        if mv["tech_detect"].get() and found_web_ports:
-            phase2.append(_run_module("tech_detect",
-                TechDetector().run(target, found_web_ports, report=report)))
-
-        if mv["dns_scan"].get():
-            phase2.append(_run_module("dns_scan",
-                DnsScanner().run(target, report=report)))
-
-        # WHOIS: skip raw text for private IPs — it's just RFC1918 boilerplate
-        if mv["whois_scan"].get() and not is_private:
-            phase2.append(_run_module("whois_scan",
-                WhoisScanner().run(target, report=report)))
-        elif mv["whois_scan"].get() and is_private:
-            self._timing_queue.put(("skip", "whois_scan", time.monotonic(), "skipped",
-                                    "Private IP — no useful WHOIS data"))
-            log.info("WHOIS skipped — private/RFC1918 address.")
-
-        # Subdomain: pointless on raw IPs
-        if mv["subdomain_scan"].get() and not is_private and not _looks_like_ip(target):
-            phase2.append(_run_module("subdomain_scan",
-                SubdomainScanner(wordlist_path=wordlist_path).run(target, report=report)))
-        elif mv["subdomain_scan"].get():
-            self._timing_queue.put(("skip", "subdomain_scan", time.monotonic(), "skipped",
-                                    "IP address target — subdomain scan N/A"))
-
-        # Threat intel: skip for private IPs (VirusTotal returns 0 detections always)
-        if mv["threat_intel"].get() and not is_private:
-            phase2.append(_run_module("threat_intel",
-                ThreatIntelScanner().run(target, report=report)))
-        elif mv["threat_intel"].get() and is_private:
-            self._timing_queue.put(("skip", "threat_intel", time.monotonic(), "skipped",
-                                    "Private IP — VirusTotal/OTX not useful"))
-            log.info("Threat intelligence skipped — private/RFC1918 address.")
-
-        # OSINT: skip for private IPs (no public records)
-        if mv["osint_scan"].get() and not is_private:
-            phase2.append(_run_module("osint_scan",
-                OsintScanner().run(target, report=report)))
-        elif mv["osint_scan"].get() and is_private:
-            self._timing_queue.put(("skip", "osint_scan", time.monotonic(), "skipped",
-                                    "Private IP — no public OSINT data"))
-            log.info("OSINT scan skipped — private/RFC1918 address.")
-
-        if phase2 and not cancelled():
-            await asyncio.gather(*phase2, return_exceptions=True)
-
-        if cancelled():
-            report.finalize(); return
-
-        # ── Phase 3: Dir brute-force ───────────────────────────────────────────
-        if mv["dir_brute"].get() and found_web_ports and not cancelled():
-            log.info("Phase 3: Directory brute-force")
-            await _run_module("dir_brute",
-                DirBruteForcer(wordlist_path=wordlist_path).run(
-                    target, found_web_ports, report=report))
-
-        # ── Phase 4: Specialised (parallel) ────────────────────────────────────
-        log.info("Phase 4: Specialised modules")
-        phase4 = []
-
-        if mv["exploit_search"].get():
-            query = self._exploit_query_var.get().strip() or target
-            phase4.append(_run_module("exploit_search",
-                ExploitScanner().run(query, report=report)))
-
-        if mv["iot_scan"].get():
-            if open_ports:
-                phase4.append(_run_module("iot_scan",
-                    IotScanner().run(target, open_ports, report=report)))
-            else:
-                self._timing_queue.put(("skip", "iot_scan", time.monotonic(), "skipped",
-                                        "No open ports — IoT scan skipped"))
-                log.info("IoT scan skipped — no open ports found.")
-
-        if mv["rf_scan"].get():
-            phase4.append(_run_module("rf_scan",
-                RfScanner().run(
-                    freq_range=self._rf_range_var.get().strip(),
-                    threshold=self._rf_threshold_var.get(),
-                    report=report)))
-
-        if phase4 and not cancelled():
-            await asyncio.gather(*phase4, return_exceptions=True)
-
-        # ── Phase 5: Sequential blocking modules ───────────────────────────────
-        if mv["pass_spray"].get() and not cancelled():
-            password  = self._spray_pass_var.get().strip()
-            usernames = [u.strip() for u in self._spray_users_var.get().split(",") if u.strip()]
-            spray_port = found_ssh_ports[0] if found_ssh_ports else 22
-            if password and usernames:
-                log.info(f"Phase 5: Password spray ({self._spray_service_var.get()})")
-                await _run_module("pass_spray",
-                    PasswordSprayer().run(
-                        target, spray_port, usernames, password,
-                        service=self._spray_service_var.get(), report=report))
-            else:
-                log.warning("Password spray: no password or usernames configured — skipping.")
-                self._timing_queue.put(("skip", "pass_spray", time.monotonic(), "skipped",
-                                        "No credentials provided"))
-
-        if mv["ot_scan"].get() and not cancelled():
-            # OT scan is meaningful even without open ports (passive sniffing)
-            # but log clearly if no OT-relevant ports were found
-            ot_ports = {p for p in open_ports if p in (
-                502, 102, 44818, 20000, 47808, 4840, 1089, 1090, 1091,
-                2222, 4000, 9600, 19999, 20547, 34962, 34963, 34964,
-            )}
-            if ot_ports:
+            # ── Auto: Android device detection ────────────────────────────────────
+            # Port 5555 = ADB-over-TCP.  Trigger automatically without a checkbox.
+            ADB_PORTS = [p for p in open_ports if p in (5555, 5554, 5556, 5558)]
+            if ADB_PORTS and AndroidScanner is not None:
                 log.info(
-                    f"Phase 5: OT/ICS scan — OT-relevant port(s) found: {ot_ports}"
+                    f"ADB port(s) detected: {ADB_PORTS} — "
+                    f"triggering Android Device Scanner automatically."
                 )
-            else:
-                log.info(
-                    "Phase 5: OT/ICS scan — no OT-specific ports found in port scan. "
-                    "Running passive detection anyway."
+                for adb_port in ADB_PORTS:
+                    await _run_module(
+                        "android_scan",
+                        AndroidScanner().run(target, port=adb_port, report=report),
+                    )
+            elif not ADB_PORTS and self._profile_var.get() == "Android Device":
+                log.warning(
+                    "Android Device profile selected but port 5555 (ADB) was not found open. "
+                    "To enable ADB over network on the device:\n"
+                    "  1. Connect via USB and run: adb tcpip 5555\n"
+                    "  2. Or: Settings → Developer Options → Wireless debugging\n"
+                    "  3. Check the device is not sleeping (screen lock disables ADB TCP on some ROMs)\n"
+                    "  Try increasing Port timeout in Advanced Options if the device is slow to respond."
                 )
-            await _run_module("ot_scan",
-                OtScanner().run(target_ip=target, duration=self._ot_duration_var.get(),
-                                report=report))
 
-        if mv["mobile_scan"].get() and not cancelled():
-            apk_path = self._apk_var.get().strip()
-            if apk_path:
-                log.info(f"Phase 5: Mobile APK analysis — {apk_path}")
-                await _run_module("mobile_scan",
-                    MobileScanner().run(apk_path, report=report))
-            else:
-                log.warning("Mobile scan: no APK path specified — skipping.")
-                self._timing_queue.put(("skip", "mobile_scan", time.monotonic(), "skipped",
-                                        "No APK path"))
+            # ── Phase 2: Parallel recon/analysis ──────────────────────────────────
+            log.info("Phase 2: Analysis & recon")
+            phase2 = []
 
-        # ── Finalize ──────────────────────────────────────────────────────────
-        report.finalize()
-        log.info(f"{'─' * 56}")
-        log.info(f"  Scan complete.")
-        for p in (report.txt_path, report.json_path):
-            log.info(f"  Report: {p}")
-        log.info(f"{'─' * 56}")
+            if mv["vuln_scan"].get() and open_ports:
+                phase2.append(_run_module("vuln_scan",
+                    VulnerabilityScanner(cve_limit=cve_limit).run(target, open_ports, report=report)))
+            elif mv["vuln_scan"].get() and not open_ports:
+                self._timing_queue.put(("skip", "vuln_scan", time.monotonic(), "skipped",
+                                        "No open ports"))
+                log.info("Vulnerability scan skipped — no open ports found.")
 
-    # =========================================================================
-    # Results population
-    # =========================================================================
+            if mv["web_scan"].get() and found_web_ports:
+                phase2.append(_run_module("web_scan",
+                    WebScanner().run(target, found_web_ports, report=report)))
+            elif mv["web_scan"].get() and not found_web_ports:
+                self._timing_queue.put(("skip", "web_scan", time.monotonic(), "skipped",
+                                        "No web ports open"))
+
+            if mv["tech_detect"].get() and found_web_ports:
+                phase2.append(_run_module("tech_detect",
+                    TechDetector().run(target, found_web_ports, report=report)))
+
+            if mv["dns_scan"].get():
+                phase2.append(_run_module("dns_scan",
+                    DnsScanner().run(target, report=report)))
+
+            # WHOIS: skip raw text for private IPs — it's just RFC1918 boilerplate
+            if mv["whois_scan"].get() and not is_private:
+                phase2.append(_run_module("whois_scan",
+                    WhoisScanner().run(target, report=report)))
+            elif mv["whois_scan"].get() and is_private:
+                self._timing_queue.put(("skip", "whois_scan", time.monotonic(), "skipped",
+                                        "Private IP — no useful WHOIS data"))
+                log.info("WHOIS skipped — private/RFC1918 address.")
+
+            # Subdomain: pointless on raw IPs
+            if mv["subdomain_scan"].get() and not is_private and not _looks_like_ip(target):
+                phase2.append(_run_module("subdomain_scan",
+                    SubdomainScanner(wordlist_path=wordlist_path).run(target, report=report)))
+            elif mv["subdomain_scan"].get():
+                self._timing_queue.put(("skip", "subdomain_scan", time.monotonic(), "skipped",
+                                        "IP address target — subdomain scan N/A"))
+
+            # Threat intel: skip for private IPs (VirusTotal returns 0 detections always)
+            if mv["threat_intel"].get() and not is_private:
+                phase2.append(_run_module("threat_intel",
+                    ThreatIntelScanner().run(target, report=report)))
+            elif mv["threat_intel"].get() and is_private:
+                self._timing_queue.put(("skip", "threat_intel", time.monotonic(), "skipped",
+                                        "Private IP — VirusTotal/OTX not useful"))
+                log.info("Threat intelligence skipped — private/RFC1918 address.")
+
+            # OSINT: skip for private IPs (no public records)
+            if mv["osint_scan"].get() and not is_private:
+                phase2.append(_run_module("osint_scan",
+                    OsintScanner().run(target, report=report)))
+            elif mv["osint_scan"].get() and is_private:
+                self._timing_queue.put(("skip", "osint_scan", time.monotonic(), "skipped",
+                                        "Private IP — no public OSINT data"))
+                log.info("OSINT scan skipped — private/RFC1918 address.")
+
+            if phase2 and not cancelled():
+                await asyncio.gather(*phase2, return_exceptions=True)
+
+            if cancelled():
+                report.finalize(); return
+
+            # ── Phase 3: Dir brute-force ───────────────────────────────────────────
+            if mv["dir_brute"].get() and found_web_ports and not cancelled():
+                log.info("Phase 3: Directory brute-force")
+                await _run_module("dir_brute",
+                    DirBruteForcer(wordlist_path=wordlist_path).run(
+                        target, found_web_ports, report=report))
+
+            # ── Phase 4: Specialised (parallel) ────────────────────────────────────
+            log.info("Phase 4: Specialised modules")
+            phase4 = []
+
+            if mv["exploit_search"].get():
+                query = self._exploit_query_var.get().strip() or target
+                phase4.append(_run_module("exploit_search",
+                    ExploitScanner().run(query, report=report)))
+
+            if mv["iot_scan"].get():
+                if open_ports:
+                    phase4.append(_run_module("iot_scan",
+                        IotScanner().run(target, open_ports, report=report)))
+                else:
+                    self._timing_queue.put(("skip", "iot_scan", time.monotonic(), "skipped",
+                                            "No open ports — IoT scan skipped"))
+                    log.info("IoT scan skipped — no open ports found.")
+
+            if mv["rf_scan"].get():
+                phase4.append(_run_module("rf_scan",
+                    RfScanner().run(
+                        freq_range=self._rf_range_var.get().strip(),
+                        threshold=self._rf_threshold_var.get(),
+                        report=report)))
+
+            if phase4 and not cancelled():
+                await asyncio.gather(*phase4, return_exceptions=True)
+
+            # ── Phase 5: Sequential blocking modules ───────────────────────────────
+            if mv["pass_spray"].get() and not cancelled():
+                password  = self._spray_pass_var.get().strip()
+                usernames = [u.strip() for u in self._spray_users_var.get().split(",") if u.strip()]
+                spray_port = found_ssh_ports[0] if found_ssh_ports else 22
+                if password and usernames:
+                    log.info(f"Phase 5: Password spray ({self._spray_service_var.get()})")
+                    await _run_module("pass_spray",
+                        PasswordSprayer().run(
+                            target, spray_port, usernames, password,
+                            service=self._spray_service_var.get(), report=report))
+                else:
+                    log.warning("Password spray: no password or usernames configured — skipping.")
+                    self._timing_queue.put(("skip", "pass_spray", time.monotonic(), "skipped",
+                                            "No credentials provided"))
+
+            if mv["ot_scan"].get() and not cancelled():
+                # OT scan is meaningful even without open ports (passive sniffing)
+                # but log clearly if no OT-relevant ports were found
+                ot_ports = {p for p in open_ports if p in (
+                    502, 102, 44818, 20000, 47808, 4840, 1089, 1090, 1091,
+                    2222, 4000, 9600, 19999, 20547, 34962, 34963, 34964,
+                )}
+                if ot_ports:
+                    log.info(
+                        f"Phase 5: OT/ICS scan — OT-relevant port(s) found: {ot_ports}"
+                    )
+                else:
+                    log.info(
+                        "Phase 5: OT/ICS scan — no OT-specific ports found in port scan. "
+                        "Running passive detection anyway."
+                    )
+                await _run_module("ot_scan",
+                    OtScanner().run(target_ip=target, duration=self._ot_duration_var.get(),
+                                    report=report))
+
+            if mv["mobile_scan"].get() and not cancelled():
+                apk_path = self._apk_var.get().strip()
+                if apk_path:
+                    log.info(f"Phase 5: Mobile APK analysis — {apk_path}")
+                    await _run_module("mobile_scan",
+                        MobileScanner().run(apk_path, report=report))
+                else:
+                    log.warning("Mobile scan: no APK path specified — skipping.")
+                    self._timing_queue.put(("skip", "mobile_scan", time.monotonic(), "skipped",
+                                            "No APK path"))
+
+            # ── Finalize — always runs even if a phase raised an exception ─────────
+        except Exception as exc:
+            log.error(f"Scan encountered an error: {exc}")
+        finally:
+            report.finalize()
+            log.info(f"{'─' * 56}")
+            log.info(f"  Scan complete.")
+            for p in (report.txt_path, report.json_path):
+                log.info(f"  Report: {p}")
+            log.info(f"{'─' * 56}")
 
     def _populate_results(self) -> None:
         """Parse report sections and populate all results trees after scan."""

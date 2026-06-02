@@ -182,7 +182,7 @@ class WebScanner:
             List of finding dicts for each disclosure header present.
         """
         findings = []
-        log.debug(f"[web] Header analysis complete for {target_ip}")
+        log.debug(f"[web] Header analysis complete for {url}")
         log.info("  Information disclosure headers:")
 
         found_any = False
