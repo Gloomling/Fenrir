@@ -94,6 +94,25 @@ class ScanHistory:
                 conn = self._connect()
                 conn.executescript(_DDL)
                 conn.commit()
+                # Migration: add scheduled_scans if DB existed before it was introduced
+                tables = {r[0] for r in conn.execute(
+                    "SELECT name FROM sqlite_master WHERE type='table'")}
+                if "scheduled_scans" not in tables:
+                    conn.executescript("""
+CREATE TABLE IF NOT EXISTS scheduled_scans (
+    id           INTEGER PRIMARY KEY AUTOINCREMENT,
+    name         TEXT NOT NULL,
+    target       TEXT NOT NULL,
+    scan_type    TEXT NOT NULL DEFAULT 'single',
+    modules      TEXT,
+    interval_h   REAL NOT NULL DEFAULT 24,
+    next_run_at  TEXT NOT NULL,
+    last_run_at  TEXT,
+    enabled      INTEGER NOT NULL DEFAULT 1
+);
+""")
+                    conn.commit()
+                    log.info("[history] Migration: created scheduled_scans table")
                 conn.close()
         except Exception as exc:
             log.error(f"[history] Schema init error: {exc}")

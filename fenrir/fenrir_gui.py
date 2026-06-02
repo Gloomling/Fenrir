@@ -749,14 +749,25 @@ class FenrirGUI(tk.Tk):
         self._net_status_label.configure(text="Starting…", fg=ACCENT)
 
         targets    = ",".join(sorted(self._disc_selected))
-        # Auto-name the output directory: Results/YYYY-MM-DD_HH-MM_targets_network/
-        try:
-            label      = targets.replace(",", "_")[:40]
-            output_dir = str(make_result_dir(label, "network"))
-            self._net_output_var.set(output_dir)
-            log.info(f"Network scan output: {output_dir}")
-        except Exception:
-            output_dir = self._net_output_var.get().strip() or str(RESULTS_DIR)
+        # Resolve output directory — respect user's custom path if set
+        user_net_dir = self._net_output_var.get().strip()
+        if user_net_dir and user_net_dir != str(RESULTS_DIR):
+            try:
+                from datetime import datetime
+                ts         = datetime.now().strftime("%Y-%m-%d_%H-%M")
+                label      = targets.replace(",", "_")[:40]
+                output_dir = str(Path(user_net_dir) / f"{ts}_{label}_network")
+                Path(output_dir).mkdir(parents=True, exist_ok=True)
+            except Exception:
+                output_dir = user_net_dir
+        else:
+            try:
+                label      = targets.replace(",", "_")[:40]
+                output_dir = str(make_result_dir(label, "network"))
+            except Exception:
+                output_dir = str(RESULTS_DIR)
+        self._net_output_var.set(output_dir)
+        log.info(f"Network scan output: {output_dir}")
         modules    = {k for k, v in self._net_mod_vars.items() if v.get()}
 
         self._net_scan_thread = threading.Thread(
@@ -1181,7 +1192,7 @@ class FenrirGUI(tk.Tk):
         ttk.Entry(out_row, textvariable=self._output_dir_var).grid(row=0, column=0, sticky="ew")
         ttk.Button(out_row, text="…",
                    command=self._browse_output).grid(row=0, column=1, padx=(2, 0))
-        ttk.Label(of, text="Auto-named: Results/YYYY-MM-DD_HH-MM_target/",
+        ttk.Label(of, text="Leave blank to auto-name: Results/YYYY-MM-DD_HH-MM_target/  |  Or enter a custom path",
                   font=("Helvetica", 8), foreground=DEBUG_FG).pack(anchor="w", pady=(2, 0))
 
         # Start / Stop
@@ -1601,11 +1612,28 @@ class FenrirGUI(tk.Tk):
             if not messagebox.askyesno("API Keys", msg):
                 return
 
-        # Build timestamped output dir:  Results/YYYY-MM-DD_HH-MM_target/
-        try:
-            output_dir = str(make_result_dir(target, "scan"))
-        except Exception:
-            output_dir = self._output_dir_var.get().strip() or str(RESULTS_DIR)
+        # Resolve output directory:
+        # - If user typed a custom path, use it as-is (create a timestamped
+        #   sub-folder inside it so each scan stays separate).
+        # - If the field is empty or still at the default RESULTS_DIR,
+        #   auto-name: Results/YYYY-MM-DD_HH-MM_target/
+        user_dir = self._output_dir_var.get().strip()
+        default  = str(RESULTS_DIR)
+        if user_dir and user_dir != default and user_dir != str(RESULTS_DIR) + "/":
+            # User specified a custom location — create a timestamped sub-folder there
+            try:
+                from datetime import datetime
+                ts       = datetime.now().strftime("%Y-%m-%d_%H-%M")
+                output_dir = str(Path(user_dir) / f"{ts}_{target.replace('/', '_')[:40]}")
+                Path(output_dir).mkdir(parents=True, exist_ok=True)
+            except Exception:
+                output_dir = user_dir
+        else:
+            # Auto-name inside the default Results/ directory
+            try:
+                output_dir = str(make_result_dir(target, "scan"))
+            except Exception:
+                output_dir = default
 
         log.info(f"Output directory: {output_dir}")
         self._output_dir_var.set(output_dir)
