@@ -32,8 +32,8 @@ fenrir/database/shellcodes/
 fenrir/database/shellcodes/**
 
 # Any other database folder that might be created at runtime
-fenrir/database/data/
-fenrir/database/data/**
+fenrir/data/
+fenrir/data/**
 
 # ── Runtime databases (anywhere in the project) ───────────────────────────────
 *.db
