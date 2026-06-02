@@ -10,7 +10,7 @@
 #     before making API requests. This returns a (bool, str) tuple so the
 #     caller can decide whether to abort, warn, or skip.
 #   - A module-level singleton `config` is provided for convenience so
-#     modules do: from ..config import config
+#     modules do: from fenrir.config import config
 #   - APP_VERSION is read dynamically from pyproject.toml so there is a
 #     single source of truth for the version number.
 #
@@ -207,6 +207,6 @@ class Config:
 # Module-level singleton
 # ---------------------------------------------------------------------------
 # All modules import this singleton:
-#   from ..config import config
+#   from fenrir.config import config
 
 config = Config()

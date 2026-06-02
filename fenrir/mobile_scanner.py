@@ -27,7 +27,7 @@ def _get_db_manager():
     for checkouts where the package root is not registered as fenrir.
     """
     try:
-        from ..database import get_db_manager as _gdm
+        from fenrir.database import get_db_manager as _gdm
         return _gdm()
     except (ImportError, ValueError):
         pass
@@ -49,8 +49,8 @@ def _get_db_manager():
     return None
 
 
-from ..logging_config import get_logger
-from ..report_manager import ReportManager
+from fenrir.logging_config import get_logger
+from fenrir.report_manager import ReportManager
 
 log = get_logger()
 

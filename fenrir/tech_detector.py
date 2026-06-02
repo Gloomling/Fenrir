@@ -38,8 +38,8 @@ from typing import Optional
 
 import httpx
 
-from ..logging_config import get_logger
-from ..report_manager import ReportManager
+from fenrir.logging_config import get_logger
+from fenrir.report_manager import ReportManager
 
 log = get_logger()
 

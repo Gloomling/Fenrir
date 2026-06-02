@@ -1,94 +1,70 @@
-#!/bin/bash
-#
-# Fenrir Updater Script (Robust Version)
-# This script automates updating Fenrir by finding and using the correct
-# Python interpreter from the project's virtual environment.
-#
-# Usage: ./update_fenrir.sh
+#!/usr/bin/env bash
+# =============================================================================
+# Fenrir Security Scanner — update_fenrir.sh
+# Updates dependencies using system Python directly. No virtual environment.
+# =============================================================================
 
-# --- Style Functions for better output ---
-bold=$(tput bold)
-normal=$(tput sgr0)
-green=$(tput setaf 2)
-yellow=$(tput setaf 3)
-red=$(tput setaf 1)
+set -e
 
-# --- Error Logging ---
-error_log=""
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
 
-echo "${bold}${green}--- Starting Fenrir Update ---${normal}"
+RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; CYAN='\033[0;36m'; NC='\033[0m'
+info()    { echo -e "${CYAN}[fenrir]${NC} $*"; }
+success() { echo -e "${GREEN}[✓]${NC} $*"; }
+warn()    { echo -e "${YELLOW}[!]${NC} $*"; }
+err()     { echo -e "${RED}[✗]${NC} $*"; }
 
-# 1. Check for prerequisite commands
-if ! command -v git &> /dev/null || ! command -v poetry &> /dev/null; then
-    echo -e "${bold}${red}Fatal Error: 'git' or 'poetry' is not installed. Please install them to continue.${normal}"
-    exit 1
-fi
+echo ""
+info "=== Fenrir Update ==="
+echo ""
 
-# 2. Fetch latest changes from the repository
-echo -e "\n${yellow}Step 1: Pulling latest changes from Git...${normal}"
-git pull
-if [ $? -ne 0 ]; then
-    echo -e "${bold}${yellow}Warning: 'git pull' failed. This might be because you are not in a git repository. Continuing...${normal}"
-    error_log+=" - 'git pull' failed to fetch updates.\n"
+# ── Ensure no venv is active ──────────────────────────────────────────────────
+deactivate 2>/dev/null || true
+unset VIRTUAL_ENV
+unset VIRTUAL_ENV_PROMPT
+
+# ── Confirm Python version ────────────────────────────────────────────────────
+PYTHON=$(python3 --version 2>&1)
+info "Using: $PYTHON at $(which python3)"
+
+# ── Step 1: Git pull ──────────────────────────────────────────────────────────
+info "Step 1: Pulling latest changes from Git..."
+if git pull origin main; then
+    success "Git pull successful."
 else
-    echo "Git pull successful."
+    warn "Git pull failed or nothing to pull — continuing with local files."
 fi
 
-# 3. Configure the project to use a compatible Python version
-echo -e "\n${yellow}Step 2: Configuring project's Python 3.12 environment...${normal}"
-poetry env use python3.12 > /dev/null 2>&1
-if [ $? -ne 0 ]; then
-    echo -e "${bold}${red}Error: Could not configure the Python 3.12 environment.${normal}"
-    echo "Please ensure Python 3.12 is installed and accessible."
-    error_log+=" - Failed to set Python 3.12 for the project.\n"
-fi
+# ── Step 2: Install/update dependencies ───────────────────────────────────────
+info "Step 2: Installing dependencies with system pip..."
 
-# 4. Activate the virtual environment for this script's session
-VENV_PATH=$(poetry env info --path)
-if [ -d "$VENV_PATH" ]; then
-    echo "Activating virtual environment for installation..."
-    export PATH="$VENV_PATH/bin:$PATH"
+pip3 install -e . --break-system-packages --quiet && \
+    success "Package installed (editable)." || \
+    err "pip install failed — check pyproject.toml for conflicts."
+
+# ── Step 3: Verify import ─────────────────────────────────────────────────────
+info "Step 3: Verifying Fenrir can be imported..."
+if python3 -c "from fenrir.modules import MODULE_REGISTRY; print(f'  Modules: {len(MODULE_REGISTRY)}')" 2>&1; then
+    success "Import OK."
 else
-    echo -e "${bold}${red}Error: Could not find the virtual environment path.${normal}"
-    error_log+=" - Virtual environment not found.\n"
+    err "Import failed — check the errors above."
 fi
 
+# ── Step 4: Write run.sh ──────────────────────────────────────────────────────
+info "Step 4: Writing run.sh..."
+cat > "$SCRIPT_DIR/run.sh" << 'RUNSCRIPT'
+#!/usr/bin/env bash
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
+deactivate 2>/dev/null || true
+unset VIRTUAL_ENV
+unset VIRTUAL_ENV_PROMPT
+exec python3 -m fenrir.cli "$@"
+RUNSCRIPT
+chmod +x "$SCRIPT_DIR/run.sh"
+success "run.sh written."
 
-# 5. Lock and Install dependencies
-echo -e "\n${yellow}Step 3: Resolving and installing dependencies...${normal}"
-# Now that the PATH is set, the correct python and poetry commands will be used.
-poetry lock
-if [ $? -ne 0 ]; then
-    echo -e "${bold}${red}Error: 'poetry lock' failed. There is a dependency conflict in pyproject.toml.${normal}"
-    error_log+=" - 'poetry lock' failed to resolve dependencies.\n"
-else
-    echo "Dependencies locked successfully. Now installing..."
-    poetry install
-    if [ $? -ne 0 ]; then
-        echo -e "${bold}${red}Error: 'poetry install' failed. The application may not be runnable.${normal}"
-        error_log+=" - 'poetry install' failed.\n"
-    fi
-fi
-
-# 6. Create a robust runner script
-echo -e "\n${yellow}Step 4: Creating a reliable run script (run.sh)...${normal}"
-cat << EOF > run.sh
-#!/bin/bash
-# This script runs the Fenrir application using the correct virtual environment.
-"$(poetry env info --path)/bin/python" -m fenrir.cli "\$@"
-EOF
-chmod +x run.sh
-echo "Created 'run.sh'. Use this to start the application."
-
-
-# 7. Final Summary
-echo -e "\n${bold}${green}--- Fenrir Update Process Finished ---${normal}"
-
-if [ -n "$error_log" ]; then
-    echo -e "${bold}${red}Update completed with errors. Please review the summary below:${normal}"
-    echo -e "${red}${error_log}${normal}"
-    echo "The application might be in an unstable state."
-else
-    echo -e "${bold}${green}Fenrir has been successfully updated!${normal}"
-    echo "You can now run the scanner with: ${bold}./run.sh --help${normal}"
-fi
+echo ""
+success "Update complete. Launch with:  ./run.sh --gui"
+echo ""

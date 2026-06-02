@@ -68,7 +68,7 @@ def _get_db_manager():
     for checkouts where the package root is not registered as fenrir.
     """
     try:
-        from ..database import get_db_manager as _gdm
+        from fenrir.database import get_db_manager as _gdm
         return _gdm()
     except (ImportError, ValueError):
         pass
@@ -90,8 +90,8 @@ def _get_db_manager():
     return None
 
 
-from ..logging_config import get_logger
-from ..report_manager import ReportManager
+from fenrir.logging_config import get_logger
+from fenrir.report_manager import ReportManager
 
 log = get_logger()
 
@@ -614,7 +614,7 @@ class NetworkScanner:
             from .tech_detector import TechDetector
             from .iot_scanner import IotScanner
             from .android_scanner import AndroidScanner
-            from ..modules import WEB_PORTS
+            from fenrir.modules import WEB_PORTS
         except ImportError as exc:
             log.debug(f"  [{ip}] Module import error: {exc}")
             info.scan_error = str(exc)

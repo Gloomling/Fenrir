@@ -173,7 +173,7 @@ def get_logger() -> logging.Logger:
 
     All modules should import and use this function:
 
-        from ..logging_config import get_logger
+        from fenrir.logging_config import get_logger
         log = get_logger()
 
     This guarantees the logger is never used before it is configured, and
@@ -189,9 +189,9 @@ def get_logger() -> logging.Logger:
 # Convenience alias
 # ---------------------------------------------------------------------------
 # Modules can do either:
-#   from ..logging_config import get_logger; log = get_logger()
+#   from fenrir.logging_config import get_logger; log = get_logger()
 # or the shorter:
-#   from ..logging_config import log
+#   from fenrir.logging_config import log
 #
 # The second form is safe because `log` is resolved at import time of THIS
 # module, not at import time of the importing module — and by the time any
