@@ -24,7 +24,11 @@ from pathlib import Path
 from tkinter import filedialog, messagebox, scrolledtext, ttk
 from typing import Optional
 
-from PIL import Image, ImageDraw, ImageTk
+try:
+    from PIL import Image, ImageDraw, ImageTk
+    PIL_OK = True
+except ImportError:
+    PIL_OK = False
 
 from .branding_config import branding
 from .config import config
@@ -242,14 +246,18 @@ class FenrirGUI(tk.Tk):
     # =========================================================================
 
     def _build_ui(self) -> None:
-        # Background canvas (sits behind everything)
-        self._bg_label = tk.Label(self, bg=DARK_BG)
-        self._bg_label.place(x=0, y=0, relwidth=1, relheight=1)
-        self._update_background()
-        self.bind("<Configure>", lambda e: self._update_background())
+        # ── Background canvas — drawn directly on root, sits behind everything ──
+        self._bg_canvas = tk.Canvas(self, highlightthickness=0, bd=0)
+        self._bg_canvas.place(x=0, y=0, relwidth=1, relheight=1)
+        # Schedule background draw after window is mapped so winfo_width is valid
+        self.after(50, self._update_background)
+        self.bind("<Configure>", lambda e: self.after(10, self._update_background))
+
+        # ── Branding header strip ──────────────────────────────────────────────
+        self._build_header_strip()
 
         notebook = ttk.Notebook(self)
-        notebook.pack(fill=tk.BOTH, expand=True, padx=6, pady=(6, 0))
+        notebook.pack(fill=tk.BOTH, expand=True, padx=6, pady=(0, 0))
 
         # ── Scan ──────────────────────────────────────────────────────────────
         scan_tab = ttk.Frame(notebook)
@@ -469,6 +477,10 @@ class FenrirGUI(tk.Tk):
                                          style="Stop.TButton", state="disabled",
                                          command=self._stop_net_scan)
         self._net_stop_btn.pack(side=tk.LEFT, padx=(0, 4))
+        self._topology_btn = ttk.Button(opt_row, text="⬡ View Topology",
+                                         state="disabled",
+                                         command=self._show_topology)
+        self._topology_btn.pack(side=tk.LEFT, padx=(0, 4))
         self._net_status_label = tk.Label(opt_row, text="Idle",
                                            bg=PANEL_BG, fg=DEBUG_FG,
                                            font=("Helvetica", 9))
@@ -721,7 +733,96 @@ class FenrirGUI(tk.Tk):
         for idx, (_, iid) in enumerate(rows):
             self._disc_tree.move(iid, "", idx)
 
-    # ─── Deep Scan control ────────────────────────────────────────────────────
+    def _show_topology(self) -> None:
+        """Generate topology diagram and open it. Starts a local callback server
+        so clicking a device in the browser triggers the Results tab in Fenrir."""
+        if not self._net_host_data:
+            messagebox.showinfo("No data", "Run a network scan first.")
+            return
+
+        try:
+            from fenrir.network_diagram import generate_diagram
+        except ImportError as exc:
+            messagebox.showerror("Missing module", f"network_diagram.py not found:\n{exc}")
+            return
+
+        # ── Start a tiny localhost HTTP server to handle click callbacks ────────
+        cb_port = self._start_topology_callback()
+
+        hosts      = list(self._net_host_data.values())
+        output_dir = self._net_output_var.get().strip() or str(RESULTS_DIR)
+        diagram_path = Path(output_dir) / "network_topology.html"
+
+        try:
+            generate_diagram(
+                hosts=hosts,
+                output_path=diagram_path,
+                scan_result_dir=output_dir,
+                fenrir_callback_port=cb_port,
+            )
+            log.info(f"[topology] Diagram saved: {diagram_path}")
+            import webbrowser
+            webbrowser.open(diagram_path.as_uri())
+        except Exception as exc:
+            log.error(f"[topology] Generation failed: {exc}")
+            messagebox.showerror("Diagram error", str(exc))
+
+    def _start_topology_callback(self) -> int:
+        """
+        Start a one-shot localhost HTTP server that receives device-click events
+        from the topology diagram browser page and routes them to the Results tab.
+        Returns the port number, or 0 if unavailable.
+        """
+        import http.server, socketserver, threading, urllib.parse
+
+        gui_ref = self
+
+        class _Handler(http.server.BaseHTTPRequestHandler):
+            def do_GET(self):
+                parsed = urllib.parse.urlparse(self.path)
+                params = urllib.parse.parse_qs(parsed.query)
+                ip     = params.get("ip", [""])[0]
+                self.send_response(200)
+                self.send_header("Content-Type", "text/plain")
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+                self.wfile.write(b"ok")
+                if ip:
+                    gui_ref.after(0, lambda i=ip: gui_ref._open_host_in_results(i))
+            def log_message(self, *_): pass  # suppress server log noise
+
+        try:
+            server = socketserver.TCPServer(("127.0.0.1", 0), _Handler)
+            server.allow_reuse_address = True
+            port = server.server_address[1]
+            t = threading.Thread(target=server.serve_forever, daemon=True)
+            t.start()
+            # Store so we can shut it down later
+            if not hasattr(self, "_topology_servers"):
+                self._topology_servers = []
+            self._topology_servers.append(server)
+            log.debug(f"[topology] Callback server on port {port}")
+            return port
+        except Exception as exc:
+            log.debug(f"[topology] Callback server failed: {exc}")
+            return 0
+
+    def _open_host_in_results(self, ip: str) -> None:
+        """Switch to Results tab and filter to the given host IP."""
+        try:
+            # Switch to the Results tab (index 2)
+            self._root_notebook.select(2)
+            # Try to highlight the host in the ports/vulns trees
+            for tree in (self._ports_tree, self._vulns_tree):
+                for iid in tree.get_children():
+                    vals = tree.item(iid, "values")
+                    if vals and str(vals[0]).startswith(ip):
+                        tree.selection_set(iid)
+                        tree.see(iid)
+                        break
+            log.info(f"[topology] Opened results for {ip}")
+        except Exception as exc:
+            log.debug(f"[topology] open_host_in_results error: {exc}")
 
     def _start_deep_scan(self) -> None:
         if not self._disc_selected:
@@ -805,9 +906,11 @@ class FenrirGUI(tk.Tk):
             fg=SUCCESS_FG if critical == 0 else ERR_FG)
         log.info(f"[GUI] Deep scan done — {total} host(s) in results table, "
                  f"{critical} critical. Populating Results tab…")
-        # Populate the shared Results tab exactly like a single-host scan would
         if self._last_report:
-            self.after(100, self._populate_results)  # slight delay ensures report is finalised
+            self.after(100, self._populate_results)
+        # Enable topology button now we have data
+        if hasattr(self, "_topology_btn"):
+            self._topology_btn.configure(state="normal")
 
     async def _run_net_scan_async(self, targets: str, output_dir: str,
                                    modules: set) -> None:
@@ -1560,26 +1663,79 @@ class FenrirGUI(tk.Tk):
         self._status_mem_label.pack(side=tk.RIGHT, padx=4)
 
     def _update_background(self) -> None:
-        """Redraw the background image blended at current opacity."""
+        """Redraw the background image on the root canvas."""
+        if not hasattr(self, "_bg_canvas"):
+            return
+        c = self._bg_canvas
+        w, h = self.winfo_width(), self.winfo_height()
+        if w < 10 or h < 10:
+            return
+        c.configure(width=w, height=h, bg=DARK_BG)
+        c.delete("bg")
+
         bg_path = branding.background_path
         opacity = float(self._bg_opacity_var.get())
 
         if not bg_path or not bg_path.exists() or opacity < 0.01:
-            self._bg_label.configure(image="", bg=DARK_BG)
             return
+
+        if not PIL_OK:
+            return
+
         try:
-            w, h = self.winfo_width(), self.winfo_height()
-            if w < 10 or h < 10:
-                return
             img = Image.open(bg_path).resize((w, h), Image.Resampling.LANCZOS).convert("RGBA")
-            # Dark overlay: alpha = (1 - opacity) → full opacity means full image
+            # opacity=1.0 → full image visible (overlay_alpha=0)
+            # opacity=0.0 → image invisible (overlay_alpha=255)
             overlay_alpha = int((1.0 - opacity) * 255)
-            overlay = Image.new("RGBA", img.size, (*_hex_to_rgb(DARK_BG), overlay_alpha))
-            merged  = Image.alpha_composite(img, overlay)
+            r, g, b = _hex_to_rgb(DARK_BG)
+            overlay = Image.new("RGBA", img.size, (r, g, b, overlay_alpha))
+            merged  = Image.alpha_composite(img, overlay).convert("RGB")
             self._bg_photo = ImageTk.PhotoImage(merged)
-            self._bg_label.configure(image=self._bg_photo, bg=DARK_BG)
-        except Exception:
-            self._bg_label.configure(image="", bg=DARK_BG)
+            c.create_image(0, 0, anchor="nw", image=self._bg_photo, tags="bg")
+            # Keep canvas behind everything
+            c.lower("bg")
+        except Exception as exc:
+            log.debug(f"[bg] Background render failed: {exc}")
+
+    def _build_header_strip(self) -> None:
+        """Thin branded header bar: logo + title. Sits above the notebook."""
+        hdr = tk.Frame(self, bg=DARK_BG, height=42)
+        hdr.pack(fill=tk.X, side=tk.TOP)
+        hdr.pack_propagate(False)
+
+        # Logo
+        logo_path = branding.logo_path
+        if logo_path and logo_path.exists() and PIL_OK:
+            try:
+                img = Image.open(logo_path).resize((30, 30), Image.Resampling.LANCZOS)
+                self._header_logo = ImageTk.PhotoImage(img)
+                tk.Label(hdr, image=self._header_logo, bg=DARK_BG).pack(
+                    side=tk.LEFT, padx=(10, 6), pady=6)
+            except Exception:
+                pass
+        else:
+            # Procedural wolf icon
+            if PIL_OK:
+                try:
+                    img = _make_wolf_icon(30)
+                    self._header_logo = ImageTk.PhotoImage(img)
+                    tk.Label(hdr, image=self._header_logo, bg=DARK_BG).pack(
+                        side=tk.LEFT, padx=(10, 6), pady=6)
+                except Exception:
+                    pass
+
+        # Title
+        tk.Label(hdr, text=branding.window_title, bg=DARK_BG, fg=ACCENT,
+                 font=("Helvetica", 13, "bold")).pack(side=tk.LEFT, pady=6)
+
+        # Version / tagline right-aligned
+        tk.Label(hdr, text="Security Scanner  v2.0", bg=DARK_BG, fg=DEBUG_FG,
+                 font=("Helvetica", 8)).pack(side=tk.RIGHT, padx=12)
+
+    def _update_header(self) -> None:
+        """Refresh header after branding change (called by fenrir_brand.py indirectly)."""
+        self.title(branding.window_title)
+        self._set_icon()
 
     # =========================================================================
     # Scan control
@@ -3027,16 +3183,50 @@ class FenrirGUI(tk.Tk):
         self._hist_tree.tag_configure("network", foreground=ACCENT)
         self._hist_tree.tag_configure("single",  foreground=TEXT_FG)
 
+    def _open_file_manager(self, path: str) -> None:
+        """Open a directory or file using the system default handler."""
+        import subprocess, sys
+        try:
+            if sys.platform == "win32":
+                os.startfile(path)
+            elif sys.platform == "darwin":
+                subprocess.Popen(["open", path])
+            else:
+                subprocess.Popen(["xdg-open", path])
+        except Exception as exc:
+            log.debug(f"Could not open file manager: {exc}")
+
     def _open_history_results(self) -> None:
         sel = self._hist_tree.selection()
         if not sel:
+            messagebox.showinfo("No selection", "Select a scan row first.")
             return
         vals   = self._hist_tree.item(sel[0], "values")
         folder = vals[7] if len(vals) > 7 else ""
-        if folder and os.path.isdir(folder):
-            self._open_file_manager(folder)
+
+        if not folder:
+            messagebox.showinfo("No folder", "This scan has no recorded result folder.")
+            return
+
+        folder_path = Path(folder)
+
+        # Try to open the report file directly first
+        for name_pattern in ["*.json", "*.txt"]:
+            matches = list(folder_path.glob(name_pattern)) if folder_path.exists() else []
+            if matches:
+                # Open the folder containing the report
+                self._open_file_manager(str(folder_path))
+                return
+
+        # Folder exists but no report files yet — open the folder anyway
+        if folder_path.exists():
+            self._open_file_manager(str(folder_path))
         else:
-            messagebox.showinfo("Not found", f"Results folder not found:\n{folder}")
+            messagebox.showinfo(
+                "Folder not found",
+                f"Results folder does not exist:\n{folder}\n\n"
+                "It may have been moved or deleted."
+            )
 
     def _delete_history_entry(self) -> None:
         sel = self._hist_tree.selection()
