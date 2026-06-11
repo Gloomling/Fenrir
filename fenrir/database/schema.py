@@ -485,8 +485,184 @@ SQL_CREATE_C2_IP_INDEX      = "CREATE INDEX IF NOT EXISTS idx_c2_ip      ON c2_b
 SQL_CREATE_C2_MALWARE_INDEX = "CREATE INDEX IF NOT EXISTS idx_c2_malware ON c2_botnet (malware);"
 
 # ===========================================================================
-# SCANNING INTELLIGENCE
+# OTX THREAT INTELLIGENCE (AlienVault-compatible offline feed)
 # ===========================================================================
+
+SQL_CREATE_OTX_PULSES = """
+CREATE TABLE IF NOT EXISTS otx_pulses (
+    pulse_id        TEXT PRIMARY KEY,
+    name            TEXT NOT NULL,
+    description     TEXT,
+    author          TEXT,
+    tlp             TEXT,
+    tags            TEXT,
+    targeted_countries TEXT,
+    malware_families   TEXT,
+    attack_ids         TEXT,     -- ATT&CK technique IDs (JSON array)
+    industries         TEXT,
+    created_date    TEXT,
+    modified_date   TEXT,
+    indicator_count INTEGER DEFAULT 0,
+    references      TEXT,        -- JSON array of reference URLs
+    source          TEXT DEFAULT 'otx_public'
+);
+"""
+
+SQL_CREATE_OTX_PULSES_FTS = """
+CREATE VIRTUAL TABLE IF NOT EXISTS otx_pulses_fts
+USING fts5(
+    pulse_id, name, description, tags, malware_families,
+    content='otx_pulses', content_rowid='rowid'
+);
+"""
+
+SQL_CREATE_OTX_PULSES_FTS_TRIGGER = """
+CREATE TRIGGER IF NOT EXISTS otx_pulses_ai AFTER INSERT ON otx_pulses BEGIN
+    INSERT INTO otx_pulses_fts(rowid, pulse_id, name, description, tags, malware_families)
+    VALUES (new.rowid, new.pulse_id, new.name, new.description, new.tags, new.malware_families);
+END;
+"""
+
+SQL_CREATE_OTX_INDICATORS = """
+CREATE TABLE IF NOT EXISTS otx_indicators (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    pulse_id        TEXT NOT NULL,
+    indicator_type  TEXT NOT NULL,   -- IPv4, domain, hostname, URL, FileHash-MD5,
+                                     -- FileHash-SHA1, FileHash-SHA256, YARA, CVE, etc.
+    indicator_value TEXT NOT NULL,
+    title           TEXT,
+    description     TEXT,
+    created_date    TEXT,
+    expiration_date TEXT,
+    is_active       INTEGER DEFAULT 1,
+    malware_family  TEXT,
+    tags            TEXT
+);
+"""
+
+SQL_CREATE_OTX_IND_VALUE_INDEX   = "CREATE INDEX IF NOT EXISTS idx_otx_ind_value  ON otx_indicators (indicator_value);"
+SQL_CREATE_OTX_IND_TYPE_INDEX    = "CREATE INDEX IF NOT EXISTS idx_otx_ind_type   ON otx_indicators (indicator_type);"
+SQL_CREATE_OTX_IND_PULSE_INDEX   = "CREATE INDEX IF NOT EXISTS idx_otx_ind_pulse  ON otx_indicators (pulse_id);"
+SQL_CREATE_OTX_IND_MALWARE_INDEX = "CREATE INDEX IF NOT EXISTS idx_otx_ind_malware ON otx_indicators (malware_family);"
+SQL_CREATE_OTX_PULSE_DATE_INDEX  = "CREATE INDEX IF NOT EXISTS idx_otx_pulse_date  ON otx_pulses (modified_date DESC);"
+
+# ===========================================================================
+# ARTEFACT INTELLIGENCE
+# Extended hash reputation with full file metadata, OTX pulse links, YARA hits
+# ===========================================================================
+
+SQL_CREATE_ARTEFACT_HASHES = """
+CREATE TABLE IF NOT EXISTS artefact_hashes (
+    hash_sha256         TEXT PRIMARY KEY,
+    hash_sha1           TEXT,
+    hash_md5            TEXT,
+    hash_ssdeep         TEXT,
+    file_name           TEXT,
+    file_type           TEXT,
+    file_size_bytes     INTEGER,
+    mime_type           TEXT,
+    malware_family      TEXT,
+    malware_type        TEXT,
+    threat_score        INTEGER DEFAULT 0,   -- 0-100
+    verdict             TEXT,                 -- clean|suspicious|malicious|unknown
+    av_detections       INTEGER DEFAULT 0,
+    first_seen          TEXT,
+    last_seen           TEXT,
+    tags                TEXT,
+    source              TEXT,                 -- malwarebazaar|otx|threatfox|vt|manual
+    pulse_ids           TEXT,                 -- JSON array of OTX pulse IDs
+    cve_ids             TEXT,                 -- JSON array of related CVEs
+    attack_technique_ids TEXT,               -- JSON array of ATT&CK technique IDs
+    yara_rules_matched  TEXT,                -- JSON array of matched YARA rule names
+    notes               TEXT
+);
+"""
+
+SQL_CREATE_ARTEFACT_MD5_INDEX     = "CREATE INDEX IF NOT EXISTS idx_art_md5     ON artefact_hashes (hash_md5);"
+SQL_CREATE_ARTEFACT_SHA1_INDEX    = "CREATE INDEX IF NOT EXISTS idx_art_sha1    ON artefact_hashes (hash_sha1);"
+SQL_CREATE_ARTEFACT_FAMILY_INDEX  = "CREATE INDEX IF NOT EXISTS idx_art_family  ON artefact_hashes (malware_family);"
+SQL_CREATE_ARTEFACT_VERDICT_INDEX = "CREATE INDEX IF NOT EXISTS idx_art_verdict ON artefact_hashes (verdict);"
+SQL_CREATE_ARTEFACT_SCORE_INDEX   = "CREATE INDEX IF NOT EXISTS idx_art_score   ON artefact_hashes (threat_score DESC);"
+
+SQL_CREATE_ARTEFACT_HASHES_FTS = """
+CREATE VIRTUAL TABLE IF NOT EXISTS artefact_hashes_fts
+USING fts5(
+    hash_sha256, file_name, malware_family, tags, notes,
+    content='artefact_hashes', content_rowid='rowid'
+);
+"""
+
+SQL_CREATE_ARTEFACT_FTS_TRIGGER = """
+CREATE TRIGGER IF NOT EXISTS artefact_hashes_ai AFTER INSERT ON artefact_hashes BEGIN
+    INSERT INTO artefact_hashes_fts(rowid, hash_sha256, file_name, malware_family, tags, notes)
+    VALUES (new.rowid, new.hash_sha256, new.file_name, new.malware_family, new.tags, new.notes);
+END;
+"""
+
+# ===========================================================================
+# ATT&CK RELATIONSHIPS  (technique ↔ group ↔ software ↔ CVE cross-links)
+# ===========================================================================
+
+SQL_CREATE_ATTACK_RELATIONSHIPS = """
+CREATE TABLE IF NOT EXISTS attack_relationships (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    source_id       TEXT NOT NULL,   -- technique_id, group_id, software_id
+    source_type     TEXT NOT NULL,   -- technique|group|software
+    target_id       TEXT NOT NULL,
+    target_type     TEXT NOT NULL,
+    relationship    TEXT NOT NULL,   -- uses|mitigates|detects|attributed-to|targets
+    description     TEXT,
+    domain          TEXT,
+    version         TEXT
+);
+"""
+
+SQL_CREATE_ATK_REL_SRC_INDEX    = "CREATE INDEX IF NOT EXISTS idx_atk_rel_src    ON attack_relationships (source_id);"
+SQL_CREATE_ATK_REL_TGT_INDEX    = "CREATE INDEX IF NOT EXISTS idx_atk_rel_tgt    ON attack_relationships (target_id);"
+SQL_CREATE_ATK_REL_TYPE_INDEX   = "CREATE INDEX IF NOT EXISTS idx_atk_rel_type   ON attack_relationships (relationship);"
+
+# ===========================================================================
+# SIGMA RULES  (detection rules for SIEMs, offline queryable)
+# ===========================================================================
+
+SQL_CREATE_SIGMA_RULES = """
+CREATE TABLE IF NOT EXISTS sigma_rules (
+    rule_id         TEXT PRIMARY KEY,
+    title           TEXT NOT NULL,
+    status          TEXT,
+    description     TEXT,
+    author          TEXT,
+    date_created    TEXT,
+    date_modified   TEXT,
+    level           TEXT,            -- informational|low|medium|high|critical
+    category        TEXT,
+    product         TEXT,
+    service         TEXT,
+    detection_yaml  TEXT,            -- full YAML rule text
+    tags            TEXT,            -- ATT&CK tags e.g. attack.t1059
+    false_positives TEXT,
+    references      TEXT,
+    logsource       TEXT
+);
+"""
+
+SQL_CREATE_SIGMA_FTS = """
+CREATE VIRTUAL TABLE IF NOT EXISTS sigma_rules_fts
+USING fts5(
+    rule_id, title, description, tags,
+    content='sigma_rules', content_rowid='rowid'
+);
+"""
+
+SQL_CREATE_SIGMA_FTS_TRIGGER = """
+CREATE TRIGGER IF NOT EXISTS sigma_rules_ai AFTER INSERT ON sigma_rules BEGIN
+    INSERT INTO sigma_rules_fts(rowid, rule_id, title, description, tags)
+    VALUES (new.rowid, new.rule_id, new.title, new.description, new.tags);
+END;
+"""
+
+SQL_CREATE_SIGMA_LEVEL_INDEX   = "CREATE INDEX IF NOT EXISTS idx_sigma_level   ON sigma_rules (level);"
+SQL_CREATE_SIGMA_CATEGORY_INDEX= "CREATE INDEX IF NOT EXISTS idx_sigma_category ON sigma_rules (category);"
 
 SQL_CREATE_NUCLEI_TEMPLATES = """
 CREATE TABLE IF NOT EXISTS nuclei_templates (
@@ -768,6 +944,25 @@ ALL_CREATE_STATEMENTS = [
     SQL_CREATE_IOC_THREATFOX_VALUE_INDEX, SQL_CREATE_IOC_THREATFOX_TYPE_INDEX,
     SQL_CREATE_IOC_THREATFOX_MALWARE_INDEX,
     SQL_CREATE_C2_IP_INDEX, SQL_CREATE_C2_MALWARE_INDEX,
+    # OTX pulses and indicators
+    SQL_CREATE_OTX_PULSES, SQL_CREATE_OTX_INDICATORS,
+    SQL_CREATE_OTX_PULSES_FTS, SQL_CREATE_OTX_PULSES_FTS_TRIGGER,
+    SQL_CREATE_OTX_IND_VALUE_INDEX, SQL_CREATE_OTX_IND_TYPE_INDEX,
+    SQL_CREATE_OTX_IND_PULSE_INDEX, SQL_CREATE_OTX_IND_MALWARE_INDEX,
+    SQL_CREATE_OTX_PULSE_DATE_INDEX,
+    # Artefact hashes (extended)
+    SQL_CREATE_ARTEFACT_HASHES, SQL_CREATE_ARTEFACT_HASHES_FTS,
+    SQL_CREATE_ARTEFACT_FTS_TRIGGER,
+    SQL_CREATE_ARTEFACT_MD5_INDEX, SQL_CREATE_ARTEFACT_SHA1_INDEX,
+    SQL_CREATE_ARTEFACT_FAMILY_INDEX, SQL_CREATE_ARTEFACT_VERDICT_INDEX,
+    SQL_CREATE_ARTEFACT_SCORE_INDEX,
+    # ATT&CK relationships
+    SQL_CREATE_ATTACK_RELATIONSHIPS,
+    SQL_CREATE_ATK_REL_SRC_INDEX, SQL_CREATE_ATK_REL_TGT_INDEX,
+    SQL_CREATE_ATK_REL_TYPE_INDEX,
+    # Sigma rules
+    SQL_CREATE_SIGMA_RULES, SQL_CREATE_SIGMA_FTS, SQL_CREATE_SIGMA_FTS_TRIGGER,
+    SQL_CREATE_SIGMA_LEVEL_INDEX, SQL_CREATE_SIGMA_CATEGORY_INDEX,
     SQL_CREATE_NUCLEI_SEVERITY_INDEX, SQL_CREATE_NUCLEI_CATEGORY_INDEX,
     SQL_CREATE_NUCLEI_KEV_INDEX,
     SQL_CREATE_DEFAULT_CREDS_VENDOR_INDEX, SQL_CREATE_DEFAULT_CREDS_TYPE_INDEX,
@@ -812,6 +1007,13 @@ META_HASH_REP_COUNT          = "hash_reputation_count"
 META_IOC_URL_COUNT           = "ioc_url_count"
 META_IOC_THREATFOX_COUNT     = "ioc_threatfox_count"
 META_C2_COUNT                = "c2_botnet_count"
+META_OTX_LAST_UPDATED        = "otx_last_updated"
+META_OTX_PULSE_COUNT         = "otx_pulse_count"
+META_OTX_INDICATOR_COUNT     = "otx_indicator_count"
+META_ARTEFACT_COUNT          = "artefact_hash_count"
+META_ATTACK_REL_COUNT        = "attack_relationship_count"
+META_SIGMA_LAST_UPDATED      = "sigma_last_updated"
+META_SIGMA_RULE_COUNT        = "sigma_rule_count"
 META_NUCLEI_LAST_UPDATED     = "nuclei_last_updated"
 META_NUCLEI_TEMPLATE_COUNT   = "nuclei_template_count"
 META_DEFAULT_CREDS_COUNT     = "default_creds_count"
@@ -837,39 +1039,40 @@ META_BUILD_TIER              = "build_tier"
 
 BUILD_TIERS = {
     "core": {
-        "description": "Standard pentest — quick install (~4.5 GB)",
+        "description": "Standard pentest — quick install (~5 GB)",
         "sources": [
             "nvd_lite", "exploitdb_source", "exploitdb_shellcodes",
-            "kev", "epss", "cwe", "capec", "attack",
+            "kev", "epss", "cwe", "capec", "attack", "attack_relationships",
             "seclists", "default_creds", "iot_creds",
-            "ghdb", "nuclei", "threat_feeds", "hash_feeds",
+            "ghdb", "nuclei", "sigma",
+            "threat_feeds", "hash_feeds", "otx",
             "iana_ports", "owasp",
         ],
     },
     "standard": {
-        "description": "Full pentest + red team (~8 GB)",
+        "description": "Full pentest + red team (~9 GB)",
         "sources": [
             "nvd_full", "exploitdb_source", "exploitdb_shellcodes",
             "exploitdb_bins", "exploitdb_papers",
-            "kev", "epss", "cwe", "capec", "attack",
+            "kev", "epss", "cwe", "capec", "attack", "attack_relationships",
             "seclists", "payloads_all_things", "fuzzdb",
-            "default_creds", "iot_creds", "ghdb", "nuclei",
+            "default_creds", "iot_creds", "ghdb", "nuclei", "sigma",
             "threat_feeds", "hash_feeds", "ioc_urls", "threatfox",
-            "c2_botnet", "waf_signatures",
+            "otx", "c2_botnet", "waf_signatures",
             "asn_data", "tor_exits", "iana_ports", "owasp",
         ],
     },
     "full": {
-        "description": "Full red team + offline cracking (~25 GB+)",
+        "description": "Full red team + offline cracking (~26 GB+)",
         "sources": [
             "nvd_full", "exploitdb_source", "exploitdb_shellcodes",
             "exploitdb_bins", "exploitdb_papers",
-            "kev", "epss", "cwe", "capec", "attack",
+            "kev", "epss", "cwe", "capec", "attack", "attack_relationships",
             "seclists", "payloads_all_things", "fuzzdb",
             "rockyou", "hibp_passwords",
-            "default_creds", "iot_creds", "ghdb", "nuclei",
+            "default_creds", "iot_creds", "ghdb", "nuclei", "sigma",
             "threat_feeds", "hash_feeds", "ioc_urls", "threatfox",
-            "c2_botnet", "waf_signatures",
+            "otx", "c2_botnet", "waf_signatures",
             "asn_data", "tor_exits", "iana_ports", "owasp",
         ],
     },

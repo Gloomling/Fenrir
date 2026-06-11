@@ -326,15 +326,18 @@ class DatabaseBuilder:
             "cwe":                lambda: self.build_cwe(db_path=db_path),
             "capec":              lambda: self.build_capec(db_path=db_path),
             "attack":             lambda: self.build_attack(db_path=db_path),
+            "attack_relationships": lambda: self.build_attack_relationships(db_path=db_path),
             # Threat intel
             "threat_feeds":       lambda: self.build_threat_feeds(db_path=db_path),
             "hash_feeds":         lambda: self.build_hash_feeds(db_path=db_path),
             "ioc_urls":           lambda: self.build_ioc_urls(db_path=db_path),
             "threatfox":          lambda: self.build_threatfox(db_path=db_path),
             "c2_botnet":          lambda: self.build_c2_botnet(db_path=db_path),
+            "otx":                lambda: self.build_otx(db_path=db_path),
             # Scanning intelligence
             "nuclei":             lambda: self.build_nuclei(db_path=db_path),
             "nuclei_update":      lambda: self.build_nuclei(db_path=db_path),
+            "sigma":              lambda: self.build_sigma(db_path=db_path),
             "default_creds":      lambda: self.build_default_creds(db_path=db_path),
             "iot_creds":          lambda: self.build_iot_creds(db_path=db_path),
             "ghdb":               lambda: self.build_ghdb(db_path=db_path),
@@ -1769,6 +1772,460 @@ class DatabaseBuilder:
         except Exception as exc:
             log.error(f"Feodo Tracker failed: {exc}")
             return False
+
+    # ===========================================================================
+    # OTX THREAT INTELLIGENCE (AlienVault-compatible, offline feed)
+    # ===========================================================================
+
+    def build_otx(self, db_path: Optional[Path] = None) -> bool:
+        """
+        Download AlienVault OTX public pulse feed and import into offline database.
+
+        Uses two public endpoints (no API key required):
+          - OTX pulse feed export (JSON, 10K most-subscribed public pulses)
+          - OTX hash indicator CSV (malware hashes from public pulses)
+
+        With an OTX_API_KEY in .env the feed is expanded to all subscribed pulses.
+
+        Imported tables:
+          otx_pulses      — pulse metadata (name, description, tags, ATT&CK IDs)
+          otx_indicators  — all IOCs from each pulse
+          artefact_hashes — hash-type indicators merged into the artefact table
+        """
+        from fenrir.database.schema import (
+            META_OTX_LAST_UPDATED, META_OTX_PULSE_COUNT, META_OTX_INDICATOR_COUNT,
+            META_ARTEFACT_COUNT,
+        )
+        target = db_path or self.db_path
+        log.info("Downloading OTX public pulse feed...")
+        self.progress_cb("otx", 0, 3, "Fetching OTX pulse feed...")
+
+        # OTX public export: most-subscribed public pulses (no key required)
+        OTX_EXPORT_URL  = "https://otx.alienvault.com/api/v1/pulses/subscribed?limit=500&page={page}"
+        OTX_PUBLIC_URL  = "https://otx.alienvault.com/api/v1/pulses/activity?limit=200&page={page}"
+        OTX_HASH_URL    = "https://otx.alienvault.com/api/v1/indicators/export?types=FileHash-SHA256,FileHash-MD5,FileHash-SHA1&limit=10000"
+
+        from fenrir.config import config as _cfg
+        headers = {}
+        has_key = bool(getattr(_cfg, "ALIENVAULT_OTX_API_KEY", None))
+        if has_key:
+            headers["X-OTX-API-KEY"] = _cfg.ALIENVAULT_OTX_API_KEY
+            feed_url = OTX_EXPORT_URL
+            log.info("OTX: using API key — fetching subscribed pulses")
+        else:
+            feed_url = OTX_PUBLIC_URL
+            log.info("OTX: no API key — fetching public activity feed (add OTX_API_KEY to .env for full feed)")
+
+        conn          = _fast_conn(target)
+        pulse_count   = 0
+        ind_count     = 0
+        art_count     = 0
+        today         = _now()[:10]
+        max_pages     = 20  # cap: ~4000 pulses in keyless mode, ~10000 with key
+
+        try:
+            for page in range(1, max_pages + 1):
+                url = feed_url.format(page=page)
+                try:
+                    resp = self.session.get(url, headers=headers, timeout=REQUEST_TIMEOUT)
+                    if resp.status_code == 403:
+                        log.warning("OTX: 403 — rate limited or endpoint requires key. Stopping.")
+                        break
+                    resp.raise_for_status()
+                    data = resp.json()
+                except Exception as exc:
+                    log.warning(f"OTX page {page} failed: {exc}")
+                    break
+
+                results = data.get("results", [])
+                if not results:
+                    break
+
+                self.progress_cb("otx", page, max_pages,
+                                  f"Importing OTX pulses (page {page})...")
+
+                pulse_rows = []
+                ind_rows   = []
+                art_rows   = []
+
+                for pulse in results:
+                    pid     = pulse.get("id", "")
+                    if not pid:
+                        continue
+                    name    = pulse.get("name", "")
+                    tags    = json.dumps(pulse.get("tags", []))
+                    att_ids = json.dumps([a.get("id","") for a in pulse.get("attack_ids", [])])
+                    malware = json.dumps([m.get("display_name","")
+                                          for m in pulse.get("malware_families", [])])
+                    refs    = json.dumps(pulse.get("references", []))
+                    ind_list = pulse.get("indicators", [])
+
+                    pulse_rows.append((
+                        pid,
+                        name,
+                        pulse.get("description", "")[:2000],
+                        pulse.get("author_name", ""),
+                        pulse.get("tlp", "white"),
+                        tags,
+                        json.dumps(pulse.get("targeted_countries", [])),
+                        malware,
+                        att_ids,
+                        json.dumps(pulse.get("industries", [])),
+                        (pulse.get("created","") or "")[:10],
+                        (pulse.get("modified","") or today)[:10],
+                        len(ind_list),
+                        refs,
+                        "otx_key" if has_key else "otx_public",
+                    ))
+
+                    hash_types = {"FileHash-MD5","FileHash-SHA1","FileHash-SHA256"}
+                    for ind in ind_list:
+                        itype = ind.get("type","")
+                        ival  = (ind.get("indicator","") or "").strip().lower()
+                        if not ival:
+                            continue
+                        ind_rows.append((
+                            pid, itype, ival,
+                            ind.get("title",""),
+                            ind.get("description","")[:500],
+                            (ind.get("created","") or "")[:10],
+                            (ind.get("expiration","") or "")[:10],
+                            1,
+                            pulse.get("malware_families","") and
+                            pulse["malware_families"][0].get("display_name","")
+                            if isinstance(pulse.get("malware_families"), list)
+                            and pulse["malware_families"] else "",
+                            tags,
+                        ))
+
+                        # Enrich artefact_hashes from hash indicators
+                        if itype in hash_types:
+                            sha256 = ival if itype == "FileHash-SHA256" else None
+                            md5    = ival if itype == "FileHash-MD5"    else None
+                            sha1   = ival if itype == "FileHash-SHA1"   else None
+                            if sha256:
+                                art_rows.append((
+                                    sha256, sha1 or "", md5 or "",
+                                    ind.get("title",""),
+                                    "",     # file_type unknown
+                                    "",     # malware_family from pulse tags
+                                    "malware",
+                                    60,     # moderate threat score
+                                    "malicious",
+                                    today, today,
+                                    tags,
+                                    "otx",
+                                    json.dumps([pid]),
+                                    att_ids,
+                                ))
+                                art_count += 1
+
+                with conn:
+                    conn.executemany(
+                        """INSERT OR REPLACE INTO otx_pulses
+                           (pulse_id,name,description,author,tlp,tags,
+                            targeted_countries,malware_families,attack_ids,industries,
+                            created_date,modified_date,indicator_count,references,source)
+                           VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                        pulse_rows,
+                    )
+                    conn.executemany(
+                        """INSERT OR IGNORE INTO otx_indicators
+                           (pulse_id,indicator_type,indicator_value,title,description,
+                            created_date,expiration_date,is_active,malware_family,tags)
+                           VALUES (?,?,?,?,?,?,?,?,?,?)""",
+                        ind_rows,
+                    )
+                    if art_rows:
+                        conn.executemany(
+                            """INSERT OR IGNORE INTO artefact_hashes
+                               (hash_sha256,hash_sha1,hash_md5,file_name,file_type,
+                                malware_family,malware_type,threat_score,verdict,
+                                first_seen,last_seen,tags,source,pulse_ids,attack_technique_ids)
+                               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                            art_rows,
+                        )
+
+                pulse_count += len(pulse_rows)
+                ind_count   += len(ind_rows)
+
+                if not data.get("next"):
+                    break   # no more pages
+
+            # Also download the hash export for denser hash coverage
+            self.progress_cb("otx", max_pages, max_pages,
+                              "Fetching OTX hash indicator export...")
+            try:
+                resp = self.session.get(OTX_HASH_URL, headers=headers,
+                                         timeout=REQUEST_TIMEOUT * 2)
+                if resp.status_code == 200:
+                    hash_rows = []
+                    for line in resp.text.splitlines()[1:]:  # skip header
+                        parts = line.split(",")
+                        if len(parts) < 2:
+                            continue
+                        itype, ival = parts[0].strip(), parts[1].strip().lower()
+                        if itype == "FileHash-SHA256" and ival:
+                            hash_rows.append((
+                                ival, "", "",
+                                "", "", "", "malware", 50, "malicious",
+                                today, today, "", "otx", "[]", "[]",
+                            ))
+                    if hash_rows:
+                        with conn:
+                            conn.executemany(
+                                """INSERT OR IGNORE INTO artefact_hashes
+                                   (hash_sha256,hash_sha1,hash_md5,file_name,file_type,
+                                    malware_family,malware_type,threat_score,verdict,
+                                    first_seen,last_seen,tags,source,pulse_ids,attack_technique_ids)
+                                   VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                                hash_rows,
+                            )
+                        art_count += len(hash_rows)
+                        log.info(f"OTX hash export: {len(hash_rows):,} SHA256 hashes added")
+            except Exception as exc:
+                log.debug(f"OTX hash export failed: {exc}")
+
+            conn.close()
+            self._set_meta(target, META_OTX_LAST_UPDATED, today)
+            self._set_meta(target, META_OTX_PULSE_COUNT,    str(pulse_count))
+            self._set_meta(target, META_OTX_INDICATOR_COUNT, str(ind_count))
+            self._set_meta(target, META_ARTEFACT_COUNT,      str(art_count))
+            self.progress_cb("otx", max_pages, max_pages,
+                              f"OTX complete: {pulse_count:,} pulses, {ind_count:,} indicators")
+            log.info(f"OTX complete: {pulse_count:,} pulses, {ind_count:,} indicators, "
+                     f"{art_count:,} artefact hashes")
+            return True
+
+        except Exception as exc:
+            log.error(f"OTX build failed: {exc}")
+            try: conn.close()
+            except Exception: pass
+            return False
+
+    # ===========================================================================
+    # ATT&CK RELATIONSHIPS
+    # ===========================================================================
+
+    def build_attack_relationships(self, db_path: Optional[Path] = None) -> bool:
+        """
+        Build the attack_relationships join table from the already-imported ATT&CK
+        STIX data. Must be called after build_attack().
+
+        Extracts relationship objects from the STIX bundles and records:
+          - technique uses software
+          - technique used by group
+          - mitigation mitigates technique
+          - group uses software
+          - campaign attributed-to group
+        """
+        from fenrir.database.schema import (
+            META_ATTACK_REL_COUNT,
+        )
+        target = db_path or self.db_path
+
+        domains = [
+            ("enterprise", ATTACK_ENTERPRISE_URL),
+            ("ics",        ATTACK_ICS_URL),
+            ("mobile",     ATTACK_MOBILE_URL),
+        ]
+
+        total_rels = 0
+        log.info("Building ATT&CK relationship table...")
+        self.progress_cb("attack_relationships", 0, len(domains),
+                          "Fetching ATT&CK STIX bundles for relationships...")
+
+        conn = _fast_conn(target)
+        try:
+            for i, (domain_name, url) in enumerate(domains):
+                self.progress_cb("attack_relationships", i, len(domains),
+                                  f"Extracting ATT&CK {domain_name} relationships...")
+                try:
+                    resp   = self.session.get(url, timeout=REQUEST_TIMEOUT * 3)
+                    bundle = resp.json()
+                except Exception as exc:
+                    log.warning(f"ATT&CK {domain_name} fetch for relationships failed: {exc}")
+                    continue
+
+                objects  = {obj["id"]: obj for obj in bundle.get("objects", [])}
+                rel_rows = []
+
+                for obj in bundle.get("objects", []):
+                    if obj.get("type") != "relationship":
+                        continue
+
+                    src_id  = obj.get("source_ref", "")
+                    tgt_id  = obj.get("target_ref", "")
+                    rel_type = obj.get("relationship_type", "")
+                    desc    = obj.get("description", "")[:500]
+                    ver     = obj.get("spec_version", "")
+
+                    # Map STIX IDs to ATT&CK IDs (T1234, G0001, S0001, M1234)
+                    def stix_to_attack_id(stix_obj_id: str) -> tuple[str, str]:
+                        obj_data = objects.get(stix_obj_id, {})
+                        ext_refs = obj_data.get("external_references", [])
+                        att_id   = ""
+                        for ref in ext_refs:
+                            if ref.get("source_name") == "mitre-attack":
+                                att_id = ref.get("external_id", "")
+                                break
+                        obj_type_map = {
+                            "attack-pattern":   "technique",
+                            "intrusion-set":    "group",
+                            "malware":          "software",
+                            "tool":             "software",
+                            "course-of-action": "mitigation",
+                            "campaign":         "campaign",
+                            "x-mitre-data-source": "data-source",
+                        }
+                        obj_type = obj_type_map.get(obj_data.get("type",""), "unknown")
+                        return att_id, obj_type
+
+                    src_att, src_type = stix_to_attack_id(src_id)
+                    tgt_att, tgt_type = stix_to_attack_id(tgt_id)
+
+                    if not src_att or not tgt_att:
+                        continue
+
+                    rel_rows.append((
+                        src_att, src_type,
+                        tgt_att, tgt_type,
+                        rel_type, desc,
+                        domain_name, ver,
+                    ))
+
+                with conn:
+                    conn.executemany(
+                        """INSERT OR IGNORE INTO attack_relationships
+                           (source_id,source_type,target_id,target_type,
+                            relationship,description,domain,version)
+                           VALUES (?,?,?,?,?,?,?,?)""",
+                        rel_rows,
+                    )
+                total_rels += len(rel_rows)
+                log.info(f"  ATT&CK {domain_name}: {len(rel_rows):,} relationships")
+
+            conn.close()
+            self._set_meta(target, META_ATTACK_REL_COUNT, str(total_rels))
+            self.progress_cb("attack_relationships", len(domains), len(domains),
+                              f"Relationships complete: {total_rels:,}")
+            log.info(f"ATT&CK relationships complete: {total_rels:,} entries")
+            return True
+
+        except Exception as exc:
+            log.error(f"ATT&CK relationships build failed: {exc}")
+            try: conn.close()
+            except Exception: pass
+            return False
+
+    # ===========================================================================
+    # SIGMA DETECTION RULES
+    # ===========================================================================
+
+    def build_sigma(self, db_path: Optional[Path] = None) -> bool:
+        """
+        Clone the SigmaHQ/sigma rule repository and index all rules into the DB.
+
+        Sigma rules are YAML detection rules for SIEMs. They map to ATT&CK
+        techniques via their 'tags' field (e.g. 'attack.t1059.001').
+
+        Repository: https://github.com/SigmaHQ/sigma
+        Rules live in: rules/ subdirectory, *.yml files.
+
+        No API key required. Requires git.
+        """
+        from fenrir.database.schema import META_SIGMA_LAST_UPDATED, META_SIGMA_RULE_COUNT
+        try:
+            import yaml as _yaml
+        except ImportError:
+            log.error("PyYAML required for Sigma build: pip install pyyaml")
+            return False
+
+        SIGMA_REPO = "https://github.com/SigmaHQ/sigma.git"
+        SIGMA_DIR  = self.data_dir / "sigma"
+
+        target = db_path or self.db_path
+        today  = _now()[:10]
+
+        log.info("Cloning/updating SigmaHQ rule repository...")
+        self.progress_cb("sigma", 0, 3, "Cloning SigmaHQ sigma repo...")
+
+        cloned = self._clone_or_pull(SIGMA_REPO, SIGMA_DIR, "sigma",
+                                      depth=1, sparse=["rules/"])
+        if not cloned and not SIGMA_DIR.exists():
+            log.error("Sigma repo clone failed and local copy not found.")
+            return False
+
+        rules_dir = SIGMA_DIR / "rules"
+        if not rules_dir.exists():
+            log.warning(f"Sigma rules directory not found at {rules_dir}")
+            return False
+
+        self.progress_cb("sigma", 1, 3, "Indexing Sigma rules...")
+        rows    = []
+        skipped = 0
+
+        for yml_path in rules_dir.rglob("*.yml"):
+            try:
+                with open(yml_path, encoding="utf-8", errors="replace") as fh:
+                    rule = _yaml.safe_load(fh)
+                if not isinstance(rule, dict):
+                    skipped += 1
+                    continue
+
+                rule_id   = str(rule.get("id", yml_path.stem))
+                title     = str(rule.get("title", ""))[:200]
+                status    = str(rule.get("status", ""))
+                desc      = str(rule.get("description", ""))[:1000]
+                author    = str(rule.get("author", ""))[:200]
+                level     = str(rule.get("level", "medium"))
+                date_c    = str(rule.get("date", ""))[:10]
+                date_m    = str(rule.get("modified", ""))[:10] or today
+                tags      = json.dumps(rule.get("tags", []))
+                fp        = json.dumps(rule.get("falsepositives", []))
+                refs      = json.dumps(rule.get("references", []))
+                ls        = rule.get("logsource", {})
+                category  = str(ls.get("category", ""))
+                product   = str(ls.get("product", ""))
+                service   = str(ls.get("service", ""))
+                logsource = json.dumps(ls)
+
+                # Full YAML for offline browsing
+                try:
+                    raw_yaml = yml_path.read_text(encoding="utf-8", errors="replace")[:8000]
+                except Exception:
+                    raw_yaml = ""
+
+                rows.append((
+                    rule_id, title, status, desc, author,
+                    date_c, date_m, level, category, product, service,
+                    raw_yaml, tags, fp, refs, logsource,
+                ))
+            except Exception:
+                skipped += 1
+
+        self.progress_cb("sigma", 2, 3, f"Importing {len(rows):,} Sigma rules...")
+
+        if rows:
+            conn = _fast_conn(target)
+            with conn:
+                conn.execute("DELETE FROM sigma_rules")
+                conn.executemany(
+                    """INSERT OR REPLACE INTO sigma_rules
+                       (rule_id,title,status,description,author,
+                        date_created,date_modified,level,category,product,service,
+                        detection_yaml,tags,false_positives,references,logsource)
+                       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                    rows,
+                )
+            conn.close()
+
+        self._set_meta(target, META_SIGMA_LAST_UPDATED, today)
+        self._set_meta(target, META_SIGMA_RULE_COUNT,    str(len(rows)))
+        self.progress_cb("sigma", 3, 3,
+                          f"Sigma complete: {len(rows):,} rules ({skipped} skipped)")
+        log.info(f"Sigma complete: {len(rows):,} rules indexed ({skipped} skipped)")
+        return True
 
     # ===========================================================================
     # SCANNING INTELLIGENCE

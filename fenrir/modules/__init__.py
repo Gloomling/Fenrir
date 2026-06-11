@@ -154,6 +154,12 @@ except ImportError as e:
     log.warning(f"RfScanner could not be loaded: {e}")
     RfScanner = None  # type: ignore[assignment,misc]
 
+try:
+    from fenrir.artefact_scanner import ArtefactScanner
+except ImportError as e:
+    log.warning(f"ArtefactScanner could not be loaded: {e}")
+    ArtefactScanner = None  # type: ignore[assignment,misc]
+
 # ---------------------------------------------------------------------------
 # Public surface — explicit declaration of what this package exports
 # ---------------------------------------------------------------------------

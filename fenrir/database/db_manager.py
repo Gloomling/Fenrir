@@ -660,6 +660,331 @@ class DatabaseManager:
             return None
 
     # ------------------------------------------------------------------
+    # Artefact / hash queries (unified across all sources)
+    # ------------------------------------------------------------------
+
+    def query_artefact(self, hash_value: str) -> dict | None:
+        """
+        Query the unified artefact_hashes table by any hash type (SHA256/SHA1/MD5).
+        Returns the richest match found, or None.
+        """
+        if not self._available:
+            return None
+        h = hash_value.strip().lower()
+        col_map = {64: "hash_sha256", 40: "hash_sha1", 32: "hash_md5"}
+        column  = col_map.get(len(h))
+        if not column:
+            return None
+        try:
+            conn = self._connect()
+            row  = conn.execute(
+                f"SELECT * FROM artefact_hashes WHERE {column} = ?", (h,)
+            ).fetchone()
+            conn.close()
+            return dict(row) if row else None
+        except sqlite3.Error as exc:
+            log.debug(f"artefact query error: {exc}")
+            return None
+
+    def query_hash_all_sources(self, hash_value: str) -> dict:
+        """
+        Check a hash across ALL offline sources:
+          - artefact_hashes (OTX + MalwareBazaar merged)
+          - hash_reputation  (MalwareBazaar legacy)
+          - ioc_threatfox    (ThreatFox hash IOCs)
+          - otx_indicators   (OTX raw hash indicators)
+
+        Returns a dict with keys:
+          found         (bool)
+          verdict       (str)   — clean|suspicious|malicious|unknown
+          threat_score  (int)   — 0-100
+          sources       (list)  — which tables matched
+          details       (list)  — per-source finding dicts
+          attack_ids    (list)  — ATT&CK technique IDs linked to this hash
+          pulse_names   (list)  — OTX pulse names mentioning this hash
+          malware_family (str)
+          tags          (list)
+        """
+        if not self._available:
+            return {"found": False, "verdict": "unknown", "threat_score": 0,
+                    "sources": [], "details": [], "attack_ids": [],
+                    "pulse_names": [], "malware_family": "", "tags": []}
+
+        h       = hash_value.strip().lower()
+        results = {"found": False, "verdict": "unknown", "threat_score": 0,
+                   "sources": [], "details": [], "attack_ids": [],
+                   "pulse_names": [], "malware_family": "", "tags": []}
+
+        col_map = {64: "hash_sha256", 40: "hash_sha1", 32: "hash_md5"}
+        column  = col_map.get(len(h))
+        if not column:
+            return results
+
+        try:
+            conn = self._connect()
+
+            # 1. artefact_hashes
+            row = conn.execute(
+                f"SELECT * FROM artefact_hashes WHERE {column} = ?", (h,)
+            ).fetchone()
+            if row:
+                d = dict(row)
+                results["found"]         = True
+                results["verdict"]       = d.get("verdict","malicious")
+                results["threat_score"]  = d.get("threat_score", 80)
+                results["malware_family"]= d.get("malware_family","")
+                results["sources"].append("artefact_hashes")
+                results["details"].append({"source": "artefact_hashes", **d})
+                import json as _json
+                try: results["attack_ids"] += _json.loads(d.get("attack_technique_ids") or "[]")
+                except Exception: pass
+                try: results["pulse_names"] += _json.loads(d.get("pulse_ids") or "[]")
+                except Exception: pass
+                try: results["tags"] += _json.loads(d.get("tags") or "[]")
+                except Exception: pass
+
+            # 2. hash_reputation (MalwareBazaar)
+            hr_col = {"hash_sha256":"hash_sha256","hash_sha1":"hash_sha1",
+                      "hash_md5":"hash_md5"}.get(column, column)
+            row2 = conn.execute(
+                f"SELECT * FROM hash_reputation WHERE {hr_col} = ?", (h,)
+            ).fetchone()
+            if row2:
+                d2 = dict(row2)
+                results["found"] = True
+                if not results["malware_family"]:
+                    results["malware_family"] = d2.get("malware_family","")
+                results["sources"].append("malwarebazaar")
+                results["details"].append({"source": "malwarebazaar", **d2})
+                if results["threat_score"] < 70:
+                    results["threat_score"] = 70
+                    results["verdict"] = "malicious"
+
+            # 3. ioc_threatfox
+            tf_rows = conn.execute(
+                "SELECT * FROM ioc_threatfox WHERE ioc_value = ? AND ioc_type LIKE '%hash%'",
+                (h,)
+            ).fetchall()
+            for row3 in tf_rows:
+                d3 = dict(row3)
+                results["found"] = True
+                results["sources"].append("threatfox")
+                results["details"].append({"source": "threatfox", **d3})
+                if results["threat_score"] < 85:
+                    results["threat_score"] = 85
+                    results["verdict"] = "malicious"
+
+            # 4. OTX indicators
+            otx_rows = conn.execute(
+                """SELECT oi.*, op.name as pulse_name, op.attack_ids
+                   FROM otx_indicators oi
+                   LEFT JOIN otx_pulses op ON oi.pulse_id = op.pulse_id
+                   WHERE oi.indicator_value = ?
+                   LIMIT 20""",
+                (h,)
+            ).fetchall()
+            for row4 in otx_rows:
+                d4 = dict(row4)
+                results["found"] = True
+                results["sources"].append("otx")
+                results["details"].append({"source": "otx", **d4})
+                pname = d4.get("pulse_name","")
+                if pname and pname not in results["pulse_names"]:
+                    results["pulse_names"].append(pname)
+                import json as _json
+                try:
+                    att = _json.loads(d4.get("attack_ids") or "[]")
+                    results["attack_ids"] += [a for a in att
+                                              if a not in results["attack_ids"]]
+                except Exception:
+                    pass
+                if results["threat_score"] < 75:
+                    results["threat_score"] = 75
+                    results["verdict"] = "malicious"
+
+            conn.close()
+
+            # Deduplicate
+            results["sources"]    = list(dict.fromkeys(results["sources"]))
+            results["attack_ids"] = list(dict.fromkeys(results["attack_ids"]))
+            results["pulse_names"]= results["pulse_names"][:20]
+            results["tags"]       = list(dict.fromkeys(results["tags"]))
+
+            if not results["found"]:
+                results["verdict"] = "clean"
+
+        except sqlite3.Error as exc:
+            log.debug(f"query_hash_all_sources error: {exc}")
+
+        return results
+
+    # ------------------------------------------------------------------
+    # OTX queries
+    # ------------------------------------------------------------------
+
+    def search_otx_pulses(self, query: str, limit: int = 20) -> list[dict]:
+        """Full-text search across OTX pulse names and descriptions."""
+        if not self._available:
+            return []
+        try:
+            conn = self._connect()
+            rows = conn.execute(
+                """SELECT p.* FROM otx_pulses p
+                   JOIN otx_pulses_fts f ON p.rowid = f.rowid
+                   WHERE otx_pulses_fts MATCH ?
+                   ORDER BY p.modified_date DESC LIMIT ?""",
+                (query, limit)
+            ).fetchall()
+            conn.close()
+            return [dict(r) for r in rows]
+        except sqlite3.Error as exc:
+            log.debug(f"OTX pulse search error: {exc}")
+            return []
+
+    def get_otx_pulse(self, pulse_id: str) -> dict | None:
+        """Get a single OTX pulse with all its indicators."""
+        if not self._available:
+            return None
+        try:
+            conn  = self._connect()
+            pulse = conn.execute(
+                "SELECT * FROM otx_pulses WHERE pulse_id = ?", (pulse_id,)
+            ).fetchone()
+            if not pulse:
+                conn.close()
+                return None
+            inds = conn.execute(
+                "SELECT * FROM otx_indicators WHERE pulse_id = ? LIMIT 500",
+                (pulse_id,)
+            ).fetchall()
+            conn.close()
+            result = dict(pulse)
+            result["indicators"] = [dict(i) for i in inds]
+            return result
+        except sqlite3.Error as exc:
+            log.debug(f"OTX pulse fetch error: {exc}")
+            return None
+
+    # ------------------------------------------------------------------
+    # Sigma rule queries
+    # ------------------------------------------------------------------
+
+    def search_sigma_rules(self, query: str = "", technique_id: str = "",
+                            level: str = "", limit: int = 50) -> list[dict]:
+        """
+        Search Sigma detection rules.
+        Filter by free-text, ATT&CK technique ID, and/or severity level.
+        """
+        if not self._available:
+            return []
+        try:
+            conn = self._connect()
+            if query:
+                rows = conn.execute(
+                    """SELECT s.* FROM sigma_rules s
+                       JOIN sigma_rules_fts f ON s.rowid = f.rowid
+                       WHERE sigma_rules_fts MATCH ?
+                       ORDER BY s.level DESC LIMIT ?""",
+                    (query, limit)
+                ).fetchall()
+            elif technique_id:
+                tid = technique_id.lower()
+                rows = conn.execute(
+                    """SELECT * FROM sigma_rules
+                       WHERE LOWER(tags) LIKE ?
+                       ORDER BY level DESC LIMIT ?""",
+                    (f"%{tid}%", limit)
+                ).fetchall()
+            elif level:
+                rows = conn.execute(
+                    "SELECT * FROM sigma_rules WHERE level=? ORDER BY date_modified DESC LIMIT ?",
+                    (level, limit)
+                ).fetchall()
+            else:
+                rows = conn.execute(
+                    "SELECT * FROM sigma_rules ORDER BY date_modified DESC LIMIT ?",
+                    (limit,)
+                ).fetchall()
+            conn.close()
+            return [dict(r) for r in rows]
+        except sqlite3.Error as exc:
+            log.debug(f"Sigma search error: {exc}")
+            return []
+
+    # ------------------------------------------------------------------
+    # ATT&CK relationship queries
+    # ------------------------------------------------------------------
+
+    def get_attack_relationships(self, attack_id: str,
+                                  rel_type: str = "") -> list[dict]:
+        """
+        Return all relationships for a given ATT&CK ID (technique, group, software).
+        Optionally filter by relationship type (uses, mitigates, attributed-to, etc.).
+        """
+        if not self._available:
+            return []
+        try:
+            conn = self._connect()
+            if rel_type:
+                rows = conn.execute(
+                    """SELECT * FROM attack_relationships
+                       WHERE (source_id=? OR target_id=?) AND relationship=?
+                       LIMIT 100""",
+                    (attack_id, attack_id, rel_type)
+                ).fetchall()
+            else:
+                rows = conn.execute(
+                    """SELECT * FROM attack_relationships
+                       WHERE source_id=? OR target_id=?
+                       LIMIT 100""",
+                    (attack_id, attack_id)
+                ).fetchall()
+            conn.close()
+            return [dict(r) for r in rows]
+        except sqlite3.Error as exc:
+            log.debug(f"ATT&CK relationships error: {exc}")
+            return []
+
+    def get_groups_using_technique(self, technique_id: str) -> list[dict]:
+        """Return all known threat groups that use a given ATT&CK technique."""
+        if not self._available:
+            return []
+        try:
+            conn = self._connect()
+            rows = conn.execute(
+                """SELECT g.* FROM attack_groups g
+                   JOIN attack_relationships r ON r.source_id = g.group_id
+                   WHERE r.target_id = ? AND r.relationship = 'uses'
+                   LIMIT 50""",
+                (technique_id,)
+            ).fetchall()
+            conn.close()
+            return [dict(r) for r in rows]
+        except sqlite3.Error as exc:
+            log.debug(f"get_groups_using_technique error: {exc}")
+            return []
+
+    def get_techniques_for_group(self, group_id: str) -> list[dict]:
+        """Return all ATT&CK techniques used by a given threat group."""
+        if not self._available:
+            return []
+        try:
+            conn = self._connect()
+            rows = conn.execute(
+                """SELECT t.*, r.description as usage_context
+                   FROM attack_techniques t
+                   JOIN attack_relationships r ON r.target_id = t.technique_id
+                   WHERE r.source_id = ? AND r.relationship = 'uses'
+                   ORDER BY t.tactic LIMIT 200""",
+                (group_id,)
+            ).fetchall()
+            conn.close()
+            return [dict(r) for r in rows]
+        except sqlite3.Error as exc:
+            log.debug(f"get_techniques_for_group error: {exc}")
+            return []
+
+    # ------------------------------------------------------------------
     # Database status
     # ------------------------------------------------------------------
 

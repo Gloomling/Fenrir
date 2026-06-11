@@ -1,0 +1,760 @@
+╔══════════════════════════════════════════════════════════════════════════════════╗
+║            FENRIR SECURITY SCANNER — COMPLETE PROJECT FILE STRUCTURE           ║
+║                    Package: fenrir-scanner  v2.0.0  |  Python ≥3.10            ║
+╚══════════════════════════════════════════════════════════════════════════════════╝
+
+This document describes every file and directory in the Fenrir project, including
+purpose, key classes/functions, and relationships between files.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. DIRECTORY TREE — OVERVIEW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+fenrir-scanner/                          ← Project root (pip-installable)
+│
+├── fenrir/                              ← Main Python package
+│   ├── __init__.py
+│   ├── cli.py
+│   ├── fenrir_gui.py
+│   ├── config.py
+│   ├── logging_config.py
+│   ├── report_manager.py
+│   ├── branding_config.py              ← READS branding.json (read-only at runtime)
+│   ├── fenrir_paths.py
+│   ├── scan_history.py
+│   ├── epss_client.py
+│   ├── port_scanner.py
+│   ├── vulnerability_scanner.py
+│   ├── exploit_scanner.py
+│   ├── network_scanner.py
+│   ├── web_scanner.py
+│   ├── dir_brute_forcer.py
+│   ├── tech_detector.py
+│   ├── dns_scanner.py
+│   ├── subdomain_scanner.py
+│   ├── whois_scanner.py
+│   ├── osint_scanner.py
+│   ├── threat_intel_scanner.py
+│   ├── iot_scanner.py
+│   ├── ot_scanner.py
+│   ├── mobile_scanner.py
+│   ├── android_scanner.py
+│   ├── password_sprayer.py
+│   ├── rf_scanner.py
+│   └── database/
+│       ├── __init__.py
+│       ├── db_manager.py
+│       ├── db_builder.py
+│       ├── schema.py
+│       ├── fenrir.db                   ← Built at runtime (gitignored)
+│       └── exploits/                   ← Downloaded exploit sources (gitignored)
+│
+├── Results/                            ← Auto-created. One folder per scan.
+│   ├── 2025-06-01_14-30_192.168.1.1/
+│   ├── 2025-06-01_15-00_192.168.1.0-24_network/
+│   └── scan_history.db                ← SQLite history of all scans
+│
+├── assets/                             ← Managed by fenrir_brand.py (operator tool)
+│   ├── logo.png                        ← Custom logo (replaces built-in wolf icon)
+│   ├── background.png                  ← Custom background image
+│   └── icon.ico                        ← Windows taskbar icon (optional)
+│
+├── data/                               ← Optional: wordlists, custom feeds
+│
+├── pyproject.toml                      ← Poetry: dependencies + entry points
+├── .env.example                        ← API key template
+├── branding.json                       ← Written by fenrir_brand.py (auto-created)
+│
+├── fenrir_brand.py          ★ OPERATOR TOOL — keep separate, not for end users
+├── install_fenrir.sh                   ← Linux/macOS full installer
+├── fenrir-gui.bat                      ← Windows GUI launcher
+├── fenrir-macos-launcher.sh            ← macOS .app-compatible launcher
+└── fenrir.desktop                      ← Template — deployed by install_fenrir.sh
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2. ROOT-LEVEL FILES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+pyproject.toml
+  Poetry package definition. Declares all dependencies, Python version constraint
+  (≥3.10,<4.0), and two console-script entry points:
+    fenrir      → fenrir.cli:main          (full CLI)
+    fenrir-gui  → fenrir.fenrir_gui:launch_gui  (launches GUI directly)
+  After `pip install -e .` both commands are available system-wide.
+
+.env.example
+  Template for API keys. Copy to .env and fill in:
+    NVD_API_KEY           — National Vulnerability Database (free)
+    VIRUSTOTAL_API_KEY    — VirusTotal threat intelligence (free tier)
+    ALIENVAULT_OTX_API_KEY — AlienVault OTX threat feeds (free)
+  All keys are optional. Fenrir uses offline data when keys are absent.
+
+branding.json                           ← WRITTEN by fenrir_brand.py
+  Persistent appearance configuration. Fenrir reads this on every launch.
+  Contains: logo path, background path, opacity, all UI colours, font, title.
+  This file is CREATED AND EDITED only by fenrir_brand.py — never by Fenrir itself.
+  If absent, Fenrir uses built-in defaults.
+
+fenrir_brand.py          ★ OPERATOR-ONLY TOOL
+  Standalone branding GUI. Completely independent of the Fenrir package.
+  No dependency on fenrir/* modules. Run it once to configure appearance,
+  then distribute Fenrir to users — they see the result but cannot change it.
+  See Section 5 for full details.
+
+install_fenrir.sh
+  Full Linux/macOS installer and desktop entry manager.
+  Subcommands:
+    install       — creates venv, pip installs, writes launchers + .desktop entry
+    launch        — launches GUI directly
+    desktop       — re-creates launchers and application menu entry only
+    fix-desktop   — diagnoses and repairs .desktop visibility issues
+    uninstall     — removes launchers and .desktop entries (preserves venv)
+
+fenrir-gui.bat
+  Windows double-click launcher. Sources the local venv automatically.
+  Uses `pythonw` (no console window). Can be pinned to Start Menu or Taskbar.
+
+fenrir-macos-launcher.sh
+  macOS launcher script. Place in Fenrir.app/Contents/MacOS/ to create a
+  proper .app bundle. Sources the venv and sets PYTHONPATH automatically.
+
+fenrir.desktop
+  XDG desktop entry TEMPLATE. The Exec= and Icon= fields contain placeholder
+  text that install_fenrir.sh replaces with absolute paths at install time.
+  DO NOT copy this file manually — use: ./install_fenrir.sh desktop
+  Manual copies will fail to appear in menus (see Section 6 on .desktop issues).
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+3. FENRIR PACKAGE — CORE FILES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+fenrir/__init__.py
+  Minimal package init. No public exports.
+
+─────────────────────────────────────────────────────────
+fenrir/cli.py                                          981 lines
+─────────────────────────────────────────────────────────
+  Full argparse CLI. Every Fenrir scan module is accessible from the command line.
+  Key functions:
+    main()              — entry point: parses args, calls _run_scans or _handle_db_commands
+    _build_parser()     — defines all CLI flags (-p, --modules, --gui, --db-*, etc.)
+    _run_scans()        — async orchestrator: runs modules in dependency order
+    _handle_db_commands()— --db-build, --db-update, --db-status, --db-build-source
+  Key behaviours:
+    fenrir <target>           — port scan + vuln scan (default)
+    fenrir --gui              — launches the GUI
+    fenrir <target> --all     — all modules
+    fenrir --db-build         — build offline intelligence database
+    Exit codes: 0=success, 1=scan error, 2=argument error
+
+─────────────────────────────────────────────────────────
+fenrir/fenrir_gui.py                                 3,386 lines
+─────────────────────────────────────────────────────────
+  Tkinter GUI application. Class FenrirGUI(tk.Tk).
+  Reads branding.json via branding_config.py on startup — cannot edit it.
+  
+  Tabs:
+    Scan          — _build_scan_tab(), _build_left_panel()
+                    Target entry, module checkboxes, profile selector, Start/Stop
+    Network Scan  — _build_network_tab()
+                    Host discovery sweep → select hosts → deep assessment
+    Results       — _build_results_tab(), _populate_results()
+                    Sub-tabs: Ports / Vulnerabilities / Exploits / Recon / Threats
+    History       — _build_history_tab(), _refresh_history_tab()
+                    All past scans; diff two; open results folder
+    Schedules     — _build_schedules_tab(), _check_schedules()
+                    Add recurring scans; auto-fires every 60s while app is open
+    Debug         — _build_debug_tab()
+                    Per-module timing, memory gauge, raw log stream
+    Database      — _build_db_tab()
+                    Build/update offline DB, show record counts
+
+  Key methods:
+    _start_scan()         — validates, creates Results/YYYY-MM-DD_HH-MM_target/ dir,
+                            records to history, launches scan thread
+    _run_scan_async()     — async orchestrator with per-module timeout + semaphore
+    _on_scan_done()       — saves to history, populates results, triggers EPSS enrichment
+    _update_background()  — blends background image at branding-specified opacity
+    _enrich_epss_async()  — fetches EPSS scores for all found CVEs post-scan
+    _check_schedules()    — polls scheduled_scans table every 60s, fires due scans
+    _show_exploit_guide() — double-click exploit row → full usage guide window
+    launch_gui()          — module-level entry point called by CLI --gui and pip script
+
+─────────────────────────────────────────────────────────
+fenrir/config.py                                       212 lines
+─────────────────────────────────────────────────────────
+  Class Config. Loads .env API keys via python-dotenv.
+  Methods: get_key(name), validate_key(name) → (bool, message)
+  Module-level singleton: config
+
+─────────────────────────────────────────────────────────
+fenrir/logging_config.py                               205 lines
+─────────────────────────────────────────────────────────
+  Classes: _ColoredFormatter, _FormattingQueueHandler
+  Functions: setup_logging(log_level, log_queue), get_logger()
+  Configures: coloured terminal output + GUI queue handler so log messages
+  appear in the Debug tab's live log area.
+
+─────────────────────────────────────────────────────────
+fenrir/report_manager.py                               272 lines
+─────────────────────────────────────────────────────────
+  Class ReportManager. Creates the output directory and writes scan results.
+  Methods:
+    add_section(title, findings)    — append a findings section
+    finalize()                      — write report.json + report.txt to disk
+    get_sections()                  — return sections list (for history DB)
+  Output goes to:  Results/YYYY-MM-DD_HH-MM_<target>/report.json
+
+─────────────────────────────────────────────────────────
+fenrir/branding_config.py                              130 lines
+─────────────────────────────────────────────────────────
+  Class BrandingConfig. READ-ONLY at Fenrir runtime.
+  Loads branding.json on import. Exposes all keys as attributes.
+  The save() and reset() methods exist but are called ONLY by fenrir_brand.py,
+  not by any Fenrir GUI or CLI code.
+  Module-level singleton: branding  (imported by fenrir_gui.py)
+  Key properties: logo_path, background_path, bg_opacity
+
+─────────────────────────────────────────────────────────
+fenrir/fenrir_paths.py                                  65 lines
+─────────────────────────────────────────────────────────
+  Central path constants derived from the package location.
+  Constants: FENRIR_ROOT, RESULTS_DIR, ASSETS_DIR, DATA_DIR
+  Asset paths: LOGO_PATH, BACKGROUND_PATH, ICON_ICO_PATH
+  Config paths: BRANDING_JSON, HISTORY_DB
+  Function: make_result_dir(target, scan_type) → Path
+    Creates and returns Results/YYYY-MM-DD_HH-MM_<target>_<type>/ directory.
+
+─────────────────────────────────────────────────────────
+fenrir/scan_history.py                                 364 lines
+─────────────────────────────────────────────────────────
+  Class ScanHistory. Thread-safe SQLite-backed history store.
+  Database: <FENRIR_ROOT>/scan_history.db
+  Tables:
+    scans            — every completed scan run
+    scheduled_scans  — recurring scan definitions
+  Key methods:
+    begin_scan(target, type, modules) → int scan_id
+    finish_scan(scan_id, result_dir, summary, report_json)
+    list_scans(limit) → list[dict]
+    get_scan(scan_id) → dict
+    delete_scan(scan_id)
+    diff_scans(id_a, id_b) → dict
+      Returns: new_ports, closed_ports, new_cves, resolved_cves,
+               new_exploits, os_changed, os_before, os_after
+    add_schedule(name, target, type, modules, interval_h) → int
+    list_schedules() → list[dict]
+    get_due_schedules() → list[dict]  — schedules with next_run_at in past
+    update_schedule_run(schedule_id, interval_h)
+  Module-level singleton: get_scan_history()
+
+─────────────────────────────────────────────────────────
+fenrir/epss_client.py                                  107 lines
+─────────────────────────────────────────────────────────
+  EPSS (Exploit Prediction Scoring System) client.
+  API: https://api.first.org/data/1.0/epss
+  Functions:
+    get_epss(cve_ids, timeout) → dict[cve_id, {score, percentile}]
+      Batches in groups of 30. In-memory cache with 1h TTL.
+    enrich_cves_with_epss(cves, epss_data) → list[dict]
+      Attaches epss_score, epss_percentile, risk_score (= CVSS × EPSS)
+  Called by FenrirGUI._enrich_epss_async() after every scan completes.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+4. FENRIR PACKAGE — SCANNER MODULES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+All scanner modules follow the same pattern:
+  - One main class with async run() → list[dict]
+  - Lazy-imported in modules/__init__.py via try/except (missing optional
+    deps don't crash the app)
+  - Registered in MODULE_REGISTRY for CLI and GUI checkbox binding
+
+─────────────────────────────────────────────────────────
+fenrir/port_scanner.py                                 385 lines
+─────────────────────────────────────────────────────────
+  Class PortScanner.
+  parse_ports(spec) — parses "80,443,1000-2000" into sorted int list.
+  scan_port(target, port, timeout) — single async TCP connect + banner grab.
+  run(target, ports, concurrency) → list[int]  — concurrent TCP port scan.
+
+─────────────────────────────────────────────────────────
+fenrir/vulnerability_scanner.py                        701 lines
+─────────────────────────────────────────────────────────
+  Class VulnerabilityScanner.
+  get_service_version(target, port) — nmap -sV for service detection.
+  search_cves(service, version) — NVD API lookup via nvdlib + offline DB fallback.
+  run(target, open_ports) → dict[port, list[cve_dict]]
+  cve_dict keys: id, description, score, severity, vector, cvss_version,
+                 published, references, epss_score (added post-scan)
+
+─────────────────────────────────────────────────────────
+fenrir/exploit_scanner.py                              444 lines
+─────────────────────────────────────────────────────────
+  Class ExploitScanner.
+  run(query, platform, type, verified_only) → list[exploit_dict]
+  Searches offline Exploit-DB mirror first, then falls back to searchsploit.
+  exploit_dict keys: id, title, type, platform, verified, cve_ids,
+                     edb_url, local_file_path, author, date_published
+  Also searches: shellcodes table, GHDB dorks table.
+
+─────────────────────────────────────────────────────────
+fenrir/network_scanner.py                            1,673 lines
+─────────────────────────────────────────────────────────
+  Classes: HostInfo (dataclass), NetworkScanner.
+  HostInfo fields: ip, mac, mac_vendor, hostname, os_name, os_family,
+    os_version, open_ports, services, device_class, device_subclass,
+    cves, exploits, banners, ttl, is_up, scan_time
+  NetworkScanner methods:
+    discover_hosts(target_spec) → list[HostInfo]  — fast sweep only
+    run(target_spec, modules, output_dir) → list[HostInfo]  — full pipeline
+    assess_one(ip) → HostInfo  — single host full assessment
+    _assess_host()  — full Phase A/B/C/D/E pipeline:
+      Phase A: port scan (nmap -sV or TCP connect fallback)
+      Phase B: CVE lookup per service
+      Phase C: OS fingerprinting (5-layer approach):
+                1. ostype from nmap -sV XML service elements
+                2. Banner inference (SSH/HTTP/SMB/CPE patterns)
+                3. nmap --script smb-os-discovery (Windows, port 445)
+                4. nmap -O --osscan-guess (requires root/CAP_NET_RAW)
+                5. TTL heuristic fallback (Linux≤64, Windows≤128, Cisco≤255)
+      Phase D: exploit matching against offline DB for every found CVE
+      Phase E: device classification (IoT/Server/Router/Workstation/etc.)
+
+─────────────────────────────────────────────────────────
+fenrir/web_scanner.py                                  523 lines
+─────────────────────────────────────────────────────────
+  Class WebScanner. HTTP header analysis, security header checks, redirect
+  following, server fingerprinting, basic XSS/injection surface detection.
+  run(target, open_ports) → list[finding_dict]
+
+─────────────────────────────────────────────────────────
+fenrir/dir_brute_forcer.py                             497 lines
+─────────────────────────────────────────────────────────
+  Class DirBruteForcer. Async HTTP directory/file enumeration.
+  Configurable wordlist, concurrency, status code filtering, extension list.
+  run(target, wordlist, extensions, concurrency) → list[url_dict]
+
+─────────────────────────────────────────────────────────
+fenrir/tech_detector.py                                623 lines
+─────────────────────────────────────────────────────────
+  Class TechDetector. Technology fingerprinting via webtech library +
+  custom header/body pattern matching. Detects CMS, frameworks, CDNs,
+  server software, JS libraries.
+  run(target) → list[tech_dict]
+
+─────────────────────────────────────────────────────────
+fenrir/dns_scanner.py                                  651 lines
+─────────────────────────────────────────────────────────
+  Class DnsScanner. Async DNS enumeration using aiodns.
+  Records: A, AAAA, MX, NS, TXT, SOA, PTR, CNAME.
+  Zone transfer attempt (AXFR). DNS-over-HTTPS fallback.
+  run(target) → list[record_dict]
+
+─────────────────────────────────────────────────────────
+fenrir/subdomain_scanner.py                            441 lines
+─────────────────────────────────────────────────────────
+  Class SubdomainScanner. Async subdomain discovery.
+  Methods: wordlist bruteforce, certificate transparency log query,
+  passive DNS via VirusTotal (if key present).
+  run(domain, wordlist, ct_logs) → list[subdomain_dict]
+
+─────────────────────────────────────────────────────────
+fenrir/whois_scanner.py                                480 lines
+─────────────────────────────────────────────────────────
+  Class WhoisScanner. Domain WHOIS lookup via python-whois.
+  run(target) → list[whois_dict]
+  Fields: registrar, creation_date, expiry_date, name_servers, org,
+          country, abuse_contact
+
+─────────────────────────────────────────────────────────
+fenrir/osint_scanner.py                                731 lines
+─────────────────────────────────────────────────────────
+  Class OsintScanner. OSINT aggregation.
+  Sources: Shodan (if key), Censys (if key), VirusTotal, AbuseIPDB,
+           HaveIBeenPwned, Google dorks via GHDB offline DB.
+  run(target) → list[osint_dict]
+
+─────────────────────────────────────────────────────────
+fenrir/threat_intel_scanner.py                         476 lines
+─────────────────────────────────────────────────────────
+  Class ThreatIntelScanner. Threat intelligence enrichment.
+  Sources: AlienVault OTX, VirusTotal, local IP reputation DB.
+  run(target) → list[threat_dict]
+  threat_dict keys: source, category, confidence, last_seen, tags
+
+─────────────────────────────────────────────────────────
+fenrir/iot_scanner.py                                  641 lines
+─────────────────────────────────────────────────────────
+  Class IotScanner. IoT device protocol detection.
+  Protocols: MQTT (1883/8883), RTSP (554), UPnP (1900), COAP (5683),
+             Modbus (502), BACnet (47808), ONVIF, Bluetooth LE (via bleak).
+  run(target, open_ports) → list[iot_finding_dict]
+
+─────────────────────────────────────────────────────────
+fenrir/ot_scanner.py                                   314 lines
+─────────────────────────────────────────────────────────
+  Class OtScanner. OT/ICS protocol detection.
+  Protocols: Siemens S7 (102), Modbus (502), DNP3 (20000), BACnet (47808),
+             EtherNet/IP (44818), IEC 61850 (102).
+  run(target, open_ports) → list[ot_finding_dict]
+
+─────────────────────────────────────────────────────────
+fenrir/mobile_scanner.py                               392 lines
+─────────────────────────────────────────────────────────
+  Class MobileScanner. Mobile device and MDM detection.
+  Detects: ADB (5555), iOS Bonjour services, MDM ports (2195, 2196, 5223),
+           mobile web interfaces.
+  run(target) → list[mobile_dict]
+
+─────────────────────────────────────────────────────────
+fenrir/android_scanner.py                            1,000 lines
+─────────────────────────────────────────────────────────
+  Class AndroidScanner. Android device and APK analysis.
+  ADB over TCP: package list, permission dump, activity dump, prop values.
+  APK static analysis via androguard: manifest permissions, exported
+  activities/services, hardcoded strings, certificate info.
+  run(target, apk_path) → list[android_finding_dict]
+
+─────────────────────────────────────────────────────────
+fenrir/password_sprayer.py                             333 lines
+─────────────────────────────────────────────────────────
+  Class PasswordSprayer. Credential spray with lockout protection.
+  Services: SSH (paramiko), FTP, Telnet, HTTP Basic Auth, HTTP form.
+  Lockout detection: stops after 3 consecutive failures per user.
+  Configurable delay between attempts (default 3s).
+  run(target, service, users, password, port) → list[cred_dict]
+  WARNING: only use against systems you own or have written permission to test.
+
+─────────────────────────────────────────────────────────
+fenrir/rf_scanner.py                                   395 lines
+─────────────────────────────────────────────────────────
+  Class RfScanner. RF spectrum monitoring.
+  Requires optional hardware: RTL-SDR dongle (pip install pyrtlsdr) or
+  HackRF/LimeSDR (pip install SoapySDR). Gracefully skips if no hardware.
+  run(freq_range, threshold) → list[signal_dict]
+
+─────────────────────────────────────────────────────────
+fenrir/modules/__init__.py                             248 lines
+─────────────────────────────────────────────────────────
+  Module registry. Lazy-imports every scanner class in try/except blocks.
+  A scanner with a missing optional dep (e.g. bleak not installed) is set
+  to None rather than crashing the whole app.
+  Exports: MODULE_REGISTRY dict, all scanner classes, DEFAULT_PORTS,
+           WEB_PORTS, SSH_PORT, parse_ports()
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+5. FENRIR DATABASE PACKAGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Build with: fenrir --db-build   (or the Database tab in the GUI)
+Location:   fenrir/database/fenrir.db   (SQLite, gitignored)
+
+─────────────────────────────────────────────────────────
+fenrir/database/schema.py                              876 lines
+─────────────────────────────────────────────────────────
+  All SQLite DDL. Tables:
+    cves          — CVE records from NVD (id, description, cvss, vector, cpes, refs)
+    exploits      — Exploit-DB entries (id, title, type, platform, verified,
+                    cve_ids, local_file_path, edb_url, author, date_published)
+    shellcodes    — Exploit-DB shellcode entries
+    ghdb          — Google Hacking Database dorks
+    ip_reputation — Threat feed IP reputation entries (ip, category, source, score)
+    oui           — MAC vendor OUI table (prefix → vendor name)
+
+─────────────────────────────────────────────────────────
+fenrir/database/db_manager.py                          787 lines
+─────────────────────────────────────────────────────────
+  Class DatabaseManager. Query interface used by all scanner modules.
+  Key methods:
+    search_cves(service, version, limit) → list[dict]
+    get_cve(cve_id) → dict
+    search_exploits(query, platform, type, cve_id) → list[dict]
+    search_by_cve(cve_id) → list[dict]     — exploits for a specific CVE
+    search_shellcodes(query) → list[dict]
+    search_ghdb(query) → list[dict]
+    get_ip_reputation(ip) → dict
+    lookup_mac_vendor(mac_prefix) → str
+    get_stats() → dict                      — record counts for each table
+
+─────────────────────────────────────────────────────────
+fenrir/database/db_builder.py                        2,702 lines
+─────────────────────────────────────────────────────────
+  Class DatabaseBuilder. Downloads and indexes all intelligence sources.
+  Sources and methods:
+    build_nvd()         — NVD CVE JSON feeds (2002–present)
+    build_exploitdb()   — Exploit-DB CSV + source file mirror
+    build_ghdb()        — Google Hacking Database XML
+    build_threatfeeds() — IP reputation feeds (Emerging Threats, etc.)
+    build_oui()         — IEEE MAC vendor OUI database
+  Supports: full build, incremental update, per-source rebuild.
+  Progress callback passed to GUI progress bar.
+
+─────────────────────────────────────────────────────────
+fenrir/database/__init__.py                             52 lines
+─────────────────────────────────────────────────────────
+  Exports DatabaseManager. Lazy-imports DatabaseBuilder (heavy deps).
+  Singleton: get_db_manager() → DatabaseManager
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+6. BRANDING ARCHITECTURE  (Operator vs End User)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ┌─────────────────────────────────────┐
+  │      OPERATOR WORKSTATION           │
+  │                                     │
+  │   fenrir_brand.py  ──────────────► branding.json
+  │   (standalone tool, not shipped     (portable config file)
+  │    to end users)                            │
+  └─────────────────────────────────────┘       │
+                                                 │  copy to Fenrir install
+                                                 ▼
+  ┌─────────────────────────────────────┐
+  │      END USER FENRIR INSTALL        │
+  │                                     │
+  │   fenrir_gui.py  ◄── reads ──── branding.json
+  │   (no branding controls visible)    (read-only at runtime)
+  └─────────────────────────────────────┘
+
+fenrir_brand.py — OPERATOR TOOL                        ~530 lines
+  Completely standalone Python script.
+  No imports from fenrir.* — zero dependency on the Fenrir package.
+  Only requires: tkinter (stdlib), Pillow (optional, for preview).
+  
+  CLI usage:
+    python3 fenrir_brand.py                       — GUI mode, auto-detect Fenrir root
+    python3 fenrir_brand.py --target /opt/fenrir  — specify Fenrir install location
+    python3 fenrir_brand.py --export theme.json   — export current theme, no GUI
+    python3 fenrir_brand.py --import-theme t.json — apply a theme file, no GUI
+
+  Auto-detection order for Fenrir root:
+    1. --target argument
+    2. FENRIR_ROOT environment variable
+    3. Same directory as fenrir_brand.py
+    4. Parent directory of fenrir_brand.py
+    5. ~/.fenrir/fenrir, /opt/fenrir, ~/fenrir
+
+  GUI panels:
+    Live Preview        — renders a miniature Fenrir window header with current settings
+    Window Title        — the text shown in the OS title bar and taskbar
+    Logo / Icon         — PNG/JPG/ICO shown in title bar; "Copy to assets" makes portable
+    Background Image    — scales to fill window; opacity slider blends with dark theme
+    Colour Palette      — 12 colour swatches, each opens a native colour picker
+    Font                — family + size applied to all UI labels and buttons
+    Theme Import/Export — save/load .json theme files for multiple installs
+    Save button         — writes branding.json to the target Fenrir root
+
+  What branding.json controls in Fenrir:
+    window_title      — OS title bar text
+    logo_path         — absolute path to PNG/JPG/ICO logo file
+    background_path   — absolute path to background image
+    bg_opacity        — 0.0 (invisible) to 1.0 (full image, no dark overlay)
+    accent_colour     — tab highlights, headings, buttons, treeview selection
+    dark_bg           — main window background
+    panel_bg          — frame/panel background
+    text_fg           — primary text colour
+    entry_bg          — text input field background
+    success_fg        — open ports, success indicators
+    warn_fg           — warnings, medium severity
+    err_fg            — errors, high severity
+    crit_fg           — critical findings
+    sep_fg            — separator lines
+    btn_active        — button hover background
+    debug_fg          — muted/debug text
+    font_family       — UI font (Helvetica, Arial, Segoe UI, etc.)
+    font_size         — base font size in pt (7–14)
+
+  Deploying branding to multiple Fenrir installs:
+    1. Run fenrir_brand.py --export corporate_theme.json
+    2. Distribute corporate_theme.json alongside the Fenrir installer
+    3. Each install runs: python3 fenrir_brand.py --target /opt/fenrir \
+                                                  --import-theme corporate_theme.json
+    4. Or include branding.json directly in the installer package
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+7. RESULTS DIRECTORY STRUCTURE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Every scan automatically creates a new sub-folder. No scan overwrites another.
+Naming:  Results/YYYY-MM-DD_HH-MM_<sanitised-target>_<type>/
+
+Results/
+├── 2025-06-01_14-30_192.168.1.1/              ← single host scan
+│   ├── report.json        Full findings (sections array)
+│   ├── report.txt         Human-readable summary
+│   ├── ports.txt          Open port list
+│   ├── cves.json          All CVE findings with CVSS + EPSS scores
+│   └── exploits.json      Exploit matches with file paths + EDB URLs
+│
+├── 2025-06-01_15-00_192.168.1.0-24_network/  ← network scan
+│   ├── report.json        Network-wide summary + all host sections
+│   ├── host_192.168.1.1.json
+│   ├── host_192.168.1.5.json
+│   └── ...
+│
+├── 2025-06-01_16-00_10.0.0.5_scheduled_single/ ← auto-run by scheduler
+│   └── report.json
+│
+└── scan_history.db                            ← SQLite: metadata for all above scans
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+8. DESKTOP ENTRY (.desktop) — WHY IT MAY NOT APPEAR AND HOW TO FIX IT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The .desktop file is a Linux/freedesktop standard for application menu entries.
+Eight things commonly cause it to be invisible:
+
+  1. Exec= is a bare command name, not an absolute path
+     ✗ Exec=fenrir-gui
+     ✓ Exec=/home/user/fenrir/fenrir-gui.sh
+     Why: Desktop environments search $PATH inconsistently. Absolute paths always work.
+
+  2. TryExec= missing
+     If TryExec= points to a binary that doesn't exist, some DEs hide the entry silently.
+     ✓ TryExec=/home/user/fenrir/fenrir-gui.sh  (same as Exec=)
+
+  3. Icon= name not in GTK icon cache
+     ✗ Icon=fenrir                    (only works if fenrir.png is in the icon theme)
+     ✓ Icon=/home/user/fenrir/assets/logo.png  (absolute path always works)
+     Fix: gtk-update-icon-cache -f -t ~/.local/share/icons/hicolor
+
+  4. Windows CRLF line endings
+     .desktop files with \r\n are silently ignored by freedesktop parsers.
+     Fix: sed -i 's/\r//' ~/.local/share/applications/fenrir.desktop
+     The install_fenrir.sh script uses printf to guarantee LF endings.
+
+  5. File not marked executable
+     GNOME and some other DEs require .desktop files to be chmod +x.
+     Fix: chmod +x ~/.local/share/applications/fenrir.desktop
+
+  6. GNOME "Untrusted application" flag
+     GNOME Nautilus marks newly-added .desktop files as untrusted.
+     Fix: gio set fenrir.desktop metadata::trusted true
+
+  7. update-desktop-database not run
+     The MIME/application cache must be rebuilt after adding a .desktop file.
+     Fix: update-desktop-database ~/.local/share/applications
+
+  8. xdg-desktop-menu not called
+     Simply copying a .desktop file to the applications directory is unreliable.
+     Fix: xdg-desktop-menu install --novendor fenrir.desktop
+
+  install_fenrir.sh applies all 8 fixes automatically.
+  If the entry still doesn't appear after install:
+    - Run: ./install_fenrir.sh fix-desktop     (diagnoses all 8 causes)
+    - Or:  Log out and back in (most reliable)
+    - Or:  Press Alt+F2, type 'r', Enter       (GNOME Shell restart)
+    - Or:  Run: xdg-desktop-menu forceupdate
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+9. INSTALLATION QUICK REFERENCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Linux / macOS (from source):
+  chmod +x install_fenrir.sh && ./install_fenrir.sh
+  Then: fenrir-gui   or   find "Fenrir" in your applications menu
+
+Linux / macOS (from PyPI):
+  pip install fenrir-scanner
+  fenrir-gui
+
+Windows:
+  pip install fenrir-scanner
+  Double-click fenrir-gui.bat   or   run: fenrir-gui
+
+Branding (operator, run once before deploying to users):
+  python3 fenrir_brand.py --target /path/to/fenrir-install
+  # Configure appearance in the GUI, click Save
+  # The resulting branding.json is read by Fenrir on every launch
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+10. KEY DEPENDENCIES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Pillow          — background image compositing, logo resize, wolf icon generation
+  requests/httpx  — HTTP scanning, NVD API, EPSS API calls
+  nvdlib          — typed NVD CVE API client
+  scapy           — ARP sweep for network discovery (raw sockets — may need root)
+  paramiko        — SSH credential testing
+  aiodns          — async DNS resolution
+  bleak           — Bluetooth LE discovery (Python <3.13 only)
+  paho-mqtt       — MQTT broker enumeration
+  androguard      — APK static analysis (Python <4.0 only)
+  python-dotenv   — load .env API keys
+  PyYAML          — config parsing in database builder
+  cryptography    — APK certificate parsing
+  reportlab       — optional PDF report generation
+  colorama        — coloured terminal output on Windows
+  tomli           — TOML parsing on Python 3.10 (stdlib tomllib added in 3.11)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+11. ADDING A NEW SCANNER MODULE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  1. Create fenrir/my_scanner.py with class MyScanner
+  2. Implement: async run(target, **kwargs) → list[dict]
+  3. Add try/except import block in fenrir/modules/__init__.py
+  4. Add key to MODULE_REGISTRY in modules/__init__.py
+  5. Add GUI checkbox in _build_left_panel() in fenrir_gui.py
+  6. Add CLI flag in _build_parser() in cli.py
+  7. Add timeout in MODULE_TIMEOUTS dict in fenrir_gui.py (if slow)
+  8. Optionally add to HEAVY_MODULES set if it uses significant memory
+
+  The module will then automatically appear in both CLI and GUI,
+  be subject to the global timeout, run inside the concurrency semaphore,
+  and have its results saved to the Results/ directory and history DB.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+12. LINE COUNT SUMMARY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  fenrir_gui.py                3,386   Main GUI application
+  database/db_builder.py       2,702   Intelligence database builder
+  network_scanner.py           1,673   Multi-host network scanner
+  android_scanner.py           1,000   Android/ADB scanner
+  cli.py                         981   Command-line interface
+  database/schema.py             876   SQLite schema DDL
+  database/db_manager.py         787   Database query interface
+  osint_scanner.py               731   OSINT aggregation
+  vulnerability_scanner.py       701   CVE lookup
+  dns_scanner.py                 651   DNS enumeration
+  iot_scanner.py                 641   IoT protocol detection
+  tech_detector.py               623   Technology fingerprinting
+  web_scanner.py                 523   HTTP scanning
+  dir_brute_forcer.py            497   Directory brute force
+  whois_scanner.py               480   WHOIS lookup
+  threat_intel_scanner.py        476   Threat intelligence
+  exploit_scanner.py             444   Exploit search
+  subdomain_scanner.py           441   Subdomain discovery
+  rf_scanner.py                  395   RF spectrum (SDR hardware)
+  mobile_scanner.py              392   Mobile device scanning
+  port_scanner.py                385   TCP port scanner
+  scan_history.py                364   SQLite history + schedules
+  ot_scanner.py                  314   OT/ICS protocol detection
+  password_sprayer.py            333   Credential spray
+  report_manager.py              272   Report file writer
+  modules/__init__.py            248   Module registry
+  config.py                      212   API key loader
+  logging_config.py              205   Logging setup
+  branding_config.py             130   Branding JSON reader
+  fenrir_brand.py    (OPERATOR)  ~530  Standalone branding tool
+  epss_client.py                 107   EPSS score fetcher
+  database/__init__.py            52   DB package init
+  fenrir_paths.py                 65   Path constants
+  ─────────────────────────────────────
+  TOTAL (approx)              22,000+ lines across 34 Python files
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+End of document
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
