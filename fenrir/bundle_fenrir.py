@@ -170,6 +170,9 @@ def copy_source(src_root: Path, dest_root: Path) -> None:
     for name in (
         "pyproject.toml", ".env.example", "README.md",
         "fenrir_brand.py",
+        "pyproject.toml", ".env.example", "README.md",
+        "fenrir_brand.py",
+    ):
     ):
         src = src_root / name
         if src.exists():
@@ -200,8 +203,8 @@ def copy_source(src_root: Path, dest_root: Path) -> None:
 def copy_database(src_root: Path, dest_root: Path) -> None:
     hdr("Step 2 — Copying offline intelligence database")
 
-    db_src = src_root / "fenrir" / "database" / "fenrir.db"
-    db_dst = dest_root / "fenrir" / "database"
+    db_src = src_root / "data" / "db" / "fenrir.db"
+    db_dst = dest_root / "data" / "db"
     db_dst.mkdir(parents=True, exist_ok=True)
 
     if db_src.exists():
@@ -727,7 +730,32 @@ def install_on_target(bundle_root: Path) -> None:
         warn(f"Some packages failed (may not have compiled wheels for this platform):")
         warn(result.stderr[-600:])
 
-    # Install Fenrir itself (editable)
+    # Install Fenrir itself (editable)└─$ ./Fenrir/fenrir/bundle_fenrir.py bundle -o ~/Desktop/BundleTest/
+
+Fenrir Portable Bundle Builder
+  Source : /home/kali/Desktop/Fenrir/fenrir
+  Output : /home/kali/Desktop/BundleTest
+  DB     : no
+  Deps   : no
+  Python : system
+
+
+Step 1 — Copying Fenrir source
+Traceback (most recent call last):
+  File "/home/kali/Desktop/./Fenrir/fenrir/bundle_fenrir.py", line 917, in <module>
+    main()
+    ~~~~^^
+  File "/home/kali/Desktop/./Fenrir/fenrir/bundle_fenrir.py", line 863, in main
+    copy_source(src_root, dest_root)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kali/Desktop/./Fenrir/fenrir/bundle_fenrir.py", line 156, in copy_source
+    shutil.copytree(fenrir_src, fenrir_dst, ignore=_ignore)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.13/shutil.py", line 591, in copytree
+    with os.scandir(src) as itr:
+         ~~~~~~~~~~^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/kali/Desktop/Fenrir/fenrir/fenrir'
+                    
     pyproject = bundle_root / "pyproject.toml"
     if pyproject.exists():
         info("Installing Fenrir package...")
