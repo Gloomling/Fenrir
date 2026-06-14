@@ -586,11 +586,11 @@ def write_readme(dest_root: Path, has_db: bool, has_deps: bool,
     Linux / macOS:
       chmod +x bin/fenrir bin/fenrir-gui
       ./bin/fenrir-gui                       Launch GUI
-      ./bin/fenrir 192.168.1.1               CLI scan
+      ./bin/fenrir 192.168.1.1              CLI scan
 
     Windows:
       bin\\fenrir-gui.bat                    Launch GUI
-      bin\\fenrir.bat 192.168.1.1            CLI scan
+      bin\\fenrir.bat 192.168.1.1           CLI scan
 
     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     PYTHON
@@ -847,6 +847,13 @@ def main() -> None:
 
     # ── bundle mode ────────────────────────────────────────────────────────────
     src_root  = Path(args.source).resolve()
+
+    # If the script is inside fenrir/ (the package), step up to the project root
+    # so that src_root points at the directory CONTAINING fenrir/, not fenrir/ itself.
+    if (src_root / "fenrir_gui.py").exists() or (src_root / "cli.py").exists():
+        src_root = src_root.parent
+        info(f"Detected script inside package — using project root: {src_root}")
+
     dest_root = Path(args.output).resolve()
 
     print(f"\n{BOLD}Fenrir Portable Bundle Builder{NC}")
