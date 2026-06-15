@@ -133,7 +133,6 @@ def _should_exclude(path: Path) -> bool:
             return True
     return False
 
-
 # =============================================================================
 # Step 1 — Copy source
 # =============================================================================
@@ -173,7 +172,6 @@ def copy_source(src_root: Path, dest_root: Path) -> None:
         "pyproject.toml", ".env.example", "README.md",
         "fenrir_brand.py",
     ):
-    ):
         src = src_root / name
         if src.exists():
             shutil.copy2(src, dest_root / name)
@@ -207,16 +205,17 @@ def copy_database(src_root: Path, dest_root: Path) -> None:
     db_dst = dest_root / "data" / "db"
     db_dst.mkdir(parents=True, exist_ok=True)
 
+    #Review below code section - db_src.exists() = False // "data" Copy resolves issue
     if db_src.exists():
         size_mb = db_src.stat().st_size // 1024 // 1024
         info(f"Copying fenrir.db ({size_mb} MB)...")
-        shutil.copy2(db_src, db_dst / "fenrir.db")
+        shutil.copy2(db_src , db_dst / "fenrir.db")
         ok(f"fenrir.db → bundle ({size_mb} MB)")
     else:
         warn("fenrir.db not found — run: ./bin/fenrir --db-build --tier core")
         warn("on the target machine after deployment to build the offline DB")
 
-    # Also copy any wordlist data directories (they are separate from the DB)
+    # Also copy any wordlist data directories (they are separate from the DB) // Resolves current failure in fenrir.db copy
     data_src = src_root / "data"
     if data_src.exists():
         info(f"Copying data/ directory tree...")
@@ -729,33 +728,7 @@ def install_on_target(bundle_root: Path) -> None:
     else:
         warn(f"Some packages failed (may not have compiled wheels for this platform):")
         warn(result.stderr[-600:])
-
-    # Install Fenrir itself (editable)└─$ ./Fenrir/fenrir/bundle_fenrir.py bundle -o ~/Desktop/BundleTest/
-
-Fenrir Portable Bundle Builder
-  Source : /home/kali/Desktop/Fenrir/fenrir
-  Output : /home/kali/Desktop/BundleTest
-  DB     : no
-  Deps   : no
-  Python : system
-
-
-Step 1 — Copying Fenrir source
-Traceback (most recent call last):
-  File "/home/kali/Desktop/./Fenrir/fenrir/bundle_fenrir.py", line 917, in <module>
-    main()
-    ~~~~^^
-  File "/home/kali/Desktop/./Fenrir/fenrir/bundle_fenrir.py", line 863, in main
-    copy_source(src_root, dest_root)
-    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
-  File "/home/kali/Desktop/./Fenrir/fenrir/bundle_fenrir.py", line 156, in copy_source
-    shutil.copytree(fenrir_src, fenrir_dst, ignore=_ignore)
-    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/lib/python3.13/shutil.py", line 591, in copytree
-    with os.scandir(src) as itr:
-         ~~~~~~~~~~^^^^^
-FileNotFoundError: [Errno 2] No such file or directory: '/home/kali/Desktop/Fenrir/fenrir/fenrir'
-                    
+                   
     pyproject = bundle_root / "pyproject.toml"
     if pyproject.exists():
         info("Installing Fenrir package...")
