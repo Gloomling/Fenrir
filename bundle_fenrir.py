@@ -200,8 +200,8 @@ def copy_source(src_root: Path, dest_root: Path) -> None:
 def copy_database(src_root: Path, dest_root: Path) -> None:
     hdr("Step 2 — Copying offline intelligence database")
 
-    db_src = src_root / "fenrir" / "database" / "fenrir.db"
-    db_dst = dest_root / "fenrir" / "database"
+    db_src = src_root / "data" / "db" / "fenrir.db"
+    db_dst = dest_root / "data" / "db"
     db_dst.mkdir(parents=True, exist_ok=True)
 
     if db_src.exists():
