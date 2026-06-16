@@ -1,212 +1,346 @@
 # fenrir/config.py
 #
-# Centralised configuration for the Fenrir application.
+# Centralised configuration and API key management for Fenrir.
 #
-# Design:
-#   - All API keys and runtime settings are loaded from a .env file via
-#     python-dotenv. A .env file is NOT required — missing keys are handled
-#     gracefully via soft warnings rather than hard failures.
-#   - The Config class exposes a validate_key() method that modules call
-#     before making API requests. This returns a (bool, str) tuple so the
-#     caller can decide whether to abort, warn, or skip.
-#   - A module-level singleton `config` is provided for convenience so
-#     modules do: from fenrir.config import config
-#   - APP_VERSION is read dynamically from pyproject.toml so there is a
-#     single source of truth for the version number.
+# Two sources of keys (merged at startup, keyfile takes priority over .env):
+#   1. .env file       — traditional dotenv, gitignored, stays on one machine
+#   2. fenrir_keys.json — portable JSON keyfile, can be moved between systems,
+#                         saved via the GUI "API Keys" button, lives at project root
 #
-# API Key Requirements by Module:
-#   VIRUSTOTAL_API_KEY   — threat_intel_scanner.py  (VirusTotal IP lookup)
-#   ALIENVAULT_OTX_API_KEY — threat_intel_scanner.py (AlienVault OTX lookup)
-#   NVD_API_KEY          — vulnerability_scanner.py  (NVD CVE search)
-#                          NVD works without a key but is heavily rate-limited;
-#                          a key raises the rate limit significantly.
+# Key file is separate from branding.json so keys are never accidentally
+# committed with the UI config. The keyfile can be encrypted in future.
+#
+# API Key Registry (all services Fenrir can use):
+#   NVD_API_KEY              vulnerability_scanner.py  (NVD CVE API)
+#   VIRUSTOTAL_API_KEY       threat_intel_scanner.py   (VirusTotal IP/hash lookup)
+#   ALIENVAULT_OTX_API_KEY   threat_intel_scanner.py   (AlienVault OTX pulses)
+#   SHODAN_API_KEY           osint_scanner.py           (Shodan host search)
+#   CENSYS_API_ID            osint_scanner.py           (Censys host search)
+#   CENSYS_API_SECRET        osint_scanner.py           (Censys secret)
+#   ABUSEIPDB_API_KEY        threat_intel_scanner.py   (AbuseIPDB IP checks)
+#   GITHUB_TOKEN             db_builder.py              (GitHub API for rate limits)
+#   HUNTER_API_KEY           osint_scanner.py           (Hunter.io email lookup)
+#   SECURITYTRAILS_API_KEY   osint_scanner.py           (SecurityTrails DNS history)
 
+from __future__ import annotations
+
+import json
 import os
-import tomllib  # stdlib in Python 3.11+; fallback below for 3.10
 from pathlib import Path
 from typing import Optional
 
-from dotenv import load_dotenv
-from .logging_config import get_logger
+try:
+    import tomllib
+except ImportError:
+    try:
+        import tomli as tomllib          # type: ignore[no-redef]
+    except ImportError:
+        tomllib = None                   # type: ignore[assignment]
+
+try:
+    from dotenv import load_dotenv
+    _DOTENV_OK = True
+except ImportError:
+    _DOTENV_OK = False
+
+from fenrir.logging_config import get_logger
 
 log = get_logger()
 
-# ---------------------------------------------------------------------------
-# Load .env file
-# ---------------------------------------------------------------------------
-# Search for .env in the project root (two levels up from this file).
-# If not found, python-dotenv silently does nothing — os.getenv() calls
-# will simply return None, which validate_key() handles gracefully.
+# ── Paths ──────────────────────────────────────────────────────────────────────
+_FENRIR_ROOT = Path(__file__).resolve().parent.parent
+_ENV_PATH    = _FENRIR_ROOT / ".env"
+_KEYFILE     = _FENRIR_ROOT / "fenrir_keys.json"
 
-_ENV_PATH = Path(__file__).resolve().parent.parent / ".env"
-load_dotenv(dotenv_path=_ENV_PATH)
+# ── Full API key registry ──────────────────────────────────────────────────────
+# Format: short_name -> (env_var, display_label, module, required, url, description)
+API_KEY_REGISTRY: dict[str, tuple] = {
+    # ── Vulnerability intelligence ─────────────────────────────────────────────
+    "nvd": (
+        "NVD_API_KEY", "NVD API Key", "Vulnerability Scanner", False,
+        "https://nvd.nist.gov/developers/request-an-api-key",
+        "Raises CVE rate limit 5→50 req/30s. Free, personal email ok.",
+    ),
+    "vulncheck": (
+        "VULNCHECK_API_KEY", "VulnCheck Community Key",
+        "Vulnerability Scanner / DB Builder", False,
+        "https://vulncheck.com/register",
+        "NVD++ (faster than NIST NVD), extended KEV, exploit intel. "
+        "Free community tier. Full offline ZIP backup supported. No company email.",
+    ),
+    # ── Threat intelligence ────────────────────────────────────────────────────
+    "virustotal": (
+        "VIRUSTOTAL_API_KEY", "VirusTotal API Key",
+        "Threat Intelligence / Artefact Scanner", False,
+        "https://www.virustotal.com/gui/my-apikey",
+        "IP, domain, file hash reputation. Free: 500 lookups/day.",
+    ),
+    "alienvault": (
+        "ALIENVAULT_OTX_API_KEY", "AlienVault OTX API Key",
+        "Threat Intelligence / OTX Feed", False,
+        "https://otx.alienvault.com/api",
+        "Full subscribed pulse feed + bulk offline download. "
+        "Without key: public activity feed only.",
+    ),
+    "abuseipdb": (
+        "ABUSEIPDB_API_KEY", "AbuseIPDB API Key", "Threat Intelligence", False,
+        "https://www.abuseipdb.com/account/api",
+        "IP abuse confidence score. Free: 1000 checks/day. Personal email ok.",
+    ),
+    # ── abuse.ch suite — ONE auth.abuse.ch account covers all three ───────────
+    "malwarebazaar": (
+        "MALWAREBAZAAR_API_KEY", "MalwareBazaar Auth-Key",
+        "Artefact Scanner / DB Builder", False,
+        "https://auth.abuse.ch/",
+        "Full hash export + malware sample download. One abuse.ch account covers "
+        "MalwareBazaar, ThreatFox, URLhaus and SSLBL. Free, personal email ok. "
+        "Without key: recent 100 samples only.",
+    ),
+    "threatfox": (
+        "THREATFOX_API_KEY", "ThreatFox Auth-Key",
+        "Threat Intelligence / DB Builder", False,
+        "https://auth.abuse.ch/",
+        "Full IOC export (all types, all history). Same account as MalwareBazaar. "
+        "Without key: recent IOCs only.",
+    ),
+    "urlhaus": (
+        "URLHAUS_API_KEY", "URLhaus Auth-Key",
+        "Threat Intelligence / DB Builder", False,
+        "https://auth.abuse.ch/",
+        "Complete malicious URL DB dump. Same account as MalwareBazaar. "
+        "Without key: recent URLs only.",
+    ),
+    # ── OSINT / Recon ──────────────────────────────────────────────────────────
+    "shodan": (
+        "SHODAN_API_KEY", "Shodan API Key", "OSINT Scanner", False,
+        "https://account.shodan.io/",
+        "Host search, banners, exposed services. Free account: basic queries.",
+    ),
+    "censys_id": (
+        "CENSYS_API_ID", "Censys API ID", "OSINT Scanner", False,
+        "https://app.censys.io/account/api",
+        "Internet-wide host scan data. Requires both ID and Secret. Free: 250/month.",
+    ),
+    "censys_secret": (
+        "CENSYS_API_SECRET", "Censys API Secret", "OSINT Scanner", False,
+        "https://app.censys.io/account/api",
+        "Paired with Censys API ID. Free: 250 queries/month.",
+    ),
+    "greynoise": (
+        "GREYNOISE_API_KEY", "GreyNoise Community Key", "Threat Intelligence", False,
+        "https://www.greynoise.io/viz/signup",
+        "Identifies internet background noise vs targeted attacks. "
+        "Free community tier. API-only, no bulk offline download.",
+    ),
+    "hunter": (
+        "HUNTER_API_KEY", "Hunter.io API Key", "OSINT Scanner", False,
+        "https://hunter.io/api-keys",
+        "Email discovery for domains. Free: 25 searches/month.",
+    ),
+    "securitytrails": (
+        "SECURITYTRAILS_API_KEY", "SecurityTrails API Key", "OSINT Scanner", False,
+        "https://securitytrails.com/app/account/credentials",
+        "DNS history, subdomain discovery. Free: 50 queries/month.",
+    ),
+    # ── Infrastructure ─────────────────────────────────────────────────────────
+    "github": (
+        "GITHUB_TOKEN", "GitHub Personal Access Token", "Database Builder", False,
+        "https://github.com/settings/tokens",
+        "Raises GitHub API rate limit 60→5000 req/hr during DB builds. "
+        "Free. Needed when cloning Sigma, YARA-Rules, SecLists, etc.",
+    ),
+}
 
-# ---------------------------------------------------------------------------
-# Version helper
-# ---------------------------------------------------------------------------
+
 
 def _read_version() -> str:
-    """
-    Read the project version from pyproject.toml.
-
-    Returns the version string (e.g. "2.0.0") or "unknown" if the file
-    cannot be parsed. Uses stdlib tomllib (Python 3.11+) with a fallback
-    to the third-party tomli package for Python 3.10.
-    """
-    pyproject_path = Path(__file__).resolve().parent.parent / "pyproject.toml"
-
+    pyproject = _FENRIR_ROOT / "pyproject.toml"
+    if not pyproject.exists() or tomllib is None:
+        return "unknown"
     try:
-        with open(pyproject_path, "rb") as f:
+        with open(pyproject, "rb") as f:
             data = tomllib.load(f)
         return data["tool"]["poetry"]["version"]
-    except ImportError:
-        # Python 3.10 — try tomli
-        try:
-            import tomli  # type: ignore[import]
-            with open(pyproject_path, "rb") as f:
-                data = tomli.load(f)
-            return data["tool"]["poetry"]["version"]
-        except Exception:
-            return "unknown"
     except Exception:
         return "unknown"
 
 
-# ---------------------------------------------------------------------------
-# Config class
-# ---------------------------------------------------------------------------
-
 class Config:
     """
-    Loads and provides all configuration settings for Fenrir.
+    Loads and exposes all Fenrir API keys and configuration settings.
 
-    Attributes:
-        APP_NAME (str):               Human-readable application name.
-        APP_VERSION (str):            Version string sourced from pyproject.toml.
-        VIRUSTOTAL_API_KEY (str|None): VirusTotal v3 API key.
-        ALIENVAULT_OTX_API_KEY (str|None): AlienVault OTX API key.
-        NVD_API_KEY (str|None):       NVD API key (optional but recommended).
+    Key priority (highest wins):
+      1. fenrir_keys.json  (portable keyfile — GUI-managed)
+      2. .env file         (dotenv — traditional)
+      3. OS environment    (shell exports)
 
-    Key requirement map — which modules need which keys:
-        "virustotal"  -> VIRUSTOTAL_API_KEY   (threat_intel_scanner)
-        "alienvault"  -> ALIENVAULT_OTX_API_KEY (threat_intel_scanner)
-        "nvd"         -> NVD_API_KEY           (vulnerability_scanner)
+    Usage:
+        from fenrir.config import config
+        key = config.get("nvd")          # returns key string or None
+        ok, msg = config.validate_key("nvd")
+        config.save_keyfile({"nvd": "abc123", ...})
     """
 
-    # Map of short key names to (env_var_name, module_name, is_required)
-    # is_required=False means the module can degrade gracefully without it.
-    _KEY_MAP: dict[str, tuple[str, str, bool]] = {
-        "virustotal":  ("VIRUSTOTAL_API_KEY",      "Threat Intelligence Scanner", False),
-        "alienvault":  ("ALIENVAULT_OTX_API_KEY",  "Threat Intelligence Scanner", False),
-        "nvd":         ("NVD_API_KEY",             "Vulnerability Scanner",       False),
-    }
-
     def __init__(self) -> None:
-        self.APP_NAME = "Fenrir Security Scanner"
+        self.APP_NAME    = "Fenrir Security Scanner"
         self.APP_VERSION = _read_version()
+        self._keys: dict[str, str] = {}
+        self.reload()
 
-        # Load API keys from environment
-        self.VIRUSTOTAL_API_KEY: Optional[str] = os.getenv("VIRUSTOTAL_API_KEY")
-        self.ALIENVAULT_OTX_API_KEY: Optional[str] = os.getenv("ALIENVAULT_OTX_API_KEY")
-        self.NVD_API_KEY: Optional[str] = os.getenv("NVD_API_KEY")
+    def reload(self) -> None:
+        """Re-read .env and fenrir_keys.json and merge into _keys."""
+        # Layer 1: dotenv
+        if _DOTENV_OK and _ENV_PATH.exists():
+            load_dotenv(dotenv_path=_ENV_PATH, override=False)
+
+        # Layer 2: OS environment (populated by dotenv above, or by shell)
+        for short, (env_var, *_rest) in API_KEY_REGISTRY.items():
+            val = os.environ.get(env_var, "").strip()
+            if val:
+                self._keys[short] = val
+
+        # Layer 3: fenrir_keys.json (highest priority — overrides .env)
+        stored = self._load_keyfile()
+        for short, val in stored.items():
+            if val and val.strip():
+                self._keys[short] = val.strip()
+                # Also push into os.environ so libraries that read env vars directly work
+                env_var = API_KEY_REGISTRY.get(short, (short.upper(),))[0]
+                os.environ[env_var] = val.strip()
 
         log.debug(
-            f"Config loaded. Version: {self.APP_VERSION} | "
-            f"VT key: {'set' if self.VIRUSTOTAL_API_KEY else 'NOT SET'} | "
-            f"OTX key: {'set' if self.ALIENVAULT_OTX_API_KEY else 'NOT SET'} | "
-            f"NVD key: {'set' if self.NVD_API_KEY else 'NOT SET'}"
+            f"Config reloaded. Version: {self.APP_VERSION} | "
+            f"Keys set: {[k for k, v in self._keys.items() if v]}"
         )
 
-    # ------------------------------------------------------------------
-    # Public API
-    # ------------------------------------------------------------------
+        # Convenience attributes for backward compatibility
+        for short, (env_var, *_rest) in API_KEY_REGISTRY.items():
+            setattr(self, env_var, self._keys.get(short))
+
+    # ── Keyfile management ─────────────────────────────────────────────────────
+
+    @staticmethod
+    def keyfile_path() -> Path:
+        """Return the path to fenrir_keys.json."""
+        return _KEYFILE
+
+    def _load_keyfile(self) -> dict[str, str]:
+        """Load fenrir_keys.json. Returns empty dict if missing or malformed."""
+        if not _KEYFILE.exists():
+            return {}
+        try:
+            data = json.loads(_KEYFILE.read_text(encoding="utf-8"))
+            return {k: v for k, v in data.get("keys", {}).items() if isinstance(v, str)}
+        except Exception as exc:
+            log.warning(f"[config] Could not read keyfile {_KEYFILE}: {exc}")
+            return {}
+
+    def save_keyfile(self, keys: dict[str, str],
+                     path: Optional[Path] = None) -> Path:
+        """
+        Write keys to fenrir_keys.json (or a custom path for export).
+
+        Args:
+            keys: dict of {short_name: api_key_string}
+            path: override destination (default: _KEYFILE)
+
+        Returns:
+            Path that was written.
+        """
+        dest = path or _KEYFILE
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        payload = {
+            "_comment": (
+                "Fenrir API key file. Keep this private — do not commit to git. "
+                "Copy this file between machines to transfer keys."
+            ),
+            "_version":  self.APP_VERSION,
+            "keys": {k: v for k, v in keys.items() if v and v.strip()},
+        }
+        dest.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        log.info(f"[config] Keys saved to {dest}")
+
+        # Merge saved keys into runtime state
+        if path is None:
+            self.reload()
+
+        return dest
+
+    def export_keyfile(self, export_path: Path) -> Path:
+        """Export the current keys to an arbitrary path for transfer."""
+        current = {short: self._keys.get(short, "")
+                   for short in API_KEY_REGISTRY}
+        return self.save_keyfile(current, path=export_path)
+
+    def import_keyfile(self, import_path: Path) -> int:
+        """
+        Import keys from an external keyfile. Returns count of keys imported.
+        Merges with existing keys (imported values win on conflict).
+        """
+        try:
+            data = json.loads(import_path.read_text(encoding="utf-8"))
+            imported = data.get("keys", {})
+            if not isinstance(imported, dict):
+                raise ValueError("'keys' field missing or not a dict")
+        except Exception as exc:
+            raise ValueError(f"Could not read keyfile: {exc}") from exc
+
+        current = self._load_keyfile()
+        current.update({k: v for k, v in imported.items() if v and v.strip()})
+        self.save_keyfile(current)
+        log.info(f"[config] Imported {len(imported)} keys from {import_path}")
+        return len(imported)
+
+    # ── Key access ─────────────────────────────────────────────────────────────
+
+    def get(self, short_name: str) -> Optional[str]:
+        """Return the API key value for a short name, or None if not set."""
+        return self._keys.get(short_name) or None
+
+    def set(self, short_name: str, value: str) -> None:
+        """Set a key in memory (call save_keyfile to persist)."""
+        self._keys[short_name] = value.strip()
+        env_var = API_KEY_REGISTRY.get(short_name, (short_name.upper(),))[0]
+        os.environ[env_var] = value.strip()
+
+    def all_keys(self) -> dict[str, str]:
+        """Return all short_name → value pairs (empty string if not set)."""
+        return {short: self._keys.get(short, "")
+                for short in API_KEY_REGISTRY}
 
     def validate_key(self, key_name: str) -> tuple[bool, str]:
         """
-        Check whether a required API key is present and non-empty.
-
-        Args:
-            key_name: Short name of the key to check. Must be one of:
-                      "virustotal", "alienvault", "nvd"
+        Check whether a key is present and non-empty.
 
         Returns:
-            (True, "")  — key is present and non-empty.
-            (False, message) — key is missing; message describes the problem
-                               and which module is affected.
-
-        Usage in a module:
-            ok, msg = config.validate_key("virustotal")
-            if not ok:
-                log.warning(msg)
-                # Decide: return early, or continue with degraded output.
-
-        Example warning message:
-            "VIRUSTOTAL_API_KEY is not set. The Threat Intelligence Scanner
-             will be skipped. Add it to your .env file to enable this feature."
+            (True, "")          — key is set
+            (False, message)    — key missing, message explains effect
         """
-        if key_name not in self._KEY_MAP:
+        if key_name not in API_KEY_REGISTRY:
             return False, (
-                f"Unknown key name '{key_name}'. "
-                f"Valid options: {', '.join(self._KEY_MAP.keys())}"
+                f"Unknown key '{key_name}'. "
+                f"Valid: {', '.join(API_KEY_REGISTRY.keys())}"
             )
-
-        env_var, module_name, _ = self._KEY_MAP[key_name]
-        value = os.getenv(env_var)
-
-        if not value or value.strip() == "":
+        env_var, label, module, _, _, desc = API_KEY_REGISTRY[key_name]
+        val = self._keys.get(key_name)
+        if not val:
             return False, (
-                f"{env_var} is not set. The {module_name} will be skipped. "
-                f"Add it to your .env file to enable this feature."
+                f"{label} not set — {module} will run in offline/degraded mode. "
+                f"Get a free key at {API_KEY_REGISTRY[key_name][4]}"
             )
-
         return True, ""
 
     def get_missing_keys_for_modules(self, modules: list[str]) -> list[str]:
-        """
-        Given a list of short key names, return only those that are missing.
-
-        Useful for the GUI and CLI to build a single pre-scan warning message
-        listing all missing keys at once rather than discovering them one by one.
-
-        Args:
-            modules: List of short key names, e.g. ["virustotal", "nvd"]
-
-        Returns:
-            List of warning message strings for each missing key.
-            Empty list if all requested keys are present.
-
-        Usage:
-            warnings = config.get_missing_keys_for_modules(["virustotal", "nvd"])
-            if warnings:
-                for w in warnings:
-                    log.warning(w)
-        """
-        missing = []
-        for key_name in modules:
-            ok, msg = self.validate_key(key_name)
-            if not ok:
-                missing.append(msg)
-        return missing
+        """Return warning strings for each missing key in the list."""
+        return [msg for k in modules for ok, msg in [self.validate_key(k)] if not ok]
 
     def summary(self) -> str:
-        """
-        Return a human-readable configuration summary string.
-
-        Useful for debug output at scan start or in the GUI about screen.
-        """
-        lines = [
-            f"Application : {self.APP_NAME} v{self.APP_VERSION}",
-            f"VT API Key  : {'✓ configured' if self.VIRUSTOTAL_API_KEY else '✗ not set'}",
-            f"OTX API Key : {'✓ configured' if self.ALIENVAULT_OTX_API_KEY else '✗ not set'}",
-            f"NVD API Key : {'✓ configured (higher rate limit)' if self.NVD_API_KEY else '✗ not set (rate-limited)'}",
-        ]
+        lines = [f"Fenrir {self.APP_VERSION}  |  Key file: {_KEYFILE}"]
+        for short, (env_var, label, module, *_) in API_KEY_REGISTRY.items():
+            status = "✓" if self._keys.get(short) else "✗"
+            lines.append(f"  {status}  {label:<35} ({module})")
         return "\n".join(lines)
 
 
-# ---------------------------------------------------------------------------
 # Module-level singleton
-# ---------------------------------------------------------------------------
-# All modules import this singleton:
-#   from fenrir.config import config
-
 config = Config()

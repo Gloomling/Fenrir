@@ -1732,10 +1732,220 @@ class FenrirGUI(tk.Tk):
         tk.Label(hdr, text="Security Scanner  v2.0", bg=DARK_BG, fg=DEBUG_FG,
                  font=("Helvetica", 8)).pack(side=tk.RIGHT, padx=12)
 
+        # API Keys button — right side of header
+        ttk.Button(hdr, text="🔑 API Keys",
+                   command=self._open_api_keys_window).pack(
+            side=tk.RIGHT, padx=(0, 6))
+
     def _update_header(self) -> None:
-        """Refresh header after branding change (called by fenrir_brand.py indirectly)."""
+        """Refresh header after branding change."""
         self.title(branding.window_title)
         self._set_icon()
+
+    # =========================================================================
+    # API Key Management Window
+    # =========================================================================
+
+    def _open_api_keys_window(self) -> None:
+        """Open the API Keys management popup."""
+        from fenrir.config import config as cfg, API_KEY_REGISTRY
+
+        win = tk.Toplevel(self)
+        win.title("API Keys")
+        win.geometry("720x640")
+        win.minsize(620, 500)
+        win.configure(bg=DARK_BG)
+        win.transient(self)
+        win.grab_set()
+
+        # ── Header ─────────────────────────────────────────────────────────────
+        hdr = tk.Frame(win, bg=DARK_BG)
+        hdr.pack(fill=tk.X, padx=16, pady=(14, 0))
+        tk.Label(hdr, text="🔑  API Keys", bg=DARK_BG, fg=ACCENT,
+                 font=("Helvetica", 14, "bold")).pack(side=tk.LEFT)
+        keyfile_path = cfg.keyfile_path()
+        tk.Label(hdr, text=f"Key file: {keyfile_path}", bg=DARK_BG, fg=DEBUG_FG,
+                 font=("Helvetica", 8)).pack(side=tk.LEFT, padx=(12, 0))
+
+        tk.Label(win,
+                 text=("Enter API keys below. All keys are optional — Fenrir uses "
+                       "offline data when keys are absent.\n"
+                       "Keys are saved to fenrir_keys.json (not .env) and can "
+                       "be exported and moved between systems."),
+                 bg=DARK_BG, fg=TEXT_FG,
+                 font=("Helvetica", 9), justify=tk.LEFT, wraplength=680,
+                 ).pack(fill=tk.X, padx=16, pady=(6, 10))
+
+        sep = tk.Frame(win, bg=SEP_FG, height=1)
+        sep.pack(fill=tk.X, padx=16)
+
+        # ── Scrollable key fields ───────────────────────────────────────────────
+        canvas = tk.Canvas(win, bg=DARK_BG, highlightthickness=0)
+        vsb    = ttk.Scrollbar(win, orient="vertical", command=canvas.yview)
+        canvas.configure(yscrollcommand=vsb.set)
+        vsb.pack(side=tk.RIGHT, fill=tk.Y, padx=(0, 6))
+        canvas.pack(fill=tk.BOTH, expand=True, padx=6)
+
+        inner = tk.Frame(canvas, bg=DARK_BG)
+        cwin  = canvas.create_window((0, 0), window=inner, anchor="nw")
+        inner.bind("<Configure>",
+                   lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+        canvas.bind("<Configure>",
+                   lambda e: canvas.itemconfigure(cwin, width=e.width))
+        canvas.bind_all("<MouseWheel>",
+                        lambda e: canvas.yview_scroll(int(-1*(e.delta/120)), "units"))
+
+        # Build one row per key
+        key_vars: dict[str, tk.StringVar] = {}
+        current  = cfg.all_keys()
+
+        for short, (env_var, label, module, _, url, description) in API_KEY_REGISTRY.items():
+            row = tk.Frame(inner, bg=DARK_BG)
+            row.pack(fill=tk.X, padx=10, pady=(10, 0))
+            row.columnconfigure(1, weight=1)
+
+            # Status dot
+            is_set = bool(current.get(short))
+            dot_color = SUCCESS_FG if is_set else SEP_FG
+            dot = tk.Label(row, text="●", bg=DARK_BG, fg=dot_color,
+                           font=("Helvetica", 10))
+            dot.grid(row=0, column=0, sticky="w", padx=(0, 8))
+
+            # Label + module
+            lbl_frame = tk.Frame(row, bg=DARK_BG)
+            lbl_frame.grid(row=0, column=1, sticky="ew")
+            tk.Label(lbl_frame, text=label, bg=DARK_BG, fg=TEXT_FG,
+                     font=("Helvetica", 9, "bold"), anchor="w").pack(anchor="w")
+            tk.Label(lbl_frame, text=f"{module}  ·  {description}",
+                     bg=DARK_BG, fg=DEBUG_FG,
+                     font=("Helvetica", 8), anchor="w", wraplength=480).pack(anchor="w")
+
+            # Entry field + show/hide + link
+            entry_row = tk.Frame(inner, bg=DARK_BG)
+            entry_row.pack(fill=tk.X, padx=10, pady=(2, 0))
+            entry_row.columnconfigure(0, weight=1)
+
+            var = tk.StringVar(value=current.get(short, ""))
+            key_vars[short] = var
+
+            entry = ttk.Entry(entry_row, textvariable=var, show="•", width=52)
+            entry.grid(row=0, column=0, sticky="ew")
+
+            # Show/hide toggle
+            show_state = [False]
+            def _toggle(e=entry, s=show_state):
+                s[0] = not s[0]
+                e.configure(show="" if s[0] else "•")
+            ttk.Button(entry_row, text="👁", width=3,
+                       command=_toggle).grid(row=0, column=1, padx=(4, 0))
+
+            # Get key link
+            def _open_url(u=url):
+                import webbrowser
+                webbrowser.open(u)
+            ttk.Button(entry_row, text="Get key →", width=9,
+                       command=_open_url).grid(row=0, column=2, padx=(4, 0))
+
+            # Status label (updates on change)
+            status_lbl = tk.Label(entry_row, text="Set ✓" if is_set else "Not set",
+                                   bg=DARK_BG,
+                                   fg=SUCCESS_FG if is_set else DEBUG_FG,
+                                   font=("Helvetica", 8))
+            status_lbl.grid(row=0, column=3, padx=(6, 0))
+
+            def _on_change(sv=var, lbl=status_lbl, d=dot):
+                v = sv.get().strip()
+                if v:
+                    lbl.configure(text="Set ✓", fg=SUCCESS_FG)
+                    d.configure(fg=SUCCESS_FG)
+                else:
+                    lbl.configure(text="Not set", fg=DEBUG_FG)
+                    d.configure(fg=SEP_FG)
+            var.trace_add("write", lambda *_a, cb=_on_change: cb())
+
+            # Separator
+            tk.Frame(inner, bg=SEP_FG, height=1).pack(
+                fill=tk.X, padx=10, pady=(8, 0))
+
+        # ── Bottom action bar ───────────────────────────────────────────────────
+        sep2 = tk.Frame(win, bg=SEP_FG, height=1)
+        sep2.pack(fill=tk.X, padx=16, pady=(8, 0))
+
+        btn_bar = tk.Frame(win, bg=DARK_BG)
+        btn_bar.pack(fill=tk.X, padx=16, pady=10)
+
+        self._key_win_status = tk.Label(btn_bar, text="", bg=DARK_BG,
+                                         fg=SUCCESS_FG,
+                                         font=("Helvetica", 9, "bold"))
+        self._key_win_status.pack(side=tk.LEFT)
+
+        def _set_status(msg: str, ok: bool = True) -> None:
+            self._key_win_status.configure(
+                text=msg, fg=SUCCESS_FG if ok else ERR_FG)
+            win.after(4000, lambda: self._key_win_status.configure(text=""))
+
+        def _save() -> None:
+            keys = {short: var.get().strip()
+                    for short, var in key_vars.items()}
+            try:
+                cfg.save_keyfile(keys)
+                _set_status(f"✓  Keys saved to {cfg.keyfile_path().name}", ok=True)
+                log.info("[keys] API keys saved to fenrir_keys.json")
+            except Exception as exc:
+                _set_status(f"Save failed: {exc}", ok=False)
+
+        def _export() -> None:
+            path = filedialog.asksaveasfilename(
+                title="Export API keys",
+                defaultextension=".json",
+                filetypes=[("JSON keyfile", "*.json"), ("All files", "*.*")],
+                initialfile="fenrir_keys.json",
+            )
+            if not path:
+                return
+            keys = {s: v.get().strip() for s, v in key_vars.items()}
+            try:
+                cfg.save_keyfile(keys, path=Path(path))
+                _set_status(f"✓  Exported to {Path(path).name}", ok=True)
+            except Exception as exc:
+                _set_status(f"Export failed: {exc}", ok=False)
+
+        def _import() -> None:
+            path = filedialog.askopenfilename(
+                title="Import API keys",
+                filetypes=[("JSON keyfile", "*.json"), ("All files", "*.*")],
+            )
+            if not path:
+                return
+            try:
+                count = cfg.import_keyfile(Path(path))
+                # Refresh entry fields
+                refreshed = cfg.all_keys()
+                for short, var in key_vars.items():
+                    var.set(refreshed.get(short, ""))
+                _set_status(f"✓  Imported {count} keys from {Path(path).name}", ok=True)
+            except Exception as exc:
+                _set_status(f"Import failed: {exc}", ok=False)
+
+        def _clear_all() -> None:
+            if messagebox.askyesno("Clear keys",
+                                    "Clear ALL API keys from memory?\n"
+                                    "(fenrir_keys.json and .env are NOT modified)",
+                                    parent=win):
+                for var in key_vars.values():
+                    var.set("")
+
+        ttk.Button(btn_bar, text="💾  Save",
+                   style="Accent.TButton",
+                   command=_save).pack(side=tk.RIGHT, padx=(4, 0))
+        ttk.Button(btn_bar, text="📤  Export…",
+                   command=_export).pack(side=tk.RIGHT, padx=(4, 0))
+        ttk.Button(btn_bar, text="📥  Import…",
+                   command=_import).pack(side=tk.RIGHT, padx=(4, 0))
+        ttk.Button(btn_bar, text="✕  Clear all",
+                   command=_clear_all).pack(side=tk.RIGHT, padx=(4, 0))
+        ttk.Button(btn_bar, text="Close",
+                   command=win.destroy).pack(side=tk.RIGHT, padx=(4, 0))
 
     # =========================================================================
     # Scan control
