@@ -41,6 +41,9 @@ data/**
 *.db-wal
 scan_history.db
 
+# ── Keys ──────────────────────────────────────────────────────────────────────
+fenrir_keys.json
+
 # ── Branding (operator-managed, not committed) ────────────────────────────────
 branding.json
 assets/logo.png
