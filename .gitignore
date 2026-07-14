@@ -47,11 +47,11 @@ scan_history.db
 fenrir_keys.json
 
 # ── Branding (operator-managed, not committed) ────────────────────────────────
-branding.json
-assets/logo.png
-assets/background.png
-assets/icon.ico
-assets/icon.png
+# branding.json
+# assets/logo.png
+# assets/background.png
+# assets/icon.ico
+# assets/icon.png
 
 # ── Python ────────────────────────────────────────────────────────────────────
 __pycache__/
